@@ -1,8 +1,10 @@
+import 'package:cma_registrator/pages/tensosensor_calibration/tensosensor_calibration_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_translate.dart';
 import 'widgets/general_info_body.dart';
 ///
 class GeneralInfoPage extends StatelessWidget {
+  static const routeName = '/generalInfo';
   ///
   const GeneralInfoPage({super.key});
   //
@@ -22,17 +24,28 @@ class GeneralInfoPage extends StatelessWidget {
           IconButton(
             tooltip: const Localized('Work cycles').v,
             onPressed:  null, 
-            icon: const Icon(Icons.table_chart_outlined),
+            icon: Icon(
+              Icons.table_chart_outlined,
+              color: theme.colorScheme.primary,
+            ),
           ),
           IconButton(
             tooltip: const Localized('Failures').v,
             onPressed:  null, 
-            icon: const Icon(Icons.table_rows_outlined),
+            icon: Icon(
+              Icons.table_rows_outlined,
+              color: theme.colorScheme.primary,
+            ),
           ),
           IconButton(
             tooltip: const Localized('Tensosensor calibration').v,
-            onPressed:  null, 
-            icon: const Icon(Icons.settings_applications_outlined),
+            onPressed:  () => Navigator.of(context).pushNamed(
+              TensosensorCalibrationPage.routeName,
+            ), 
+            icon: Icon(
+              Icons.settings_applications_outlined,
+              color: theme.colorScheme.primary,
+            ),
           ),
         ],
       ),

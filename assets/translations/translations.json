@@ -23,6 +23,7 @@
     "Something went wrong": ["Something went wrong", "Что-то пошло не так"],
     "Work cycles": ["Work cycles", "Циклы работы"],
     "Failures": ["Failures", "Сбои"],
-    "Tensosensor calibration": ["Tensosensor calibration", "Калибровка тензодатчика"]
+    "Tensosensor calibration": ["Tensosensor calibration", "Калибровка тензодатчика"],
+    "Only digits expected": ["Only digits expected", "Допустимы только цифры"]
 
 }

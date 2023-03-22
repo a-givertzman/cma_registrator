@@ -3,7 +3,7 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 
 ///
-class GeneralInfoField extends StatelessWidget {
+class InfoField extends StatelessWidget {
   final String _initialValue;
   final TextEditingController _controller;
   final String? _label;
@@ -12,7 +12,7 @@ class GeneralInfoField extends StatelessWidget {
   final void Function(String)? _onCanceled;
   final Validator _validator;
   ///
-  GeneralInfoField({
+  InfoField({
     super.key,
     String? label,
     String? sendError,
