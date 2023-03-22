@@ -87,7 +87,6 @@ class _GeneralInfoBodyState extends State<GeneralInfoBody> {
   //
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final changedFields = [
       ..._craneData.where((data) => data.initialValue != data.controller.text),
       ..._recorderData.where((data) => data.initialValue != data.controller.text),
