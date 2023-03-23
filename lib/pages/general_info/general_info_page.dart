@@ -1,3 +1,4 @@
+import 'package:cma_registrator/pages/failures/failures_page.dart';
 import 'package:cma_registrator/pages/tensosensor_calibration/tensosensor_calibration_page.dart';
 import 'package:cma_registrator/pages/work_cycles/work_cycles_page.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,9 @@ class GeneralInfoPage extends StatelessWidget {
           ),
           IconButton(
             tooltip: const Localized('Failures').v,
-            onPressed:  null, 
+            onPressed:  () => Navigator.of(context).pushNamed(
+              FailuresPage.routeName,
+            ), 
             icon: Icon(
               Icons.table_rows_outlined,
               color: theme.colorScheme.primary,

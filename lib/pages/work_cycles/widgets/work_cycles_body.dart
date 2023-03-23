@@ -1,6 +1,7 @@
 import 'package:cma_registrator/core/models/work_cycle.dart';
+import 'package:cma_registrator/core/widgets/table/list_row_widget.dart';
+import 'package:cma_registrator/pages/failures/failures_page.dart';
 import 'package:flutter/material.dart';
-import 'list_row_widget.dart';
 ///
 class WorkCyclesBody extends StatefulWidget {
   final List<WorkCycle> _workCycles;
@@ -36,7 +37,7 @@ class _WorkCyclesBodyState extends State<WorkCyclesBody> {
         Expanded(
           child: ListView.builder(
             itemCount: _workCycles.length,
-            itemBuilder: (_, index) {
+            itemBuilder: (context, index) {
               final workCycle = _workCycles[index];
               final cellsContent = [
                 workCycle.beginning.toIso8601String(),
@@ -47,7 +48,14 @@ class _WorkCyclesBodyState extends State<WorkCyclesBody> {
                 workCycle.data.toStringAsFixed(5),
               ];
               return InkWell(
-                onTap: () { return; },
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => FailuresPage(
+                      beginningTime: workCycle.beginning,
+                      endingTime: workCycle.ending,
+                    ),
+                  ),
+                ),
                 child: ListRowWidget(
                   columnFlexes: _columnFlexes,
                   cellsContent: cellsContent,
