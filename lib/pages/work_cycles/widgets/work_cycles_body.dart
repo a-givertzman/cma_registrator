@@ -1,5 +1,5 @@
 import 'package:cma_registrator/core/models/work_cycle.dart';
-import 'package:cma_registrator/core/widgets/table/list_row_widget.dart';
+import 'package:cma_registrator/core/widgets/table/table_row_widget.dart';
 import 'package:cma_registrator/pages/failures/failures_page.dart';
 import 'package:flutter/material.dart';
 ///
@@ -30,7 +30,7 @@ class _WorkCyclesBodyState extends State<WorkCyclesBody> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const ListRowWidget(
+        const TableRowWidget(
           columnFlexes: _columnFlexes, 
           cellsContent: _tableHeaders,
         ),
@@ -56,7 +56,7 @@ class _WorkCyclesBodyState extends State<WorkCyclesBody> {
                     ),
                   ),
                 ),
-                child: ListRowWidget(
+                child: TableRowWidget(
                   columnFlexes: _columnFlexes,
                   cellsContent: cellsContent,
                 ),

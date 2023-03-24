@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 
 ///
-class ListCellWidget  extends StatelessWidget {
+class TableCellWidget  extends StatelessWidget {
   final String content;
   final Setting padding;
   ///
-  const ListCellWidget ({
+  const TableCellWidget ({
     super.key, 
     required this.content, 
     this.padding = const Setting('padding'),

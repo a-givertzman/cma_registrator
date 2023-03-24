@@ -1,5 +1,5 @@
 import 'dart:collection';
-import 'package:cma_registrator/core/widgets/table/list_column_widget.dart';
+import 'package:cma_registrator/core/widgets/table/table_column_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 
@@ -51,14 +51,14 @@ class _FailuresBodyState extends State<FailuresBody> {
         children: [
           SizedBox(
             width: 230,
-            child: ListColumnWidget(
+            child: TableColumnWidget(
                   columnName: 'Time',
                   cellsContent: _timestamps,
             ),
           ),
           ...signalNames.map(
             (signalName) => Expanded(
-              child: ListColumnWidget(
+              child: TableColumnWidget(
                 columnName: signalName,
                 cellsContent: _timestamps.map(
                   (timestamp) => _columns[signalName]![timestamp]?.toString() ?? '-',

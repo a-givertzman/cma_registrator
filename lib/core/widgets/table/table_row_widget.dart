@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'list_cell_widget.dart';
+import 'table_cell_widget.dart';
 
 ///
-class ListRowWidget extends StatelessWidget {
+class TableRowWidget extends StatelessWidget {
   final List<String> _cellsContent;
   final List<int> _columnFlexes;
   ///
-  const ListRowWidget({
+  const TableRowWidget({
     super.key,
     required List<int> columnFlexes,
     required List<String> cellsContent,
@@ -20,7 +20,7 @@ class ListRowWidget extends StatelessWidget {
       children: _cellsContent.asMap().entries.map(
         (entry) => Expanded(
           flex: _columnFlexes[entry.key],
-          child: ListCellWidget(
+          child: TableCellWidget(
             content: entry.value,
           ),
         ),

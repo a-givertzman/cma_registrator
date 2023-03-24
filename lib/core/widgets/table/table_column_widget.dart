@@ -1,12 +1,12 @@
-import 'package:cma_registrator/core/widgets/table/list_cell_widget.dart';
+import 'package:cma_registrator/core/widgets/table/table_cell_widget.dart';
 import 'package:flutter/material.dart';
 
 ///
-class ListColumnWidget extends StatelessWidget {
+class TableColumnWidget extends StatelessWidget {
   final String? _columnName;
   final List<String> _cellsContent;
   ///
-  const ListColumnWidget({
+  const TableColumnWidget({
     super.key,
     String? columnName,
     required List<String> cellsContent,
@@ -20,9 +20,9 @@ class ListColumnWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (_columnName != null)
-          ListCellWidget(content: _columnName!),
+          TableCellWidget(content: _columnName!),
         ..._cellsContent.map(
-          (content) => ListCellWidget(content: content),
+          (content) => TableCellWidget(content: content),
         ),
       ],
     );
