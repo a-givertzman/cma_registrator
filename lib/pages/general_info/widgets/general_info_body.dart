@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:cma_registrator/core/widgets/field/field_group.dart';
-import 'package:cma_registrator/core/widgets/field/general_info_field.dart';
+import 'package:cma_registrator/core/widgets/field/cancelable_field.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:cma_registrator/core/models/field/field_data.dart';
@@ -159,7 +159,7 @@ class _GeneralInfoBodyState extends State<GeneralInfoBody> {
     );
   }
   ///
-  InfoField _mapDataToField(FieldData data) => InfoField(
+  CancelableField _mapDataToField(FieldData data) => CancelableField(
     label: data.viewLabel,
     initialValue: data.initialValue,
     controller: data.controller,
