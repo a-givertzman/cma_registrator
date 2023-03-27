@@ -24,6 +24,7 @@
     "Work cycles": ["Work cycles", "Циклы работы"],
     "Failures": ["Failures", "Сбои"],
     "Tensosensor calibration": ["Tensosensor calibration", "Калибровка тензодатчика"],
-    "Only digits expected": ["Only digits expected", "Допустимы только цифры"]
-
+    "Only digits expected": ["Only digits expected", "Допустимы только цифры"],
+    "Columns": ["Columns", "Колонки"],
+    "Time": ["Time", "Время"]
 }

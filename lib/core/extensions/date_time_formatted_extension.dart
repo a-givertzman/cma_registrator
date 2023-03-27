@@ -1,7 +1,7 @@
 ///
-extension DateTimeFormatted on DateTime {
+extension DateTimeToFormatted on DateTime {
   ///
-  String formatted() {
+  String toFormatted() {
     final dd = _padWithZeros(day, 2);
     final mm = _padWithZeros(month, 2);
     final yyyy = _padWithZeros(year, 4);
@@ -13,11 +13,12 @@ extension DateTimeFormatted on DateTime {
     return '$dd.$mm.$yyyy $hh:$min:$sec.$ms$us';
   }
   ///
-  String formattedDate() {
+  String toFormattedAsDate() {
     final dd = _padWithZeros(day, 2);
     final mm = _padWithZeros(month, 2);
     return '$dd.$mm.$year';
   }
   ///
   String _padWithZeros(int n, int padding) => '$n'.padLeft(padding, '0');
+  
 }
