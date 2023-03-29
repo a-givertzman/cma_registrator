@@ -87,7 +87,11 @@ class _DropdownMultiselectButtonState extends State<DropdownMultiselectButton> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(_label ?? ''),
+            Text(
+              _label ?? '',
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 18),
+            ),
             SizedBox(width: padding),
             Icon(
               _overlayEntry == null 

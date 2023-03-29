@@ -120,18 +120,18 @@ class _SubmitableFieldState<T> extends State<SubmitableField<T>> {
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // _initialValue != _value 
-            // ? InkWell(
-            //     customBorder: const CircleBorder(),
-            //     onTap: () {
-            //       _onComplete?.call(_value);
-            //     },
-            //     child: Icon(
-            //       Icons.check,
-            //       color: Theme.of(context).colorScheme.primary,
-            //     ),
-            //   ) 
-            //   : const Icon(null),
+            _initialValue != _value 
+            ? InkWell(
+                customBorder: const CircleBorder(),
+                onTap: () {
+                  _onComplete?.call(_value);
+                },
+                child: Icon(
+                  Icons.check,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ) 
+              : const Icon(null),
             _initialTextValue != _controller.text 
             ? InkWell(
               customBorder: const CircleBorder(),
