@@ -11,5 +11,13 @@ Future<void> main() async {
       const TextFile.asset('assets/translations/translations.json'),
     ),
   );
-  runApp(const AppWidget());
+  runZonedGuarded(
+    () async {
+      runApp(const AppWidget());
+    },
+    (error, stackTrace) {
+      final trace = stackTrace.toString().isEmpty ? StackTrace.current : stackTrace.toString();
+      const Log('main').error('message: $error\nstackTrace: $trace'); 
+    },
+  );  
 }
