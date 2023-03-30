@@ -17,12 +17,13 @@ class WorkCyclesAppBar extends StatelessWidget {
   //
   @override
   Widget build(BuildContext context) {
+    const dateFieldWidth = 220.0;
     return AppBarWidget(
       title: const Localized('Work cycles').v,
       height: kTextTabBarHeight * 1.5,
       rightWidgets: [
         SizedBox(
-          width: 220,
+          width: dateFieldWidth,
           child: SubmitableField<DateTime>(
             initialValue: _beginningTime,
             label: const Localized('Beginning').v,
@@ -30,7 +31,7 @@ class WorkCyclesAppBar extends StatelessWidget {
           ),
         ),
         SizedBox(
-          width: 220,
+          width: dateFieldWidth,
           child: SubmitableField<DateTime>(
             initialValue: _endingTime,
             label: const Localized('Ending').v,

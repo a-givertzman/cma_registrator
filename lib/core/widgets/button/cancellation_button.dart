@@ -30,9 +30,9 @@ class CancellationButton extends StatelessWidget {
         style: ButtonStyle(
           textStyle: MaterialStateProperty.resolveWith<TextStyle?>(
             (states) => theme.textTheme.titleLarge?.copyWith(
-                color: theme.colorScheme.primary,
-                height: 1,
-              ),
+              color: theme.colorScheme.primary,
+              height: 1,
+            ),
           ),
         ),
         child: Text(

@@ -86,9 +86,9 @@ class _DropdownMultiselectButtonState extends State<DropdownMultiselectButton> {
         style: ButtonStyle(
           textStyle: MaterialStateProperty.resolveWith<TextStyle?>(
             (states) => theme.textTheme.titleLarge?.copyWith(
-                color: theme.colorScheme.onPrimary,
-                height: 1,
-              ),
+              color: theme.colorScheme.onPrimary,
+              height: 1,
+            ),
           ),
         ),
         child: Row(
@@ -99,10 +99,6 @@ class _DropdownMultiselectButtonState extends State<DropdownMultiselectButton> {
             Text(
               _label ?? '',
               textAlign: TextAlign.center,
-              style: theme.textTheme.titleLarge?.copyWith(
-                color: theme.colorScheme.onPrimary,
-                height: 1,
-              ),
             ),
             SizedBox(width: padding),
             Icon(
@@ -115,7 +111,7 @@ class _DropdownMultiselectButtonState extends State<DropdownMultiselectButton> {
       ),
     );
   }
-   ///
+  ///
   void _toggleMenu(BuildContext context) {
     const defaultMenuWidth = 200.0;
     const defaultMenuItemHeight = 20.0;

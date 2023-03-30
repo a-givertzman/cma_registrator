@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:cma_registrator/core/models/field/field_data.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-import 'saving_confirmation_dialog.dart';
+import 'confirmation_dialog.dart';
 ///
 class GeneralInfoBody extends StatefulWidget {
   ///
@@ -183,7 +183,11 @@ class _GeneralInfoBodyState extends State<GeneralInfoBody> {
     if(_isFormValid()) {
       showDialog<bool>(
         context: context, 
-        builder: (_) => const SavingConfirmationDialog(),
+        builder: (_) => ConfirmationDialog(
+          title: Text(const Localized('Data saving').v),
+          content: Text(const Localized('Data will be persisted on the server. Do you want to proceed?').v),
+          confirmationButtonLabel: const Localized('Save').v,
+        ),
       ).then((isSaveSubmitted) {
         if (isSaveSubmitted ?? false) {
           final random = Random();
