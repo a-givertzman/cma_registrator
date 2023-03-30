@@ -1,3 +1,4 @@
+import 'package:cma_registrator/core/theme/app_theme_switch.dart';
 import 'package:flutter/material.dart' hide Localizations;
 import 'package:hmi_core/hmi_core.dart';
 import 'pages/app_widget.dart';
@@ -11,5 +12,10 @@ Future<void> main() async {
       const TextFile.asset('assets/translations/translations.json'),
     ),
   );
-  runApp(const AppWidget());
+  final appThemeSwitch = AppThemeSwitch();
+  runApp(
+    AppWidget(
+      themeSwitch: appThemeSwitch,
+    ),
+  );
 }
