@@ -24,22 +24,26 @@ class FailuresAppBar extends StatelessWidget {
   //
   @override
   Widget build(BuildContext context) {
+    const dropdownButtonHeight = 40.0;
+    const dropdownMenuItemHeight = 50.0;
+    const dropdownMenuWidth = 200.0;
+    const dateFieldWIdth = 220.0;
     return AppBarWidget(
       title: const Localized('Failures').v,
-      height: kTextTabBarHeight * 1.5,
+      height: kToolbarHeight * 1.5,
       leftWidgets: [
         DropdownMultiselectButton(
           onChanged: _onChanged,
-          height: 40,
+          height: dropdownButtonHeight,
           label: const Localized('Columns').v,
           items: _columnsVisibility,
-          itemHeight: 50,
-          menuWidth: 200,
+          itemHeight: dropdownMenuItemHeight,
+          menuWidth: dropdownMenuWidth,
         ),
       ],
       rightWidgets: [
         SizedBox(
-          width: 220,
+          width: dateFieldWIdth,
           child: SubmitableField<DateTime>(
             initialValue: _beginningTime,
             label: const Localized('Beginning').v,
@@ -47,7 +51,7 @@ class FailuresAppBar extends StatelessWidget {
           ),
         ),
         SizedBox(
-          width: 220,
+          width: dateFieldWIdth,
           child: SubmitableField<DateTime>(
             initialValue: _endingTime,
             label: const Localized('Ending').v,

@@ -50,6 +50,14 @@ class _MultiselectItemsListWidgetState extends State<MultiselectItemsListWidget>
   //
   @override
   Widget build(BuildContext context) {
+    const menuBorderRadius = 16.0;
+    const menuShadow = [
+      BoxShadow(
+        color: Color(0x4C000000),
+        offset: Offset(0.0, 1.0),
+        blurRadius: 6.0,
+      ),
+    ];
     final theme = Theme.of(context);
     final padding = const Setting('padding').toDouble;
     final entries = _multiselectItems.entries.toList();
@@ -58,17 +66,11 @@ class _MultiselectItemsListWidgetState extends State<MultiselectItemsListWidget>
       decoration: BoxDecoration(
         color: theme.cardColor,
         border: Border.all(color: Colors.white10),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: theme.colorScheme.shadow.withOpacity(0.3),
-            offset: const Offset(0.0, 1.0),
-            blurRadius: 6.0,
-          ),
-        ],
+        borderRadius: BorderRadius.circular(menuBorderRadius),
+        boxShadow: menuShadow,
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(menuBorderRadius),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

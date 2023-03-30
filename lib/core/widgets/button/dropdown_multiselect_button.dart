@@ -77,11 +77,20 @@ class _DropdownMultiselectButtonState extends State<DropdownMultiselectButton> {
   @override
   Widget build(BuildContext context) {
     final padding = const Setting('padding').toDouble;
+    final theme = Theme.of(context);
     return SizedBox(
       height: _height,
       width: _width,
       child: ElevatedButton(
-        onPressed: () => _toggleMenu(context), 
+        onPressed: () => _toggleMenu(context),
+        style: ButtonStyle(
+          textStyle: MaterialStateProperty.resolveWith<TextStyle?>(
+            (states) => theme.textTheme.titleLarge?.copyWith(
+                color: theme.colorScheme.onPrimary,
+                height: 1,
+              ),
+          ),
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -90,7 +99,10 @@ class _DropdownMultiselectButtonState extends State<DropdownMultiselectButton> {
             Text(
               _label ?? '',
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 18),
+              style: theme.textTheme.titleLarge?.copyWith(
+                color: theme.colorScheme.onPrimary,
+                height: 1,
+              ),
             ),
             SizedBox(width: padding),
             Icon(
@@ -105,6 +117,8 @@ class _DropdownMultiselectButtonState extends State<DropdownMultiselectButton> {
   }
    ///
   void _toggleMenu(BuildContext context) {
+    const defaultMenuWidth = 200.0;
+    const defaultMenuItemHeight = 20.0;
     if (_overlayEntry != null) {
       _removeOverlayEntry();
     } else {
@@ -116,19 +130,24 @@ class _DropdownMultiselectButtonState extends State<DropdownMultiselectButton> {
       );
       setState(() {
         _overlayEntry = OverlayEntry(
-          builder: (context) => Positioned(
-            top: position.dy,
-            left: position.dx,
-            child: MultiselectItemsListWidget(
-              multiselectItems: _items,
-              width: _menuWidth ?? 200, 
-              itemHeight: _itemHeight ?? 20,
-              onChanged: (key, value) {
-                _onChanged?.call(key, value);
-                // _toggleMenu(context);
-                // _toggleMenu(context);
-              },
-            ),
+          builder: (context) => Stack(
+            children: [
+              ModalBarrier(
+                onDismiss: _removeOverlayEntry,
+              ),
+              Positioned(
+                top: position.dy,
+                left: position.dx,
+                child: MultiselectItemsListWidget(
+                  multiselectItems: _items,
+                  width: _menuWidth ?? defaultMenuWidth, 
+                  itemHeight: _itemHeight ?? defaultMenuItemHeight,
+                  onChanged: (key, value) {
+                    _onChanged?.call(key, value);
+                  },
+                ),
+              ),
+            ],
           ),
         );
       });

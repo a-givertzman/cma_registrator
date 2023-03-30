@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:cma_registrator/core/models/field/field_data.dart';
+import 'package:cma_registrator/core/widgets/button/action_button.dart';
+import 'package:cma_registrator/core/widgets/button/cancellation_button.dart';
 import 'package:cma_registrator/core/widgets/field/cancelable_field.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
@@ -115,6 +117,8 @@ class _TensosensorCalibrationStepState extends State<TensosensorCalibrationStep>
   //
   @override
   Widget build(BuildContext context) {
+    const itemWidth = 150.0;
+    const indicatorHeight = 50.0;
     final padding = const Setting('padding',factor: 5).toDouble;
     final random = Random();
     final fieldData = _fieldData;
@@ -129,7 +133,7 @@ class _TensosensorCalibrationStepState extends State<TensosensorCalibrationStep>
       children: [
         Text(
           headline,
-          style: const TextStyle(fontSize: 18),
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         Expanded(
           child: Row(
@@ -137,7 +141,7 @@ class _TensosensorCalibrationStepState extends State<TensosensorCalibrationStep>
             children: [
               if(_stepType != StepType.starter && fieldData != null) ...[
                   SizedBox(
-                    width: 200,
+                    width: itemWidth,
                     child: Form(
                       key: _formKey,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -147,8 +151,8 @@ class _TensosensorCalibrationStepState extends State<TensosensorCalibrationStep>
                   SizedBox(width: padding),
                 ],
               TextIndicatorWidget(
-                height: 50,
-                width: 150,
+                height: indicatorHeight,
+                width: itemWidth,
                 indicator: TextValueIndicator(
                   stream: Stream.periodic(
                     const Duration(milliseconds: 500),
@@ -195,52 +199,34 @@ class _TensosensorCalibrationStepState extends State<TensosensorCalibrationStep>
   );
   ///
   List<Widget> _getButtons(StepType stepType) {
-    final padding = const Setting('padding').toDouble;
+    const buttonHeight = 40.0;
+    final blockPadding = const Setting('blockPadding').toDouble;
     return [
       if(stepType != StepType.starter)
-        TextButton(
-          onPressed: _onCancel, 
-          child: Text(
-            const Localized('Cancel').v, 
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 18),
-          ),
-        ),
+        CancellationButton(onPressed: _onCancel),
       if(stepType != StepType.finishing) ...[
-        SizedBox(width: padding),
-        SizedBox(
-          height: 40,
-          child: ElevatedButton(
-            onPressed: () {
-              if((_formKey.currentState?.validate() ?? false)
-                || _stepType == StepType.starter) {
-                _onNext?.call();
-              }
-            }, 
-            child: Text(
-              const Localized('Next').v, 
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 18),
-            ),
-          ),
+        SizedBox(width: blockPadding),
+        ActionButton(
+          height: buttonHeight,
+          label: const Localized('Next').v,
+          onPressed: () {
+            if((_formKey.currentState?.validate() ?? false)
+              || _stepType == StepType.starter) {
+              _onNext?.call();
+            }
+          }, 
         ),
       ]
       else ...[
-        SizedBox(width: padding),
-        SizedBox(
-          height: 40,
-          child: ElevatedButton(
-            onPressed: () {
-              if(_formKey.currentState?.validate() ?? false) {
-                _onFinish?.call();
-              }
-            }, 
-            child: Text(
-              const Localized('Save and finish').v, 
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 18),
-            ),
-          ),
+        SizedBox(width: blockPadding),
+        ActionButton(
+          height: buttonHeight,
+          label: const Localized('Save and finish').v,
+          onPressed: () {
+            if(_formKey.currentState?.validate() ?? false) {
+              _onFinish?.call();
+            }
+          }, 
         ),
       ],
     ];

@@ -1,9 +1,12 @@
 import 'dart:math';
+import 'package:cma_registrator/core/widgets/button/action_button.dart';
+import 'package:cma_registrator/core/widgets/button/cancellation_button.dart';
 import 'package:cma_registrator/core/widgets/field/field_group.dart';
 import 'package:cma_registrator/core/widgets/field/cancelable_field.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:cma_registrator/core/models/field/field_data.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'saving_confirmation_dialog.dart';
 ///
 class GeneralInfoBody extends StatefulWidget {
@@ -87,6 +90,9 @@ class _GeneralInfoBodyState extends State<GeneralInfoBody> {
   //
   @override
   Widget build(BuildContext context) {
+    const buttonHeight = 40.0;
+    const buttonWidth = 130.0;
+    final blockPadding = const Setting('blockPadding').toDouble;
     final changedFields = [
       ..._craneData.where((data) => data.initialValue != data.controller.text),
       ..._recorderData.where((data) => data.initialValue != data.controller.text),
@@ -126,30 +132,20 @@ class _GeneralInfoBodyState extends State<GeneralInfoBody> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TextButton(
+                CancellationButton(
+                  height: buttonHeight,
                   onPressed: changedFields.isNotEmpty
-                      ? _cancelEditedFields
-                      : null,
-                  child: Text(
-                    const Localized('Cancel').v,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 18),
-                  ),
+                    ? _cancelEditedFields
+                    : null,
                 ),
-                const SizedBox(width: 20),
-                SizedBox(
-                  height: 40,
-                  width: 130,
-                  child: ElevatedButton(
-                    onPressed: changedFields.isNotEmpty
-                      ? () => _trySaveData(context, changedFields)
-                      : null,
-                    child: Text(
-                      const Localized('Save').v,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 18),
-                    ),
-                  ),
+                SizedBox(width: blockPadding),
+                ActionButton(
+                  height: buttonHeight,
+                  width: buttonWidth,
+                  label: const Localized('Save').v,
+                  onPressed: changedFields.isNotEmpty
+                    ? () => _trySaveData(context, changedFields)
+                    : null,
                 ),
               ],
             ),

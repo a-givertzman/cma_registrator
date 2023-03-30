@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 
 ///
 class FieldGroup extends StatefulWidget {
@@ -22,13 +23,15 @@ class _FieldGroupState extends State<FieldGroup> {
   //
   @override
   Widget build(BuildContext context) {
+    final padding = const Setting('padding').toDouble;
+    final blockPadding = const Setting('blockPadding').toDouble;
     return Column(
       children: [
         Text(
           widget._groupName,
           style: Theme.of(context).textTheme.titleLarge,
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: blockPadding),
         Expanded(
           child: Scrollbar(
             thumbVisibility: true,
@@ -39,10 +42,10 @@ class _FieldGroupState extends State<FieldGroup> {
                 controller: _scrollController,
                 itemCount: widget._fields.length,
                 itemBuilder: (context, index) => Padding(
-                  padding: const EdgeInsets.only(right: 16.0),
+                  padding: EdgeInsets.only(right: padding),
                   child: widget._fields[index],
                 ),
-                separatorBuilder: (context, index) => const SizedBox(height: 15),
+                separatorBuilder: (context, index) => SizedBox(height: padding),
               ),
             ),
           ),

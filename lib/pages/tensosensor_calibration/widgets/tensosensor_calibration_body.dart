@@ -13,6 +13,7 @@ class TensosensorCalibrationBody extends StatefulWidget {
 }
 ///
 class _TensosensorCalibrationBodyState extends State<TensosensorCalibrationBody> {
+  static const _slideDuration = Duration(milliseconds: 300);
   static const _pagesCount = 3;
   late final PageController _pageController;
 
@@ -87,7 +88,7 @@ class _TensosensorCalibrationBodyState extends State<TensosensorCalibrationBody>
   ///
   void _slideToPage(int index) => _pageController.animateToPage(
     index, 
-    duration: const Duration(milliseconds: 300), 
+    duration: _slideDuration, 
     curve: Curves.easeInOut,
   );
   ///

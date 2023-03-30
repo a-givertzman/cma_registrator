@@ -65,6 +65,7 @@ class _FailuresBodyState extends State<FailuresBody> {
   //
   @override
   Widget build(BuildContext context) {
+    const timeColumnSize = 230.0;
     final signalNames = _columns.keys.toList();
     signalNames.sort();
     return Column(
@@ -87,7 +88,7 @@ class _FailuresBodyState extends State<FailuresBody> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  width: 230,
+                  width: timeColumnSize,
                   child: TableColumnWidget(
                         columnName: const Localized('Time').v,
                         cellsContent: _timestamps,
