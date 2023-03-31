@@ -183,14 +183,9 @@ class _TensosensorCalibrationStepState extends State<TensosensorCalibrationStep>
   }
   ///
   CancelableField _mapDataToField(FieldData data) => CancelableField(
-    label: data.viewLabel,
+    label: data.label,
     initialValue: data.initialValue,
-    controller: data.controller,
-    sendError: data.receivedError,
-    onChanged: (_) => setState(() { return; }),
-    onCanceled: (_) => setState(() {
-      data.receivedError = null;
-    }),
+    onChanged: (value) => setState(() { data.update(value); }),
     validator: const Validator(
       cases: [
         OnlyDigitsValidationCase(),

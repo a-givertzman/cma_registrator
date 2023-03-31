@@ -1,4 +1,5 @@
 import 'package:cma_registrator/core/models/field/field_data.dart';
+import 'package:cma_registrator/core/models/persistable/sql_record.dart';
 import 'package:cma_registrator/pages/general_info/widgets/confirmation_dialog.dart';
 import 'package:cma_registrator/pages/tensosensor_calibration/widgets/tensosensor_calibration_step.dart';
 import 'package:flutter/material.dart';
@@ -20,8 +21,9 @@ class _TensosensorCalibrationBodyState extends State<TensosensorCalibrationBody>
   final _fieldsData = List.generate(
     _pagesCount - 1, 
     (index) => FieldData(
-      viewLabel: const Localized('Target weight').v, 
-      initialValue: '0.0',
+      label: const Localized('Target weight').v, 
+      initialValue: '0.0', 
+      persistable: const SqlRecord('Target weight'),
     ),
   );
   //
@@ -93,11 +95,11 @@ class _TensosensorCalibrationBodyState extends State<TensosensorCalibrationBody>
   );
   ///
   void _cancelEditedFields() {
-    for(final data in _fieldsData) {
-      data.controller.text = data.initialValue;
-      data.receivedError = null;
-    }
-    setState(() { return; });
+    setState(() {
+      for(final data in _fieldsData) {
+        data.cancel();
+      }
+    });
   }
   ///
   void _trySaveData(BuildContext context, void Function() action) {

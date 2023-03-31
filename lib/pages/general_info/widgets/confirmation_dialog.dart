@@ -6,7 +6,6 @@ class ConfirmationDialog extends StatelessWidget {
   final Widget? _content;
   final String? _cancellationButtonLabel;
   final String? _confirmaationButtonLabel;
-
   ///
   const ConfirmationDialog({
     super.key, 

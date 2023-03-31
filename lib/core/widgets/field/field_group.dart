@@ -42,7 +42,7 @@ class _FieldGroupState extends State<FieldGroup> {
                 controller: _scrollController,
                 itemCount: widget._fields.length,
                 itemBuilder: (context, index) => Padding(
-                  padding: EdgeInsets.only(right: padding),
+                  padding: EdgeInsets.only(right: padding * 2),
                   child: widget._fields[index],
                 ),
                 separatorBuilder: (context, index) => SizedBox(height: padding),

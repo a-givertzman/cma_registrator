@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'package:cma_registrator/core/models/persistable/sql_record.dart';
 import 'package:cma_registrator/core/widgets/button/action_button.dart';
 import 'package:cma_registrator/core/widgets/button/cancellation_button.dart';
 import 'package:cma_registrator/core/widgets/field/field_group.dart';
@@ -21,82 +21,101 @@ class _GeneralInfoBodyState extends State<GeneralInfoBody> {
   final _formKey = GlobalKey<FormState>();
   final _craneData = [
     FieldData(
-      viewLabel: const Localized('Type').v,
-      initialValue: 'Some type',
+      label: const Localized('Type').v,
+      initialValue: 'Some type', 
+      persistable: const SqlRecord('Type'),
     ),
     FieldData(
-      viewLabel: const Localized('Index').v,
-      initialValue: 'Index value',
+      label: const Localized('Index').v,
+      initialValue: 'Index value', 
+      persistable: const SqlRecord('Index'),
     ),
     FieldData(
-      viewLabel: const Localized('Manufacturer').v,
-      initialValue: 'Manufacturer name',
+      label: const Localized('Manufacturer').v,
+      initialValue: 'Manufacturer name', 
+      persistable: const SqlRecord('Manufacturer'),
     ),
     FieldData(
-      viewLabel: const Localized('Serial number').v,
-      initialValue: '123456789',
+      label: const Localized('Serial number').v,
+      initialValue: '123456789', 
+      persistable: const SqlRecord('Serial number'),
     ),
     FieldData(
-      viewLabel: const Localized('Manufacture year').v,
-      initialValue: '2023',
+      label: const Localized('Manufacture year').v,
+      initialValue: '2023', 
+      persistable: const SqlRecord('Manufacture year'),
     ),
     FieldData(
-      viewLabel: const Localized('Load capacity').v,
-      initialValue: '20t',
+      label: const Localized('Load capacity').v,
+      initialValue: '20t', 
+      persistable: const SqlRecord('Load capacity'),
     ),
     FieldData(
-      viewLabel: const Localized('Modes classification group').v,
-      initialValue: 'Group name',
+      label: const Localized('Modes classification group').v,
+      initialValue: 'Group name', 
+      persistable: const SqlRecord('Modes classification group'),
     ),
     FieldData(
-      viewLabel: const Localized('Commissioning date').v,
-      initialValue: '17.03.2023',
+      label: const Localized('Commissioning date').v,
+      initialValue: '17.03.2023', 
+      persistable: const SqlRecord('Commissioning date'),
     ),
     FieldData(
-      viewLabel: const Localized('Standard service life').v,
-      initialValue: '100 years',
+      label: const Localized('Standard service life').v,
+      initialValue: '100 years', 
+      persistable: const SqlRecord('Standard service life'),
     ),
   ];
   final _recorderData = [
     FieldData(
-      viewLabel: const Localized('Type').v,
-      initialValue: 'Some type',
+      label: const Localized('Type').v,
+      initialValue: 'Some type', 
+      persistable: const SqlRecord('Type'),
     ),
     FieldData(
-      viewLabel: const Localized('Modification').v,
-      initialValue: 'Modification name',
+      label: const Localized('Modification').v,
+      initialValue: 'Modification name', 
+      persistable: const SqlRecord('Modification'),
     ),
     FieldData(
-      viewLabel: const Localized('Manufacturer').v,
-      initialValue: 'Manufacturer name',
+      label: const Localized('Manufacturer').v,
+      initialValue: 'Manufacturer name', 
+      persistable: const SqlRecord('Manufacturer'),
     ),
     FieldData(
-      viewLabel: const Localized('Serial number').v,
-      initialValue: '123456789',
+      label: const Localized('Serial number').v,
+      initialValue: '123456789', 
+      persistable: const SqlRecord('Serial number'),
     ),
     FieldData(
-      viewLabel: const Localized('Manufacture year').v,
-      initialValue: '2023',
+      label: const Localized('Manufacture year').v,
+      initialValue: '2023', 
+      persistable: const SqlRecord('Manufacture year'),
     ),
     FieldData(
-      viewLabel: const Localized('Date of installation on the crane').v,
-      initialValue: '18.03.2023',
+      label: const Localized('Date of installation on the crane').v,
+      initialValue: '18.03.2023', 
+      persistable: const SqlRecord('Date of installation on the crane'),
     ),
     FieldData(
-      viewLabel: const Localized('Organization that installed sensor on the crane').v,
-      initialValue: 'Organization name',
+      label: const Localized('Organization that installed sensor on the crane').v,
+      initialValue: 'Organization name', 
+      persistable: const SqlRecord('Organization that installed sensor on the crane'),
     ),
   ];
   //
   @override
   Widget build(BuildContext context) {
+    final isAnyFieldChanged = _craneData
+      .where((data) => data.isUpdated)
+      .followedBy(
+        _recorderData
+          .where((data) => data.isUpdated),
+      )
+      .isNotEmpty;
     const buttonHeight = 40.0;
     const buttonWidth = 130.0;
     final blockPadding = const Setting('blockPadding').toDouble;
-    final changedFields = [
-      ..._craneData.where((data) => data.initialValue != data.controller.text),
-      ..._recorderData.where((data) => data.initialValue != data.controller.text),
-    ];
     return Form(
       key: _formKey,
       child: Column(
@@ -134,7 +153,7 @@ class _GeneralInfoBodyState extends State<GeneralInfoBody> {
               children: [
                 CancellationButton(
                   height: buttonHeight,
-                  onPressed: changedFields.isNotEmpty
+                  onPressed: isAnyFieldChanged
                     ? _cancelEditedFields
                     : null,
                 ),
@@ -143,8 +162,8 @@ class _GeneralInfoBodyState extends State<GeneralInfoBody> {
                   height: buttonHeight,
                   width: buttonWidth,
                   label: const Localized('Save').v,
-                  onPressed: changedFields.isNotEmpty
-                    ? () => _trySaveData(context, changedFields)
+                  onPressed: isAnyFieldChanged
+                    ? () => _trySaveData(context)
                     : null,
                 ),
               ],
@@ -156,51 +175,53 @@ class _GeneralInfoBodyState extends State<GeneralInfoBody> {
   }
   ///
   CancelableField _mapDataToField(FieldData data) => CancelableField(
-    label: data.viewLabel,
+    label: data.label,
     initialValue: data.initialValue,
-    controller: data.controller,
-    sendError: data.receivedError,
-    onChanged: (_) => setState(() { return; }),
-    onCanceled: (_) => setState(() {
-      data.receivedError = null;
+    onChanged: (value) => setState(() {
+      data.update(value);
     }),
+    onCanceled: (_) => setState(() {
+      data.cancel();
+    }),
+    onSaved: (_) {
+      return data.save()
+        .then((result) {
+          if (!result.hasError && mounted) {
+            setState(() { return; });
+          }
+          return result;
+        });
+    },
   );
   ///
   void _cancelEditedFields() {
-    for(final data in _craneData) {
-      data.controller.text = data.initialValue;
-      data.receivedError = null;
-    }
-    for(final data in _recorderData) {
-      data.controller.text = data.initialValue;
-      data.receivedError = null;
-    }
-    setState(() { return; });
+    setState(() {
+      for(final data in _craneData) {
+        data.cancel();
+      }
+      for(final data in _recorderData) {
+        data.cancel();
+      }
+    });
   }
   ///
-  void _trySaveData(BuildContext context, List<FieldData> changedFields) {
+  void _trySaveData(BuildContext context) {
     final theme = Theme.of(context);
     if(_isFormValid()) {
       showDialog<bool>(
         context: context, 
         builder: (_) => ConfirmationDialog(
           title: Text(const Localized('Data saving').v),
-          content: Text(const Localized('Data will be persisted on the server. Do you want to proceed?').v),
+          content: Text(
+            const Localized(
+              'Data will be persisted on the server. Do you want to proceed?',
+            ).v,
+          ),
           confirmationButtonLabel: const Localized('Save').v,
         ),
       ).then((isSaveSubmitted) {
         if (isSaveSubmitted ?? false) {
-          final random = Random();
-          setState(() {
-            for(final field in changedFields) {
-              if (random.nextDouble() < 0.9) {
-                field.initialValue = field.controller.text;
-                field.receivedError = null;
-              } else {
-                field.receivedError = const Localized('Something went wrong').v;
-              }
-            }
-          });
+          _formKey.currentState?.save();
         }
       });
     } else {
