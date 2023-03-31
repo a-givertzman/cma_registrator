@@ -175,7 +175,6 @@ class _SuffixIcon extends StatelessWidget {
   final Widget? visibleChild;
   final Widget? invisibleChild;
   const _SuffixIcon({
-    super.key, 
     required this.isVisible, 
     this.visibleChild, 
     this.invisibleChild,
