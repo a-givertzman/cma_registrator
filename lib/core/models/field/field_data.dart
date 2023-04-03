@@ -11,7 +11,7 @@ class FieldData {
   /// Model that holds data for [TextFormField] or [TextField].
   /// 
   ///   - [label] - text with which the target field will be labeled.
-  ///   - [initialValue] - initial content of the target field.
+  ///   - [initialValue] - initial content of the target field. Also will be set to [value].
   ///   - [record] - database field from which we can read or to which we can write data.
   FieldData({
     required this.label, 
@@ -51,12 +51,12 @@ class FieldData {
       return result;
     });
   /// 
-  /// Set current [value] to its initial state.
+  /// Set current [value] to its [initialState].
   void cancel() {
     _value = _initialValue;
   }
   /// 
-  /// Set current [value].
+  /// Set current [value] with provided [newValue].
   void update(String newValue) {
     _value = newValue;
   }
