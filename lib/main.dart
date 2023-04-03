@@ -13,9 +13,17 @@ Future<void> main() async {
     ),
   );
   final appThemeSwitch = AppThemeSwitch();
-  runApp(
-    AppWidget(
-      themeSwitch: appThemeSwitch,
-    ),
-  );
+  runZonedGuarded(
+    () async {
+      runApp(
+        AppWidget(
+          themeSwitch: appThemeSwitch,
+        ),
+      );
+    },
+    (error, stackTrace) {
+      final trace = stackTrace.toString().isEmpty ? StackTrace.current : stackTrace.toString();
+      const Log('main').error('message: $error\nstackTrace: $trace'); 
+    },
+  );    
 }
