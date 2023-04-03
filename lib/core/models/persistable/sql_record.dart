@@ -1,9 +1,6 @@
 import 'dart:math';
-
-import 'package:cma_registrator/core/models/persistable/fetchable.dart';
-import 'package:cma_registrator/core/models/persistable/persistable.dart';
 import 'package:hmi_core/hmi_core.dart';
-class SqlRecord implements Persistable<String>, Fetchable<String> {
+class SqlRecord {
   static final _log = const Log('SqlRecord')..level=LogLevel.debug;
   final String _dbFieldName;
   /// 
@@ -11,7 +8,6 @@ class SqlRecord implements Persistable<String>, Fetchable<String> {
     _dbFieldName = dbFieldName;
   //
   // TODO to be implemented with backend
-  @override
   Future<Result<String>> persist(String value) async {
     await Future.delayed(const Duration(seconds: 3));
     final random = Random();
@@ -30,7 +26,6 @@ class SqlRecord implements Persistable<String>, Fetchable<String> {
   }
   //
   // TODO to be implemented with backend
-  @override
   Future<Result<String>> fetch() async {
     await Future.delayed(const Duration(seconds: 3));
     final random = Random();
