@@ -23,94 +23,94 @@ class _GeneralInfoBodyState extends State<GeneralInfoBody> {
     FieldData(
       label: const Localized('Type').v,
       initialValue: 'Some type', 
-      persistable: const SqlRecord('Type'),
+      record: const SqlRecord('Type'),
     ),
     FieldData(
       label: const Localized('Index').v,
       initialValue: 'Index value', 
-      persistable: const SqlRecord('Index'),
+      record: const SqlRecord('Index'),
     ),
     FieldData(
       label: const Localized('Manufacturer').v,
       initialValue: 'Manufacturer name', 
-      persistable: const SqlRecord('Manufacturer'),
+      record: const SqlRecord('Manufacturer'),
     ),
     FieldData(
       label: const Localized('Serial number').v,
       initialValue: '123456789', 
-      persistable: const SqlRecord('Serial number'),
+      record: const SqlRecord('Serial number'),
     ),
     FieldData(
       label: const Localized('Manufacture year').v,
       initialValue: '2023', 
-      persistable: const SqlRecord('Manufacture year'),
+      record: const SqlRecord('Manufacture year'),
     ),
     FieldData(
       label: const Localized('Load capacity').v,
       initialValue: '20t', 
-      persistable: const SqlRecord('Load capacity'),
+      record: const SqlRecord('Load capacity'),
     ),
     FieldData(
       label: const Localized('Modes classification group').v,
       initialValue: 'Group name', 
-      persistable: const SqlRecord('Modes classification group'),
+      record: const SqlRecord('Modes classification group'),
     ),
     FieldData(
       label: const Localized('Commissioning date').v,
       initialValue: '17.03.2023', 
-      persistable: const SqlRecord('Commissioning date'),
+      record: const SqlRecord('Commissioning date'),
     ),
     FieldData(
       label: const Localized('Standard service life').v,
       initialValue: '100 years', 
-      persistable: const SqlRecord('Standard service life'),
+      record: const SqlRecord('Standard service life'),
     ),
   ];
   final _recorderData = [
     FieldData(
       label: const Localized('Type').v,
       initialValue: 'Some type', 
-      persistable: const SqlRecord('Type'),
+      record: const SqlRecord('Type'),
     ),
     FieldData(
       label: const Localized('Modification').v,
       initialValue: 'Modification name', 
-      persistable: const SqlRecord('Modification'),
+      record: const SqlRecord('Modification'),
     ),
     FieldData(
       label: const Localized('Manufacturer').v,
       initialValue: 'Manufacturer name', 
-      persistable: const SqlRecord('Manufacturer'),
+      record: const SqlRecord('Manufacturer'),
     ),
     FieldData(
       label: const Localized('Serial number').v,
       initialValue: '123456789', 
-      persistable: const SqlRecord('Serial number'),
+      record: const SqlRecord('Serial number'),
     ),
     FieldData(
       label: const Localized('Manufacture year').v,
       initialValue: '2023', 
-      persistable: const SqlRecord('Manufacture year'),
+      record: const SqlRecord('Manufacture year'),
     ),
     FieldData(
       label: const Localized('Date of installation on the crane').v,
       initialValue: '18.03.2023', 
-      persistable: const SqlRecord('Date of installation on the crane'),
+      record: const SqlRecord('Date of installation on the crane'),
     ),
     FieldData(
       label: const Localized('Organization that installed sensor on the crane').v,
       initialValue: 'Organization name', 
-      persistable: const SqlRecord('Organization that installed sensor on the crane'),
+      record: const SqlRecord('Organization that installed sensor on the crane'),
     ),
   ];
   //
   @override
   Widget build(BuildContext context) {
     final isAnyFieldChanged = _craneData
-      .where((data) => data.isUpdated)
+      .where((data) => data.isChanged)
       .followedBy(
         _recorderData
-          .where((data) => data.isUpdated),
+          .where((data) => data.isChanged),
       )
       .isNotEmpty;
     const buttonHeight = 40.0;

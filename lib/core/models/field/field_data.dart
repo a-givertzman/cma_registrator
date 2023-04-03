@@ -1,26 +1,36 @@
 import 'package:cma_registrator/core/models/persistable/sql_record.dart';
 import 'package:hmi_core/hmi_core_result.dart';
-///
+/// 
+/// Model that holds data for [TextFormField] or [TextField].
 class FieldData {
   final String label;
   String _initialValue;
   String _value;
   final SqlRecord _record;
-  ///
+  /// 
+  /// Model that holds data for [TextFormField] or [TextField].
+  /// 
+  ///   - [label] - text with which the target field will be labeled.
+  ///   - [initialValue] - initial content of the target field.
+  ///   - [record] - database field from which we can read or to which we can write data.
   FieldData({
     required this.label, 
     required String initialValue, 
-    required SqlRecord persistable,
+    required SqlRecord record,
   }) : _initialValue = initialValue, 
-    _record = persistable, 
+    _record = record, 
     _value = initialValue;
-  ///
+  /// 
+  /// Initial content of the target field.
   String get initialValue => _initialValue;
-  ///
+  /// 
+  /// Current content of the target field.
   String get value => _value;
-  ///
-  bool get isUpdated => _initialValue != _value;
-  ///
+  /// 
+  /// Whether content of the target changed or not.
+  bool get isChanged => _initialValue != _value;
+  /// 
+  /// Pull data from the database through provided [record].
   Future<Result<String>> fetch() => 
     _record.fetch()
     .then((result) {
@@ -30,7 +40,8 @@ class FieldData {
       }
       return result;
     });
-  ///
+  /// 
+  /// Persist data to the database through provided [record].
   Future<Result<String>> save() => 
     _record.persist(_value)
     .then((result) {
@@ -39,12 +50,14 @@ class FieldData {
       }
       return result;
     });
-  ///
+  /// 
+  /// Set current [value] to its initial state.
   void cancel() {
     _value = _initialValue;
   }
-  ///
-  void update(String value) {
-    _value = value;
+  /// 
+  /// Set current [value].
+  void update(String newValue) {
+    _value = newValue;
   }
 }

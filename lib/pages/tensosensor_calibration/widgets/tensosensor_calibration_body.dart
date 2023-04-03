@@ -23,7 +23,7 @@ class _TensosensorCalibrationBodyState extends State<TensosensorCalibrationBody>
     (index) => FieldData(
       label: const Localized('Target weight').v, 
       initialValue: '0.0', 
-      persistable: const SqlRecord('Target weight'),
+      record: const SqlRecord('Target weight'),
     ),
   );
   //
