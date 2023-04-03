@@ -5,6 +5,7 @@ class CancellationButton extends StatelessWidget {
   final double? _height;
   final double? _width;
   final String? _label;
+  final double _labelLineHeught;
   final void Function()? _onPressed;
   ///
   const CancellationButton({
@@ -12,8 +13,10 @@ class CancellationButton extends StatelessWidget {
     required void Function()? onPressed, 
     String? label, 
     double? height, 
-    double? width,
+    double? width, 
+    double labelLineHeught = 1.0,
   }) : 
+    _labelLineHeught = labelLineHeught, 
     _width = width, 
     _height = height, 
     _label = label, 
@@ -31,7 +34,7 @@ class CancellationButton extends StatelessWidget {
           textStyle: MaterialStateProperty.resolveWith<TextStyle?>(
             (states) => theme.textTheme.titleLarge?.copyWith(
               color: theme.colorScheme.primary,
-              height: 1,
+              height: _labelLineHeught,
             ),
           ),
         ),

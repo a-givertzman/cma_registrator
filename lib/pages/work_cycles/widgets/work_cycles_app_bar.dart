@@ -6,24 +6,29 @@ import 'package:hmi_core/hmi_core_translate.dart';
 class WorkCyclesAppBar extends StatelessWidget {
   final DateTime? _beginningTime;
   final DateTime? _endingTime;
+  final double _height;
+  final double _dateFieldWidth;
   ///
   const WorkCyclesAppBar({
     super.key,
     DateTime? beginningTime,
-    DateTime? endingTime, 
+    DateTime? endingTime,
+    double dateFieldWidth = 220,
+    double height = 72,
   }) : 
     _endingTime = endingTime, 
-    _beginningTime = beginningTime;
+    _beginningTime = beginningTime,
+    _dateFieldWidth = dateFieldWidth,
+    _height = height;
   //
   @override
   Widget build(BuildContext context) {
-    const dateFieldWidth = 220.0;
     return AppBarWidget(
       title: const Localized('Work cycles').v,
-      height: kTextTabBarHeight * 1.5,
+      height: _height,
       rightWidgets: [
         SizedBox(
-          width: dateFieldWidth,
+          width: _dateFieldWidth,
           child: SubmitableField<DateTime>(
             initialValue: _beginningTime,
             label: const Localized('Beginning').v,
@@ -31,7 +36,7 @@ class WorkCyclesAppBar extends StatelessWidget {
           ),
         ),
         SizedBox(
-          width: dateFieldWidth,
+          width: _dateFieldWidth,
           child: SubmitableField<DateTime>(
             initialValue: _endingTime,
             label: const Localized('Ending').v,

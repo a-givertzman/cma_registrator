@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:cma_registrator/core/models/field/field_data.dart';
 import 'package:cma_registrator/core/widgets/button/action_button.dart';
 import 'package:cma_registrator/core/widgets/button/cancellation_button.dart';
@@ -19,6 +18,9 @@ class TensosensorCalibrationStep extends StatefulWidget {
   final int? _viewIndex;
   final FieldData? _fieldData;
   final StepType _stepType;
+  final double _buttonHeight;
+  final double _itemWidth;
+  final double _indicatorHeight;
   final void Function()? _onNext;
   final void Function()? _onFinish;
   final void Function()? _onCancel;
@@ -29,15 +31,21 @@ class TensosensorCalibrationStep extends StatefulWidget {
     FieldData? fieldData,
     void Function()? onNext, 
     void Function()? onFinish, 
-    void Function()? onCancel, 
+    void Function()? onCancel,
+    double buttonHeight = 40, 
+    double itemWidth = 150, 
+    double indicatorHeight = 50, 
     int? viewIndex, 
   }) : 
+    _indicatorHeight = indicatorHeight, 
+    _itemWidth = itemWidth, 
     _viewIndex = viewIndex, 
     _fieldData = fieldData,
     _stepType = stepType, 
     _onCancel = onCancel, 
     _onFinish = onFinish, 
-    _onNext = onNext;
+    _onNext = onNext,
+    _buttonHeight = buttonHeight;
   ///
   const TensosensorCalibrationStep.starter({
     Key? key,
@@ -88,12 +96,18 @@ class TensosensorCalibrationStep extends StatefulWidget {
     stepType: _stepType,
     fieldData: _fieldData,
     viewIndex: _viewIndex,
+    buttonHeight: _buttonHeight,
+    itemWidth: _itemWidth,
+    indicatorHeight: _indicatorHeight,
   );
 }
 ///
 class _TensosensorCalibrationStepState extends State<TensosensorCalibrationStep> {
   final _formKey = GlobalKey<FormState>();
   final StepType _stepType;
+  final double _buttonHeight;
+  final double _itemWidth;
+  final double _indicatorHeight;
   final int? _viewIndex;
   final FieldData? _fieldData;
   final void Function()? _onNext;
@@ -102,12 +116,18 @@ class _TensosensorCalibrationStepState extends State<TensosensorCalibrationStep>
   ///
   _TensosensorCalibrationStepState({
     required StepType stepType,
+    required double itemWidth, 
+    required double indicatorHeight,
+    required double buttonHeight,
     int? viewIndex,
     FieldData? fieldData,
     void Function()? onNext, 
     void Function()? onFinish, 
     void Function()? onCancel,
   }) : 
+    _buttonHeight = buttonHeight,
+    _itemWidth = itemWidth,
+    _indicatorHeight = indicatorHeight,
     _viewIndex = viewIndex,
     _fieldData = fieldData,
     _stepType = stepType,
@@ -117,8 +137,6 @@ class _TensosensorCalibrationStepState extends State<TensosensorCalibrationStep>
   //
   @override
   Widget build(BuildContext context) {
-    const itemWidth = 150.0;
-    const indicatorHeight = 50.0;
     final padding = const Setting('padding',factor: 5).toDouble;
     final random = Random();
     final fieldData = _fieldData;
@@ -141,7 +159,7 @@ class _TensosensorCalibrationStepState extends State<TensosensorCalibrationStep>
             children: [
               if(_stepType != StepType.starter && fieldData != null) ...[
                   SizedBox(
-                    width: itemWidth,
+                    width: _itemWidth,
                     child: Form(
                       key: _formKey,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -151,8 +169,8 @@ class _TensosensorCalibrationStepState extends State<TensosensorCalibrationStep>
                   SizedBox(width: padding),
                 ],
               TextIndicatorWidget(
-                height: indicatorHeight,
-                width: itemWidth,
+                height: _indicatorHeight,
+                width: _itemWidth,
                 indicator: TextValueIndicator(
                   stream: Stream.periodic(
                     const Duration(milliseconds: 500),
@@ -194,7 +212,6 @@ class _TensosensorCalibrationStepState extends State<TensosensorCalibrationStep>
   );
   ///
   List<Widget> _getButtons(StepType stepType) {
-    const buttonHeight = 40.0;
     final blockPadding = const Setting('blockPadding').toDouble;
     return [
       if(stepType != StepType.starter)
@@ -202,7 +219,7 @@ class _TensosensorCalibrationStepState extends State<TensosensorCalibrationStep>
       if(stepType != StepType.finishing) ...[
         SizedBox(width: blockPadding),
         ActionButton(
-          height: buttonHeight,
+          height: _buttonHeight,
           label: const Localized('Next').v,
           onPressed: () {
             if((_formKey.currentState?.validate() ?? false)
@@ -215,7 +232,7 @@ class _TensosensorCalibrationStepState extends State<TensosensorCalibrationStep>
       else ...[
         SizedBox(width: blockPadding),
         ActionButton(
-          height: buttonHeight,
+          height: _buttonHeight,
           label: const Localized('Save and finish').v,
           onPressed: () {
             if(_formKey.currentState?.validate() ?? false) {

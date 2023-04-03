@@ -5,8 +5,9 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 class DropdownMultiselectButton extends StatefulWidget {
   final double? _height;
   final double? _width;
-  final double? _itemHeight;
-  final double? _menuWidth;
+  final double _itemHeight;
+  final double _menuWidth;
+  final double _labelLineHeight;
   final String? _label;
   final Map<String, bool> _items;
   final void Function(String, bool?)? _onChanged;
@@ -17,10 +18,11 @@ class DropdownMultiselectButton extends StatefulWidget {
     String? label, 
     double? height, 
     double? width, 
-    double? itemHeight, 
-    double? menuWidth, 
-    void Function(String, bool?)? onChanged,
-  }) : 
+    double itemHeight = 20.0, 
+    double menuWidth = 200.0, 
+    double labelLineHeight = 1.0,
+    void Function(String, bool?)? onChanged, 
+  }) : _labelLineHeight = labelLineHeight, 
     _onChanged = onChanged, 
     _menuWidth = menuWidth, 
     _itemHeight = itemHeight, 
@@ -33,6 +35,7 @@ class DropdownMultiselectButton extends StatefulWidget {
   State<DropdownMultiselectButton> createState() => _DropdownMultiselectButtonState(
     items: _items,
     label: _label,
+    labelLineHeight: _labelLineHeight,
     height: _height,
     width: _width,
     itemHeight: _itemHeight,
@@ -44,9 +47,10 @@ class DropdownMultiselectButton extends StatefulWidget {
 class _DropdownMultiselectButtonState extends State<DropdownMultiselectButton> {
   final double? _height;
   final double? _width;
-  final double? _itemHeight;
-  final double? _menuWidth;
+  final double _itemHeight;
+  final double _menuWidth;
   final String? _label;
+  final double _labelLineHeight;
   final void Function(String, bool?)? _onChanged;
   final Map<String, bool> _items;
   OverlayEntry? _overlayEntry;
@@ -54,14 +58,16 @@ class _DropdownMultiselectButtonState extends State<DropdownMultiselectButton> {
   _DropdownMultiselectButtonState({
     required Map<String, bool> items,
     String? label,
+    required double labelLineHeight,
     double? height,
     double? width,
-    double? itemHeight, 
-    double? menuWidth,
+    required double itemHeight, 
+    required double menuWidth,
     void Function(String, bool?)? onChanged,
   }) : 
     _items = items,
     _label = label,
+    _labelLineHeight = labelLineHeight,
     _width = width,
     _height = height,
     _itemHeight = itemHeight,
@@ -87,7 +93,7 @@ class _DropdownMultiselectButtonState extends State<DropdownMultiselectButton> {
           textStyle: MaterialStateProperty.resolveWith<TextStyle?>(
             (states) => theme.textTheme.titleLarge?.copyWith(
               color: theme.colorScheme.onPrimary,
-              height: 1,
+              height: _labelLineHeight,
             ),
           ),
         ),
@@ -113,8 +119,6 @@ class _DropdownMultiselectButtonState extends State<DropdownMultiselectButton> {
   }
   ///
   void _toggleMenu(BuildContext context) {
-    const defaultMenuWidth = 200.0;
-    const defaultMenuItemHeight = 20.0;
     if (_overlayEntry != null) {
       _removeOverlayEntry();
     } else {
@@ -136,8 +140,8 @@ class _DropdownMultiselectButtonState extends State<DropdownMultiselectButton> {
                 left: position.dx,
                 child: MultiselectItemsListWidget(
                   multiselectItems: _items,
-                  width: _menuWidth ?? defaultMenuWidth, 
-                  itemHeight: _itemHeight ?? defaultMenuItemHeight,
+                  width: _menuWidth, 
+                  itemHeight: _itemHeight,
                   onChanged: (key, value) {
                     _onChanged?.call(key, value);
                   },
@@ -147,7 +151,6 @@ class _DropdownMultiselectButtonState extends State<DropdownMultiselectButton> {
           ),
         );
       });
-      
       overlayState.insert(_overlayEntry!);
     }
   }
@@ -156,7 +159,7 @@ class _DropdownMultiselectButtonState extends State<DropdownMultiselectButton> {
     _overlayEntry?.remove();
     _overlayEntry?.dispose();
     Future.delayed(
-      const Duration(milliseconds: 0), 
+      Duration.zero, 
       () {
         if (mounted) {
           setState(() {

@@ -9,6 +9,11 @@ class FailuresAppBar extends StatelessWidget {
   final DateTime? _endingTime;
   final Map<String, bool> _columnsVisibility;
   final void Function(String, bool?)? _onChanged;
+  final double _dropdownButtonHeight;
+  final double _dropdownMenuItemHeight;
+  final double _dropdownMenuWidth;
+  final double _dateFieldWIdth;
+  final double _height;
   ///
   const FailuresAppBar({
     super.key,
@@ -16,7 +21,17 @@ class FailuresAppBar extends StatelessWidget {
     DateTime? beginningTime,
     DateTime? endingTime, 
     void Function(String key, bool? value)? onChanged, 
+    double dropdownButtonHeight = 40, 
+    double dropdownMenuItemHeight = 50, 
+    double dropdownMenuWidth = 200, 
+    double dateFieldWIdth = 220, 
+    double height = 84, 
   }) : 
+    _height = height, 
+    _dateFieldWIdth = dateFieldWIdth, 
+    _dropdownMenuWidth = dropdownMenuWidth, 
+    _dropdownMenuItemHeight = dropdownMenuItemHeight, 
+    _dropdownButtonHeight = dropdownButtonHeight, 
     _columnsVisibility = columnsVisibility, 
     _onChanged = onChanged, 
     _endingTime = endingTime, 
@@ -24,26 +39,22 @@ class FailuresAppBar extends StatelessWidget {
   //
   @override
   Widget build(BuildContext context) {
-    const dropdownButtonHeight = 40.0;
-    const dropdownMenuItemHeight = 50.0;
-    const dropdownMenuWidth = 200.0;
-    const dateFieldWIdth = 220.0;
     return AppBarWidget(
       title: const Localized('Failures').v,
-      height: kToolbarHeight * 1.5,
+      height: _height,
       leftWidgets: [
         DropdownMultiselectButton(
           onChanged: _onChanged,
-          height: dropdownButtonHeight,
+          height: _dropdownButtonHeight,
           label: const Localized('Columns').v,
           items: _columnsVisibility,
-          itemHeight: dropdownMenuItemHeight,
-          menuWidth: dropdownMenuWidth,
+          itemHeight: _dropdownMenuItemHeight,
+          menuWidth: _dropdownMenuWidth,
         ),
       ],
       rightWidgets: [
         SizedBox(
-          width: dateFieldWIdth,
+          width: _dateFieldWIdth,
           child: SubmitableField<DateTime>(
             initialValue: _beginningTime,
             label: const Localized('Beginning').v,
@@ -51,7 +62,7 @@ class FailuresAppBar extends StatelessWidget {
           ),
         ),
         SizedBox(
-          width: dateFieldWIdth,
+          width: _dateFieldWIdth,
           child: SubmitableField<DateTime>(
             initialValue: _endingTime,
             label: const Localized('Ending').v,

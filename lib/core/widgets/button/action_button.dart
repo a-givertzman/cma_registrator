@@ -4,6 +4,7 @@ class ActionButton extends StatelessWidget {
   final double? _height;
   final double? _width;
   final String? _label;
+  final double _labelLineHeight;
   final void Function()? _onPressed;
   ///
   const ActionButton({
@@ -11,8 +12,10 @@ class ActionButton extends StatelessWidget {
     required void Function()? onPressed, 
     String? label, 
     double? height, 
-    double? width,
+    double? width, 
+    double labelLineHeight = 1.0,
   }) : 
+    _labelLineHeight = labelLineHeight, 
     _width = width, 
     _height = height, 
     _label = label, 
@@ -30,7 +33,7 @@ class ActionButton extends StatelessWidget {
           textStyle: MaterialStateProperty.resolveWith<TextStyle?>(
             (states) => theme.textTheme.titleLarge?.copyWith(
               color: theme.colorScheme.onPrimary,
-              height: 1,
+              height: _labelLineHeight,
             ),
           ),
         ),

@@ -8,20 +8,24 @@ class FailuresBody extends StatefulWidget {
   final DateTime? _beginningTime;
   final DateTime? _endingTime;
   final List<DsDataPoint> _points;
+  final double _timeColumnWidth;
   ///
   const FailuresBody({
     super.key,
     required List<DsDataPoint> points, 
     DateTime? beginningTime, 
-    DateTime? endingTime,
+    DateTime? endingTime, 
+    double timeColumnWidth = 230,
   }) : 
     _endingTime = endingTime, 
     _beginningTime = beginningTime, 
-    _points = points;
+    _points = points,
+    _timeColumnWidth = timeColumnWidth;
   //
   @override
   State<FailuresBody> createState() => _FailuresBodyState(
     points: _points,
+    timeColumnWidth: _timeColumnWidth,
     beginningTime: _beginningTime,
     endingTime: _endingTime,
   );
@@ -34,12 +38,15 @@ class _FailuresBodyState extends State<FailuresBody> {
   final List<DsDataPoint> _points;
   final DateTime? _beginningTime;
   final DateTime? _endingTime;
+  final double _timeColumnWidth;
   ///
   _FailuresBodyState({
     required List<DsDataPoint> points,
+    required double timeColumnWidth,
     DateTime? beginningTime, 
     DateTime? endingTime,
   }) : _points = points,
+    _timeColumnWidth = timeColumnWidth,
     _beginningTime = beginningTime,
     _endingTime = endingTime;
   //
@@ -65,7 +72,6 @@ class _FailuresBodyState extends State<FailuresBody> {
   //
   @override
   Widget build(BuildContext context) {
-    const timeColumnSize = 230.0;
     final signalNames = _columns.keys.toList();
     signalNames.sort();
     return Column(
@@ -88,7 +94,7 @@ class _FailuresBodyState extends State<FailuresBody> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  width: timeColumnSize,
+                  width: _timeColumnWidth,
                   child: TableColumnWidget(
                         columnName: const Localized('Time').v,
                         cellsContent: _timestamps,

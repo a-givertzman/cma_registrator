@@ -6,6 +6,9 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 class MultiselectItemsListWidget extends StatefulWidget {
   final double _width;
   final double _itemHeight;
+  final double _listBorderRadius;
+  final double _shadowBlurRadius;
+  final Offset _shadowOffset;
   final Map<String, bool> _multiselectItems;
   final void Function(String, bool?)? _onChanged;
   ///
@@ -14,50 +17,60 @@ class MultiselectItemsListWidget extends StatefulWidget {
     required Map<String, bool> multiselectItems, 
     required double width, 
     required double itemHeight,
-    void Function(String key, bool? value)? onChanged,
+    void Function(String key, bool? value)? onChanged, 
+    double listBorderRadius = 16.0, 
+    double shadowBlurRadius = 6.0, 
+    Offset shadowOffset = const Offset(0, 1),
   }) : 
+    _shadowOffset = shadowOffset, 
+    _shadowBlurRadius = shadowBlurRadius, 
+    _listBorderRadius = listBorderRadius, 
     _multiselectItems = multiselectItems, 
     _width = width,
     _itemHeight = itemHeight,
     _onChanged = onChanged, 
     super(key: key);
-
+  //
   @override
   State<MultiselectItemsListWidget> createState() => _MultiselectItemsListWidgetState(
     multiselectItems: _multiselectItems,
     width: _width,
     itemHeight: _itemHeight,
-    onChanged: _onChanged,
+    onChanged: _onChanged, 
+    listBorderRadius: _listBorderRadius, 
+    shadowBlurRadius: _shadowBlurRadius,
+    shadowOffset: _shadowOffset,
   );
 }
-
+///
 class _MultiselectItemsListWidgetState extends State<MultiselectItemsListWidget> {
   final double _width;
   final double _itemHeight;
+  final double _listBorderRadius;
+  final double _shadowBlurRadius;
+  final Offset _shadowOffset;
   final Map<String, bool> _multiselectItems;
   final void Function(String, bool?)? _onChanged;
-
+  ///
   _MultiselectItemsListWidgetState({
     required Map<String, bool> multiselectItems, 
     required double width, 
     required double itemHeight,
+    required double listBorderRadius,
+    required double shadowBlurRadius,
+    required Offset shadowOffset,
     void Function(String key, bool? value)? onChanged,
   }) : 
     _multiselectItems = multiselectItems, 
     _width = width,
     _itemHeight = itemHeight,
+    _listBorderRadius = listBorderRadius,
+    _shadowBlurRadius = shadowBlurRadius,
+    _shadowOffset = shadowOffset,
     _onChanged = onChanged;
   //
   @override
   Widget build(BuildContext context) {
-    const menuBorderRadius = 16.0;
-    const menuShadow = [
-      BoxShadow(
-        color: Color(0x4C000000),
-        offset: Offset(0.0, 1.0),
-        blurRadius: 6.0,
-      ),
-    ];
     final theme = Theme.of(context);
     final padding = const Setting('padding').toDouble;
     final entries = _multiselectItems.entries.toList();
@@ -66,11 +79,17 @@ class _MultiselectItemsListWidgetState extends State<MultiselectItemsListWidget>
       decoration: BoxDecoration(
         color: theme.cardColor,
         border: Border.all(color: Colors.white10),
-        borderRadius: BorderRadius.circular(menuBorderRadius),
-        boxShadow: menuShadow,
+        borderRadius: BorderRadius.circular(_listBorderRadius),
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).shadowColor,
+            offset: _shadowOffset,
+            blurRadius: _shadowBlurRadius,
+          ),
+        ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(menuBorderRadius),
+        borderRadius: BorderRadius.circular(_listBorderRadius),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -121,7 +140,7 @@ class _MultiselectItemsListWidgetState extends State<MultiselectItemsListWidget>
       ),
     );
   }
-
+  ///
   Border _getBorderByIndex(int index, int length) {
     const borderSide = BorderSide(color: Colors.white10);
     if(index == 0) {
