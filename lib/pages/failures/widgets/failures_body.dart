@@ -73,7 +73,9 @@ class _FailuresBodyState extends State<FailuresBody> {
   @override
   Widget build(BuildContext context) {
     final signalNames = _columns.keys.toList();
-    signalNames.sort();
+    final filteredSignalNames = signalNames
+      .where((signal) => _columnsVisibility[signal] ?? false)
+      .toList();
     return Column(
       children: [
         FailuresAppBar(
@@ -90,32 +92,56 @@ class _FailuresBodyState extends State<FailuresBody> {
         ),
         Expanded(
           child: SingleChildScrollView(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Table(
               children: [
-                SizedBox(
-                  width: _timeColumnWidth,
-                  child: TableColumnWidget(
-                        columnName: const Localized('Time').v,
-                        cellsContent: _timestamps,
+                TableRow(
+                  children: _timestamps.map(
+                    (timestamp) => TableCell(
+                      child: Text(timestamp),
+                    ),
+                  ).toList(),
+                ),
+                ..._timestamps.map(
+                  (timestamp) => TableRow(
+                    children: filteredSignalNames.map(
+                      (signalName) => TableCell(
+                        child: Text(_columns[signalName]![timestamp]?.toString() ?? '-'),
+                      ),
+                    ).toList(),
                   ),
                 ),
-                ...signalNames
-                  .where((signal) => _columnsVisibility[signal] ?? false)
-                  .map(
-                    (signalName) => Expanded(
-                      child: TableColumnWidget(
-                        columnName: signalName,
-                        cellsContent: _timestamps.map(
-                          (timestamp) => _columns[signalName]![timestamp]?.toString() ?? '-',
-                        ).toList(),
-                      ),
-                    ),
-                  ),
               ],
             ),
           ),
         ),
+        // Expanded(
+        //   child: SingleChildScrollView(
+        //     child: Row(
+        //       crossAxisAlignment: CrossAxisAlignment.start,
+        //       children: [
+        //         SizedBox(
+        //           width: _timeColumnWidth,
+        //           child: TableColumnWidget(
+        //                 columnName: const Localized('Time').v,
+        //                 cellsContent: _timestamps,
+        //           ),
+        //         ),
+        //         ...signalNames
+        //           .where((signal) => _columnsVisibility[signal] ?? false)
+        //           .map(
+        //             (signalName) => Expanded(
+        //               child: TableColumnWidget(
+        //                 columnName: signalName,
+        //                 cellsContent: _timestamps.map(
+        //                   (timestamp) => _columns[signalName]![timestamp]?.toString() ?? '-',
+        //                 ).toList(),
+        //               ),
+        //             ),
+        //           ),
+        //       ],
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }

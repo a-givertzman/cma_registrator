@@ -1,5 +1,4 @@
 import 'package:cma_registrator/core/models/work_cycle.dart';
-import 'package:cma_registrator/core/widgets/table/table_row_widget.dart';
 import 'package:cma_registrator/pages/failures/failures_page.dart';
 import 'package:flutter/material.dart';
 
@@ -37,45 +36,97 @@ class _WorkCyclesBodyState extends State<WorkCyclesBody> {
           // endingTime: _endingTime,
         ),
         Expanded(
-          child: Column(
+          child: Table(
+            columnWidths: _columnFlexes.map(
+              (flex) => FlexColumnWidth(flex as double),
+            ).toList().asMap(),
             children: [
-              const TableRowWidget(
-                columnFlexes: _columnFlexes, 
-                cellsContent: _tableHeaders,
+              TableRow(
+                children: _tableHeaders.map(
+                  (header) => TableCell(
+                    child: Text(header),
+                  ),
+                ).toList(),
               ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: _workCycles.length,
-                  itemBuilder: (context, index) {
-                    final workCycle = _workCycles[index];
-                    final cellsContent = [
-                      workCycle.beginning.toIso8601String(),
-                      workCycle.ending?.toIso8601String() ?? '-',
-                      workCycle.failureClass.toString(),
-                      workCycle.max.toStringAsFixed(5),
-                      workCycle.mean.toStringAsFixed(5),
-                      workCycle.data.toStringAsFixed(5),
-                    ];
-                    return InkWell(
-                      onDoubleTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => FailuresPage(
-                            beginningTime: workCycle.beginning,
-                            endingTime: workCycle.ending,
-                          ),
-                        ),
+              ..._workCycles.map((workCycle) {
+                return TableRow(
+                  children: [
+                    TableCell(
+                      child: Text(
+                        workCycle.beginning.toIso8601String(),
                       ),
-                      child: TableRowWidget(
-                        columnFlexes: _columnFlexes,
-                        cellsContent: cellsContent,
+                    ),
+                    TableCell(
+                      child: Text(
+                        workCycle.ending?.toIso8601String() ?? '-',
                       ),
-                    );
-                  },
-                ),
-              ),
+                    ),
+                    TableCell(
+                      child: Text(
+                        workCycle.failureClass.toString(),
+                      ),
+                    ),
+                    TableCell(
+                      child: Text(
+                        workCycle.max.toStringAsFixed(5),
+                      ),
+                    ),
+                    TableCell(
+                      child: Text(
+                        workCycle.mean.toStringAsFixed(5),
+                      ),
+                    ),
+                    TableCell(
+                      child: Text(
+                        workCycle.data.toStringAsFixed(5),
+                      ),
+                    ),
+                  ],
+                );
+              }),
             ],
           ),
         ),
+        // Expanded(
+        //   child: Column(
+        //     children: [
+        //       const TableRowWidget(
+        //         columnFlexes: _columnFlexes, 
+        //         cellsContent: _tableHeaders,
+        //       ),
+        //       Expanded(
+        //         child: ListView.builder(
+        //           itemCount: _workCycles.length,
+        //           itemBuilder: (context, index) {
+        //             final workCycle = _workCycles[index];
+        //             final cellsContent = [
+        //               workCycle.beginning.toIso8601String(),
+        //               workCycle.ending?.toIso8601String() ?? '-',
+        //               workCycle.failureClass.toString(),
+        //               workCycle.max.toStringAsFixed(5),
+        //               workCycle.mean.toStringAsFixed(5),
+        //               workCycle.data.toStringAsFixed(5),
+        //             ];
+        //             return InkWell(
+        //               onDoubleTap: () => Navigator.of(context).push(
+        //                 MaterialPageRoute(
+        //                   builder: (_) => FailuresPage(
+        //                     beginningTime: workCycle.beginning,
+        //                     endingTime: workCycle.ending,
+        //                   ),
+        //                 ),
+        //               ),
+        //               child: TableRowWidget(
+        //                 columnFlexes: _columnFlexes,
+        //                 cellsContent: cellsContent,
+        //               ),
+        //             );
+        //           },
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
       ],
     );
   }
