@@ -1,5 +1,4 @@
 import 'package:cma_registrator/core/models/work_cycle.dart';
-import 'package:cma_registrator/core/widgets/table/table_row_widget.dart';
 import 'package:cma_registrator/pages/failures/failures_page.dart';
 import 'package:flutter/material.dart';
 
@@ -37,45 +36,90 @@ class _WorkCyclesBodyState extends State<WorkCyclesBody> {
           // endingTime: _endingTime,
         ),
         Expanded(
-          child: Column(
-            children: [
-              const TableRowWidget(
-                columnFlexes: _columnFlexes, 
-                cellsContent: _tableHeaders,
+          child: DataTable(
+            columns: _tableHeaders.map(
+              (header) => DataColumn(
+                label: Text(header),
               ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: _workCycles.length,
-                  itemBuilder: (context, index) {
-                    final workCycle = _workCycles[index];
-                    final cellsContent = [
+            ).toList(),
+            rows: _workCycles.map((workCycle) {
+              return DataRow(
+                cells: [
+                  DataCell(
+                    Text(
                       workCycle.beginning.toIso8601String(),
+                    ),
+                  ),
+                  DataCell(
+                    Text(
                       workCycle.ending?.toIso8601String() ?? '-',
+                    ),
+                  ),
+                  DataCell(
+                    Text(
                       workCycle.failureClass.toString(),
+                    ),
+                  ),
+                  DataCell(
+                    Text(
                       workCycle.max.toStringAsFixed(5),
+                    ),
+                  ),
+                  DataCell(
+                    Text(
                       workCycle.mean.toStringAsFixed(5),
+                    ),
+                  ),
+                  DataCell(
+                    Text(
                       workCycle.data.toStringAsFixed(5),
-                    ];
-                    return InkWell(
-                      onDoubleTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => FailuresPage(
-                            beginningTime: workCycle.beginning,
-                            endingTime: workCycle.ending,
-                          ),
-                        ),
-                      ),
-                      child: TableRowWidget(
-                        columnFlexes: _columnFlexes,
-                        cellsContent: cellsContent,
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
+                    ),
+                  ),
+                ],
+              );
+            }).toList(),
           ),
         ),
+        // Expanded(
+        //   child: Column(
+        //     children: [
+        //       const TableRowWidget(
+        //         columnFlexes: _columnFlexes, 
+        //         cellsContent: _tableHeaders,
+        //       ),
+        //       Expanded(
+        //         child: ListView.builder(
+        //           itemCount: _workCycles.length,
+        //           itemBuilder: (context, index) {
+        //             final workCycle = _workCycles[index];
+        //             final cellsContent = [
+        //               workCycle.beginning.toIso8601String(),
+        //               workCycle.ending?.toIso8601String() ?? '-',
+        //               workCycle.failureClass.toString(),
+        //               workCycle.max.toStringAsFixed(5),
+        //               workCycle.mean.toStringAsFixed(5),
+        //               workCycle.data.toStringAsFixed(5),
+        //             ];
+        //             return InkWell(
+        //               onDoubleTap: () => Navigator.of(context).push(
+        //                 MaterialPageRoute(
+        //                   builder: (_) => FailuresPage(
+        //                     beginningTime: workCycle.beginning,
+        //                     endingTime: workCycle.ending,
+        //                   ),
+        //                 ),
+        //               ),
+        //               child: TableRowWidget(
+        //                 columnFlexes: _columnFlexes,
+        //                 cellsContent: cellsContent,
+        //               ),
+        //             );
+        //           },
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
       ],
     );
   }
