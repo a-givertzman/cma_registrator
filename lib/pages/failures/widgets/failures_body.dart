@@ -1,7 +1,7 @@
 import 'dart:collection';
-import 'package:cma_registrator/core/widgets/table/table_column_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'failures_app_bar.dart';
 ///
 class FailuresBody extends StatefulWidget {
@@ -72,17 +72,22 @@ class _FailuresBodyState extends State<FailuresBody> {
   //
   @override
   Widget build(BuildContext context) {
+    final padding = const Setting('padding').toDouble;
     final signalNames = _columns.keys.toList();
     final filteredSignalNames = signalNames
       .where((signal) => _columnsVisibility[signal] ?? false)
-      .toList();
+      .toList()
+      ..sort();
+    final selectedSignalsCount = filteredSignalNames.length;
     return Column(
       children: [
         FailuresAppBar(
           beginningTime: _beginningTime, 
           endingTime: _endingTime,
-          columnsVisibility: Map.fromEntries(
-            signalNames.map((signal) => MapEntry(signal, true)),
+          columnsVisibility: SplayTreeMap.from(
+            Map.fromEntries(
+              signalNames.map((signal) => MapEntry(signal, true)),
+            ),
           ),
           onChanged: (key, value) {
             setState(() {
@@ -93,55 +98,75 @@ class _FailuresBodyState extends State<FailuresBody> {
         Expanded(
           child: SingleChildScrollView(
             child: Table(
+              columnWidths: [
+                selectedSignalsCount > 0 
+                  ? FixedColumnWidth(_timeColumnWidth) 
+                  : const FlexColumnWidth(),
+                ...Iterable.generate(
+                  selectedSignalsCount,
+                  (index) => const FlexColumnWidth(),
+                ),
+              ].asMap(),
+              border: TableBorder.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.3)),
               children: [
-                TableRow(
-                  children: _timestamps.map(
-                    (timestamp) => TableCell(
-                      child: Text(timestamp),
+                 TableRow(
+                  children: [
+                    TableCell(
+                      child: Padding(
+                        padding: EdgeInsets.all(padding),
+                        child: const Text(
+                          'Time', 
+                          overflow: TextOverflow.fade,
+                          softWrap: false,
+                        ),
+                      ),
                     ),
-                  ).toList(),
+                    ...filteredSignalNames.map(
+                      (signalName) => TableCell(
+                        child: Padding(
+                          padding: EdgeInsets.all(padding),
+                          child: Text(
+                            signalName,
+                            overflow: TextOverflow.fade,
+                            softWrap: false,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 ..._timestamps.map(
                   (timestamp) => TableRow(
-                    children: filteredSignalNames.map(
-                      (signalName) => TableCell(
-                        child: Text(_columns[signalName]![timestamp]?.toString() ?? '-'),
+                    children: [
+                      TableCell(
+                          child: Padding(
+                            padding: EdgeInsets.all(padding),
+                            child: Text(
+                              timestamp,
+                              overflow: TextOverflow.fade,
+                              softWrap: false,
+                            ),
+                          ),
                       ),
-                    ).toList(),
+                      ...filteredSignalNames.map(
+                        (signalName) => TableCell(
+                          child: Padding(
+                            padding: EdgeInsets.all(padding),
+                            child: Text(
+                              _columns[signalName]![timestamp]?.toString() ?? '-',
+                              overflow: TextOverflow.fade,
+                              softWrap: false,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
           ),
         ),
-        // Expanded(
-        //   child: SingleChildScrollView(
-        //     child: Row(
-        //       crossAxisAlignment: CrossAxisAlignment.start,
-        //       children: [
-        //         SizedBox(
-        //           width: _timeColumnWidth,
-        //           child: TableColumnWidget(
-        //                 columnName: const Localized('Time').v,
-        //                 cellsContent: _timestamps,
-        //           ),
-        //         ),
-        //         ...signalNames
-        //           .where((signal) => _columnsVisibility[signal] ?? false)
-        //           .map(
-        //             (signalName) => Expanded(
-        //               child: TableColumnWidget(
-        //                 columnName: signalName,
-        //                 cellsContent: _timestamps.map(
-        //                   (timestamp) => _columns[signalName]![timestamp]?.toString() ?? '-',
-        //                 ).toList(),
-        //               ),
-        //             ),
-        //           ),
-        //       ],
-        //     ),
-        //   ),
-        // ),
       ],
     );
   }
