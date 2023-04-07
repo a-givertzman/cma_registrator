@@ -39,6 +39,8 @@ class _FailuresBodyState extends State<FailuresBody> {
   final DateTime? _beginningTime;
   final DateTime? _endingTime;
   final double _timeColumnWidth;
+  final ScrollController _vertical = ScrollController();
+  final ScrollController _horizontal = ScrollController();
   ///
   _FailuresBodyState({
     required List<DsDataPoint> points,
@@ -96,74 +98,88 @@ class _FailuresBodyState extends State<FailuresBody> {
           },
         ),
         Expanded(
-          child: SingleChildScrollView(
-            child: Table(
-              columnWidths: [
-                selectedSignalsCount > 0 
-                  ? FixedColumnWidth(_timeColumnWidth) 
-                  : const FlexColumnWidth(),
-                ...Iterable.generate(
-                  selectedSignalsCount,
-                  (index) => const FlexColumnWidth(),
-                ),
-              ].asMap(),
-              border: TableBorder.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.3)),
-              children: [
-                 TableRow(
-                  children: [
-                    TableCell(
-                      child: Padding(
-                        padding: EdgeInsets.all(padding),
-                        child: const Text(
-                          'Time', 
-                          overflow: TextOverflow.fade,
-                          softWrap: false,
-                        ),
+          child: Scrollbar(
+            thumbVisibility: true,
+            controller: _vertical,
+            child: Scrollbar(
+              controller: _horizontal,
+              thumbVisibility: true,
+              notificationPredicate: (notification) => notification.depth == 1,
+              child: SingleChildScrollView(
+                controller: _vertical,
+                child: SingleChildScrollView(
+                  controller: _horizontal,
+                  scrollDirection: Axis.horizontal,
+                  child: Table(
+                    columnWidths: [
+                      selectedSignalsCount > 0 
+                        ? const IntrinsicColumnWidth() 
+                        : const FlexColumnWidth(),
+                      ...Iterable.generate(
+                        selectedSignalsCount,
+                        (index) => const IntrinsicColumnWidth(),
                       ),
-                    ),
-                    ...filteredSignalNames.map(
-                      (signalName) => TableCell(
-                        child: Padding(
-                          padding: EdgeInsets.all(padding),
-                          child: Text(
-                            signalName,
-                            overflow: TextOverflow.fade,
-                            softWrap: false,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                ..._timestamps.map(
-                  (timestamp) => TableRow(
+                    ].asMap(),
+                    border: TableBorder.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.3)),
                     children: [
-                      TableCell(
-                          child: Padding(
-                            padding: EdgeInsets.all(padding),
-                            child: Text(
-                              timestamp,
-                              overflow: TextOverflow.fade,
-                              softWrap: false,
+                       TableRow(
+                        children: [
+                          TableCell(
+                            child: Padding(
+                              padding: EdgeInsets.all(padding),
+                              child: const Text(
+                                'Time', 
+                                overflow: TextOverflow.fade,
+                                softWrap: false,
+                              ),
                             ),
                           ),
+                          ...filteredSignalNames.map(
+                            (signalName) => TableCell(
+                              child: Padding(
+                                padding: EdgeInsets.all(padding),
+                                child: Text(
+                                  signalName,
+                                  overflow: TextOverflow.fade,
+                                  softWrap: false,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      ...filteredSignalNames.map(
-                        (signalName) => TableCell(
-                          child: Padding(
-                            padding: EdgeInsets.all(padding),
-                            child: Text(
-                              _columns[signalName]![timestamp]?.toString() ?? '-',
-                              overflow: TextOverflow.fade,
-                              softWrap: false,
+                      ..._timestamps.map(
+                        (timestamp) => TableRow(
+                          children: [
+                            TableCell(
+                                child: Padding(
+                                  padding: EdgeInsets.all(padding),
+                                  child: Text(
+                                    timestamp,
+                                    overflow: TextOverflow.fade,
+                                    softWrap: false,
+                                  ),
+                                ),
                             ),
-                          ),
+                            ...filteredSignalNames.map(
+                              (signalName) => TableCell(
+                                child: Padding(
+                                  padding: EdgeInsets.all(padding),
+                                  child: Text(
+                                    _columns[signalName]![timestamp]?.toString() ?? '-',
+                                    overflow: TextOverflow.fade,
+                                    softWrap: false,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
-              ],
+              ),
             ),
           ),
         ),
