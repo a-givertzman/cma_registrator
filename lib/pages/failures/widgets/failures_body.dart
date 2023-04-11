@@ -1,31 +1,27 @@
 import 'dart:collection';
-import 'package:cma_registrator/core/widgets/table/table_column_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'failures_app_bar.dart';
+import 'table_view.dart';
 ///
 class FailuresBody extends StatefulWidget {
   final DateTime? _beginningTime;
   final DateTime? _endingTime;
   final List<DsDataPoint> _points;
-  final double _timeColumnWidth;
   ///
   const FailuresBody({
     super.key,
     required List<DsDataPoint> points, 
     DateTime? beginningTime, 
     DateTime? endingTime, 
-    double timeColumnWidth = 230,
   }) : 
     _endingTime = endingTime, 
     _beginningTime = beginningTime, 
-    _points = points,
-    _timeColumnWidth = timeColumnWidth;
+    _points = points;
   //
   @override
   State<FailuresBody> createState() => _FailuresBodyState(
     points: _points,
-    timeColumnWidth: _timeColumnWidth,
     beginningTime: _beginningTime,
     endingTime: _endingTime,
   );
@@ -38,15 +34,12 @@ class _FailuresBodyState extends State<FailuresBody> {
   final List<DsDataPoint> _points;
   final DateTime? _beginningTime;
   final DateTime? _endingTime;
-  final double _timeColumnWidth;
   ///
   _FailuresBodyState({
     required List<DsDataPoint> points,
-    required double timeColumnWidth,
     DateTime? beginningTime, 
     DateTime? endingTime,
   }) : _points = points,
-    _timeColumnWidth = timeColumnWidth,
     _beginningTime = beginningTime,
     _endingTime = endingTime;
   //
@@ -72,15 +65,20 @@ class _FailuresBodyState extends State<FailuresBody> {
   //
   @override
   Widget build(BuildContext context) {
-    final signalNames = _columns.keys.toList();
-    signalNames.sort();
+    final filteredColumns = _columnsVisibility.entries
+      .where((entry) => entry.value)
+      .map((entry) => entry.key)
+      .toList()..sort(
+        _compareSignalNames,
+      );
     return Column(
       children: [
         FailuresAppBar(
           beginningTime: _beginningTime, 
           endingTime: _endingTime,
-          columnsVisibility: Map.fromEntries(
-            signalNames.map((signal) => MapEntry(signal, true)),
+          columnsVisibility: SplayTreeMap.from(
+            _columnsVisibility,
+            _compareSignalNames,
           ),
           onChanged: (key, value) {
             setState(() {
@@ -89,34 +87,24 @@ class _FailuresBodyState extends State<FailuresBody> {
           },
         ),
         Expanded(
-          child: SingleChildScrollView(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: _timeColumnWidth,
-                  child: TableColumnWidget(
-                        columnName: const Localized('Time').v,
-                        cellsContent: _timestamps,
-                  ),
-                ),
-                ...signalNames
-                  .where((signal) => _columnsVisibility[signal] ?? false)
-                  .map(
-                    (signalName) => Expanded(
-                      child: TableColumnWidget(
-                        columnName: signalName,
-                        cellsContent: _timestamps.map(
-                          (timestamp) => _columns[signalName]![timestamp]?.toString() ?? '-',
-                        ).toList(),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
+          child: TableView(
+            visibleColumns: filteredColumns, 
+            rowKeys: _timestamps, 
+            keyColumnName: const Localized('Time').v,
+            rowContent: _columns,
           ),
         ),
       ],
+    );
+  }
+  ///
+  int _compareSignalNames(String a, String b) {
+    return int.parse(
+      a.replaceAll(RegExp('Signal '), ''),
+    ).compareTo(
+      int.parse(
+        b.replaceAll(RegExp('Signal '), ''),
+      ),
     );
   }
 }
