@@ -1,172 +1,175 @@
-import 'dart:collection';
-import 'package:cma_registrator/core/widgets/table/table_cell_widget.dart';
+import 'package:davi/davi.dart';
 import 'package:flutter/material.dart';
-import 'linked_scroll_controller.dart';
-import 'table_column_view.dart';
 
 ///
-class TableView extends StatefulWidget {
-  final double _cellHeight;
-  final double _columnWidth;
-  final double _keyColumnWidth;
-  final List<String> _visibleColumns;
-  final List<String> _rowKeys;
-  final String _keyColumnName;
-  final Map<String, SplayTreeMap<String, dynamic>> _rowsContent;
+class TableView<T> extends StatefulWidget {
+  final DaviModel<T> _model;
+  final void Function(T)? _onRowTap;
+  final void Function(T)? _onRowDoubleTap;
+  final Color? Function(DaviRow<T>)? _rowColor;
+  final MouseCursor? Function(DaviRow<T>)? _rowCursor;
+  final Border? _outerBorder;
+  final double _tableBorderThickness;
+  final Color? _tableBorderColor;
+  final Color? _scrollbarBackgroundColor;
+  final Color? _controlElementColor;
+  final Color? _thumbColor;
+  final ColumnWidthBehavior _columnWidthBehavior;
   ///
   const TableView({
-    super.key,
-    required List<String> visibleColumns,
-    required List<String> rowKeys,
-    required Map<String, SplayTreeMap<String, dynamic>> rowContent, 
-    double cellHeight = 40, 
-    double columnWidth = 150, 
-    String keyColumnName = '', 
-    double keyColumnWidth = 200,
+    super.key, 
+    required DaviModel<T> model, 
+    void Function(T)? onRowTap,
+    void Function(T)? onRowDoubleTap, 
+    Color? Function(DaviRow<T>)? rowColor, 
+    MouseCursor? Function(DaviRow<T>)? rowCursor, 
+    Border? outerBorder, 
+    double tableBorderThickness = 2.0, 
+    Color? tableBorderColor, 
+    Color? scrollbarBackgroundColor, 
+    Color? controlElementColor, 
+    Color? thumbColor, 
+    ColumnWidthBehavior columnWidthBehavior = ColumnWidthBehavior.scrollable, 
+    Color? selectedRowColor, 
   }) : 
-    _columnWidth = columnWidth, 
-    _keyColumnWidth = keyColumnWidth, 
-    _cellHeight = cellHeight, 
-    _keyColumnName = keyColumnName, 
-    _visibleColumns = visibleColumns, 
-    _rowKeys = rowKeys, 
-    _rowsContent = rowContent;
+    _rowColor = rowColor, 
+    _columnWidthBehavior = columnWidthBehavior, 
+    _thumbColor = thumbColor, 
+    _controlElementColor = controlElementColor, 
+    _scrollbarBackgroundColor = scrollbarBackgroundColor, 
+    _tableBorderColor = tableBorderColor, 
+    _tableBorderThickness = tableBorderThickness, 
+    _onRowTap = onRowTap,
+    _onRowDoubleTap = onRowDoubleTap,
+    _rowCursor = rowCursor, 
+    _outerBorder = outerBorder, 
+    _model = model;
   //
   @override
-  State<TableView> createState() => _TableViewState(
-    cellHeight: _cellHeight, 
-    columnWidth: _columnWidth, 
-    keyColumnWidth: _keyColumnWidth,
-    rowKeys: _rowKeys, 
-    keyColumnName: _keyColumnName,
-    rowsContent: _rowsContent, 
+  State<TableView<T>> createState() => _TableViewState<T>(
+    model: _model,
+    onRowTap: _onRowTap,
+    onRowDoubleTap: _onRowDoubleTap,
+    rowColor: _rowColor,
+    rowCursor: _rowCursor,
+    outerBorder: _outerBorder,
+    tableBorderThickness: _tableBorderThickness,
+    tableBorderColor: _tableBorderColor,
+    scrollbarBackgroundColor: _scrollbarBackgroundColor,
+    controlElementColor: _controlElementColor,
+    thumbColor: _thumbColor,
+    columnWidthBehavior: _columnWidthBehavior,
   );
 }
 ///
-class _TableViewState extends State<TableView> {
-  final double _cellHeight;
-  final double _columnWidth;
-  final double _keyColumnWidth;
-  final List<String> _rowKeys;
-  final String _keyColumnName;
-  final Set<int> _selectedRows = {};
-  final Map<String, SplayTreeMap<String, dynamic>> _rowsContent;
-  late final ScrollController _scrollbarVertical;
-  final _horizontalGroup = LinkedScrollControllerGroup();
-  late final ScrollController _scrollbarHorizontal;
-  final _verticalGroup = LinkedScrollControllerGroup();
+class _TableViewState<T> extends State<TableView<T>> {
+  final DaviModel<T> _model;
+  final void Function(T)? _onRowTap;
+  final void Function(T)? _onRowDoubleTap;
+  final MouseCursor? Function(DaviRow<T>)? _rowCursor;
+  final Color? Function(DaviRow<T>)? _rowColor;
+  final Border? _outerBorder;
+  final double _tableBorderThickness;
+  final Color? _tableBorderColor;
+  final Color? _scrollbarBackgroundColor;
+  final Color? _controlElementColor;
+  final Color? _thumbColor;
+  final ColumnWidthBehavior _columnWidthBehavior;
   ///
   _TableViewState({
-    required double cellHeight, 
-    required double columnWidth, 
-    required double keyColumnWidth,
-    required List<String> rowKeys,
-    required String keyColumnName,
-    required Map<String, SplayTreeMap<String, dynamic>> rowsContent,
+    required DaviModel<T> model,
+    required void Function(T)? onRowTap,
+    required void Function(T)? onRowDoubleTap, 
+    required Color? Function(DaviRow<T>)? rowColor,
+    required MouseCursor? Function(DaviRow<T>)? rowCursor,
+    required Border? outerBorder,
+    required double tableBorderThickness,
+    required Color? tableBorderColor,
+    required Color? scrollbarBackgroundColor,
+    required Color? controlElementColor,
+    required Color? thumbColor,
+    required ColumnWidthBehavior columnWidthBehavior,
+
   }) : 
-    _cellHeight = cellHeight,
-    _columnWidth = columnWidth,
-    _keyColumnWidth = keyColumnWidth,
-    _rowKeys = rowKeys,
-    _keyColumnName = keyColumnName,
-    _rowsContent = rowsContent;
-  //
-  @override
-  void initState() {
-    _scrollbarHorizontal = _horizontalGroup.addAndGet();
-    _scrollbarVertical = _verticalGroup.addAndGet();
-    super.initState();
-  }
+    _model = model,
+    _rowColor = rowColor,
+    _rowCursor = rowCursor, 
+    _onRowTap = onRowTap,
+    _onRowDoubleTap = onRowDoubleTap,
+    _outerBorder = outerBorder,
+    _tableBorderThickness = tableBorderThickness,
+    _tableBorderColor = tableBorderColor,
+    _scrollbarBackgroundColor = scrollbarBackgroundColor,
+    _controlElementColor = controlElementColor,
+    _thumbColor = thumbColor,
+    _columnWidthBehavior = columnWidthBehavior;
   //
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Column(
-          children: [
-            SizedBox(
-              width: _keyColumnWidth,
-              height: _cellHeight,
-              child: TableCellWidget(
-                content: _keyColumnName,
-              ),
-            ),
-            Expanded(
-              child: TableColumnView(
-                selectedRows: _selectedRows,
-                columnWidth: _keyColumnWidth,
-                cellHeight: _cellHeight,
-                controller: _scrollbarVertical,
-                rowKeys: _rowKeys,
-                rowContents: SplayTreeMap.fromIterables(
-                  _rowKeys,
-                  _rowKeys,
-                ),
-              ),
-            ),
-          ],
+    final theme = Theme.of(context);
+    final controlElementColor = _controlElementColor 
+      ?? theme.colorScheme.primary;
+    final tableBorderColor = _tableBorderColor 
+      ?? theme.disabledColor.withOpacity(0.3);
+    final scrollbarBackgroundColor = _scrollbarBackgroundColor
+      ?? theme.disabledColor.withOpacity(0.07);
+    final thumbColor = _thumbColor ?? theme.disabledColor.withOpacity(0.3);
+    final outerBorder = _outerBorder ?? Border.all(
+      color:  tableBorderColor,
+      width: 1,
+    );
+    return DaviTheme(
+      data: DaviThemeData(
+        decoration: BoxDecoration(
+          border: outerBorder,
         ),
-        Expanded(
-          child: Column(
-            children: [
-              SizedBox(
-                height: _cellHeight,
-                child: ListView.builder(
-                  key: UniqueKey(),
-                  controller: _horizontalGroup.addAndGet(),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: widget._visibleColumns.length,
-                  itemBuilder: (context, index) => SizedBox(
-                      width: _columnWidth,
-                      child: TableCellWidget(
-                      content: widget._visibleColumns[index],
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Scrollbar(
-                  controller: _scrollbarVertical,
-                  thumbVisibility: true,
-                  notificationPredicate: (notification) => notification.depth==1,
-                  child: Scrollbar(
-                    controller: _scrollbarHorizontal,
-                    thumbVisibility: true,
-                    child: ListView.builder(
-                      key: UniqueKey(),
-                      controller:  _scrollbarHorizontal,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: widget._visibleColumns.length,
-                      itemBuilder: (context, columnIndex) {
-                        final columnName = widget._visibleColumns[columnIndex];
-                        return TableColumnView(
-                          selectedRows: _selectedRows,
-                          columnWidth: _columnWidth,
-                          cellHeight: _cellHeight,
-                          controller: _verticalGroup.addAndGet(),
-                          rowKeys: _rowKeys,
-                          rowContents: _rowsContent[columnName] ?? const {},
-                          onCellTap: (rowIndex) {
-                            if(_selectedRows.contains(rowIndex)) {
-                              setState(() {
-                                _selectedRows.remove(rowIndex);
-                              });
-                            } else {
-                              setState(() {
-                                _selectedRows.add(rowIndex);
-                              });
-                            }
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ),
-            ],
+        columnDividerColor: tableBorderColor,
+        columnDividerThickness: _tableBorderThickness,
+        headerCell: HeaderCellThemeData(
+          sortIconColors: SortIconColors(
+            ascending: controlElementColor, 
+            descending: controlElementColor,
           ),
         ),
-      ],
+        header: HeaderThemeData(
+          bottomBorderColor: tableBorderColor,
+          bottomBorderHeight: _tableBorderThickness,
+          columnDividerColor: tableBorderColor,
+        ),
+        row: RowThemeData(
+          dividerColor: tableBorderColor,
+          dividerThickness: _tableBorderThickness,
+        ),
+        cell: const CellThemeData(
+          alignment: Alignment.center,
+        ),
+        scrollbar: TableScrollbarThemeData(
+          margin: theme.scrollbarTheme.mainAxisMargin
+            ?? TableScrollbarThemeDataDefaults.margin,
+          thickness: theme.scrollbarTheme.thickness?.resolve({MaterialState.hovered}) 
+            ?? TableScrollbarThemeDataDefaults.thickness,
+          verticalColor: scrollbarBackgroundColor,
+          verticalBorderColor: Colors.transparent,
+          pinnedHorizontalColor: scrollbarBackgroundColor,
+          pinnedHorizontalBorderColor: Colors.transparent,
+          unpinnedHorizontalColor: scrollbarBackgroundColor,
+          unpinnedHorizontalBorderColor: Colors.transparent,
+          columnDividerColor: tableBorderColor,
+          thumbColor: thumbColor,
+        ),
+        topCornerColor: Colors.transparent,
+        bottomCornerColor: scrollbarBackgroundColor,
+        topCornerBorderColor: Colors.transparent,
+        bottomCornerBorderColor: Colors.transparent,
+      ),
+      child: Davi<T>(
+        _model,
+        onRowTap:_onRowTap,
+        onRowDoubleTap: _onRowDoubleTap,
+        rowColor: _rowColor,
+        rowCursor: _rowCursor,
+        columnWidthBehavior: _columnWidthBehavior,
+      ),
     );
   }
 }

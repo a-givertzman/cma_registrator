@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:cma_registrator/core/extensions/date_time_formatted_extension.dart';
 import 'package:cma_registrator/pages/failures/widgets/failures_body.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
@@ -43,7 +44,7 @@ class FailuresPage extends StatelessWidget {
           name: DsPointName('/${names[random.nextInt(names.length)]}'), 
           value: random.nextDouble(), 
           status: DsStatus.ok, 
-          timestamp: DsTimeStamp.now().toString(),
+          timestamp: DateTime.now().toFormatted(),
         ),
       );
     }
