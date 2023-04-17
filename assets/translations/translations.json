@@ -27,6 +27,7 @@
     "Only digits expected": ["Only digits expected", "Допустимы только цифры"],
     "Columns": ["Columns", "Колонки"],
     "Time": ["Time", "Время"],
+    "Back": ["Back", "Назад"],
     "Save and finish": ["Save and finish", "Сохранить и закончить"],
     "Baseline calibration": ["Baseline calibration", "Калибровка нуля"],
     "Calibration for the selected weight": ["Calibration for the selected weight", "Калибровка для заданного веса"],

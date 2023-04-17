@@ -22,6 +22,7 @@ class TensosensorCalibrationStep extends StatefulWidget {
   final double _itemWidth;
   final double _indicatorHeight;
   final void Function()? _onNext;
+  final void Function()? _onPrevious;
   final void Function()? _onFinish;
   final void Function()? _onCancel;
   ///
@@ -30,6 +31,7 @@ class TensosensorCalibrationStep extends StatefulWidget {
     required StepType stepType,
     FieldData? fieldData,
     void Function()? onNext, 
+    void Function()? onPrevious, 
     void Function()? onFinish, 
     void Function()? onCancel,
     double buttonHeight = 40, 
@@ -45,6 +47,7 @@ class TensosensorCalibrationStep extends StatefulWidget {
     _onCancel = onCancel, 
     _onFinish = onFinish, 
     _onNext = onNext,
+    _onPrevious = onPrevious,
     _buttonHeight = buttonHeight;
   ///
   const TensosensorCalibrationStep.starter({
@@ -63,6 +66,7 @@ class TensosensorCalibrationStep extends StatefulWidget {
     required FieldData fieldData,
     int? viewIndex,
     void Function()? onNext,
+    void Function()? onPrevious,
     void Function()? onCancel,
   }) : this(
     key: key,
@@ -70,6 +74,7 @@ class TensosensorCalibrationStep extends StatefulWidget {
     viewIndex: viewIndex,
     stepType: StepType.intermediate,
     onNext: onNext,
+    onPrevious: onPrevious,
     onCancel: onCancel,
   );
   ///
@@ -78,6 +83,7 @@ class TensosensorCalibrationStep extends StatefulWidget {
     int? viewIndex,
     FieldData? fieldData,
     void Function()? onFinish,
+    void Function()? onPrevious,
     void Function()? onCancel,
   }) : this(
     key: key,
@@ -85,12 +91,14 @@ class TensosensorCalibrationStep extends StatefulWidget {
     viewIndex: viewIndex,
     stepType: StepType.finishing,
     onFinish: onFinish,
+    onPrevious: onPrevious,
     onCancel: onCancel,
   );
   //
   @override
   State<TensosensorCalibrationStep> createState() => _TensosensorCalibrationStepState(
     onNext: _onNext,
+    onPrevious: _onPrevious,
     onFinish: _onFinish,
     onCancel: _onCancel,
     stepType: _stepType,
@@ -111,6 +119,7 @@ class _TensosensorCalibrationStepState extends State<TensosensorCalibrationStep>
   final int? _viewIndex;
   final FieldData? _fieldData;
   final void Function()? _onNext;
+  final void Function()? _onPrevious;
   final void Function()? _onFinish;
   final void Function()? _onCancel;
   ///
@@ -122,6 +131,7 @@ class _TensosensorCalibrationStepState extends State<TensosensorCalibrationStep>
     int? viewIndex,
     FieldData? fieldData,
     void Function()? onNext, 
+    void Function()? onPrevious, 
     void Function()? onFinish, 
     void Function()? onCancel,
   }) : 
@@ -133,7 +143,8 @@ class _TensosensorCalibrationStepState extends State<TensosensorCalibrationStep>
     _stepType = stepType,
     _onCancel = onCancel, 
     _onFinish = onFinish, 
-    _onNext = onNext;
+    _onNext = onNext,
+    _onPrevious = onPrevious;
   //
   @override
   Widget build(BuildContext context) {
@@ -214,10 +225,19 @@ class _TensosensorCalibrationStepState extends State<TensosensorCalibrationStep>
   List<Widget> _getButtons(StepType stepType) {
     final blockPadding = const Setting('blockPadding').toDouble;
     return [
-      if(stepType != StepType.starter)
+      if(stepType != StepType.starter) ... [
         CancellationButton(onPressed: _onCancel),
-      if(stepType != StepType.finishing) ...[
         SizedBox(width: blockPadding),
+        ActionButton(
+          height: _buttonHeight,
+          label: const Localized('Back').v,
+          onPressed: () {
+            _onPrevious?.call();
+          }, 
+        ),
+      ],
+      if(stepType != StepType.finishing) ...[
+        SizedBox(width: blockPadding / 2),
         ActionButton(
           height: _buttonHeight,
           label: const Localized('Next').v,
