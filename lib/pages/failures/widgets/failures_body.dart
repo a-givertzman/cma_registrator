@@ -125,17 +125,25 @@ class _FailuresBodyState extends State<FailuresBody> {
             _compareSignalNames,
           ),
           onChanged: (key, value) {
-            setState(() {
-              _columnsVisibility[key] = value ?? false;
-            });
-            if (value ?? false) {
-              final column = _columns.firstWhere((element) => element.name == key);
-              column.resizable = true;
-              column.width = 100;
+            final assignedValue = value ?? false;
+            final visibleColumns = _columns.where(
+              (element) => _columnsVisibility[element.name] ?? false,
+            );
+            if (assignedValue) {
+              for(final column in visibleColumns) {
+                _model.removeColumn(column);
+              }
+              _columnsVisibility[key] = assignedValue;
+              _model.addColumns(
+                _columns.where(
+                  (element) => _columnsVisibility[element.name] ?? false,
+                ),
+              );
             } else {
-              final column = _columns.firstWhere((element) => element.name == key);
-              column.resizable = false;
-              column.width = 0;
+              _model.removeColumn(
+                visibleColumns.firstWhere((element) => element.name == key),
+              );
+              _columnsVisibility[key] = assignedValue;
             }
           },
         ),
