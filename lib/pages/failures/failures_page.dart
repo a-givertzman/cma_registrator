@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:cma_registrator/core/extensions/date_time_formatted_extension.dart';
 import 'package:cma_registrator/pages/failures/widgets/failures_body.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
@@ -22,22 +23,28 @@ class FailuresPage extends StatelessWidget {
       body: FailuresBody(
         beginningTime: _beginningTime,
         endingTime: _endingTime,
-        points: _generateRandomPoints(),
+        points: _generateRandomPoints(
+          signalsCount: 20,
+          entriesCount: 1000,
+        ),
       ),
     );
   }
-  List<DsDataPoint> _generateRandomPoints() {
-    final names = ['Signal 1', 'Signal 2', 'Signal 3', 'Signal 4', 'Signal 5'];
+  List<DsDataPoint> _generateRandomPoints({
+    int signalsCount = 5,
+    int entriesCount = 100,
+  }) {
+    final names = List.generate(signalsCount, (index) => 'Signal $index');
     final random = Random();
     final points = <DsDataPoint>[];
-    for(int i = 0; i<100; i++) {
+    for(int i = 0; i<entriesCount; i++) {
       points.add(
         DsDataPoint(
           type: DsDataType.real, 
           name: DsPointName('/${names[random.nextInt(names.length)]}'), 
           value: random.nextDouble(), 
           status: DsStatus.ok, 
-          timestamp: DsTimeStamp.now().toString(),
+          timestamp: DateTime.now().toFormatted(),
         ),
       );
     }

@@ -82,7 +82,7 @@ class _MultiselectItemsListWidgetState extends State<MultiselectItemsListWidget>
         borderRadius: BorderRadius.circular(_listBorderRadius),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).shadowColor,
+            color: Theme.of(context).colorScheme.shadow.withOpacity(0.4),
             offset: _shadowOffset,
             blurRadius: _shadowBlurRadius,
           ),
@@ -90,52 +90,59 @@ class _MultiselectItemsListWidgetState extends State<MultiselectItemsListWidget>
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(_listBorderRadius),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            for(int i = 0; i < entries.length; i++)
-              Material(
-                color: Colors.transparent,
-                child: SizedBox(
-                  width: _width,
-                  height: _itemHeight,
-                  child: InkWrapper(
-                    splashColor: Theme.of(context).splashColor,
-                    onTap: () {
-                      final newValue = !_multiselectItems[entries[i].key]!;
-                      _onChanged?.call(entries[i].key, newValue);
-                      setState(() {
-                        _multiselectItems[entries[i].key] = newValue;
-                      });
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(padding),
-                      decoration: BoxDecoration(
-                        color: theme.cardColor,
-                        border: _getBorderByIndex(i, entries.length),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(entries[i].key),
-                          const Spacer(),
-                          Checkbox(
-                            activeColor: theme.colorScheme.primary,
-                            value: entries[i].value, 
-                            onChanged: (value) {
-                              _onChanged?.call(entries[i].key, value);
-                              setState(() {
-                                _multiselectItems[entries[i].key] = value ?? false;
-                              });
-                            },
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.5,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for(int i = 0; i < entries.length; i++)
+                  Material(
+                    color: Colors.transparent,
+                    child: SizedBox(
+                      width: _width,
+                      height: _itemHeight,
+                      child: InkWrapper(
+                        splashColor: Theme.of(context).splashColor,
+                        onTap: () {
+                          final newValue = !_multiselectItems[entries[i].key]!;
+                          _onChanged?.call(entries[i].key, newValue);
+                          setState(() {
+                            _multiselectItems[entries[i].key] = newValue;
+                          });
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(padding),
+                          decoration: BoxDecoration(
+                            color: theme.cardColor,
+                            border: _getBorderByIndex(i, entries.length),
                           ),
-                        ],
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(entries[i].key),
+                              const Spacer(),
+                              Checkbox(
+                                activeColor: theme.colorScheme.primary,
+                                value: entries[i].value, 
+                                onChanged: (value) {
+                                  _onChanged?.call(entries[i].key, value);
+                                  setState(() {
+                                    _multiselectItems[entries[i].key] = value ?? false;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
-          ],
+              ],
+            ),
+          ),
         ),
       ),
     );

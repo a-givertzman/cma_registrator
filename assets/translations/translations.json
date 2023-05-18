@@ -33,5 +33,11 @@
     "Calibration for the selected weight": ["Calibration for the selected weight", "Калибровка для заданного веса"],
     "Target weight": ["Target weight", "Целевой вес"],
     "Sensor value": ["Sensor value", "Значение датчика"],
-    "kg": ["kg", "кг"]
+    "kg": ["kg", "кг"],
+    "Beginning": ["Beginning", "Начало"],
+    "Ending": ["Ending", "Конец"],
+    "Failure class": ["Failure class", "Класс аварии"],
+    "Max": ["Max", "Макс"],
+    "Mean": ["Mean", "Среднее"],
+    "Data": ["Data", "Данные"]
 }
