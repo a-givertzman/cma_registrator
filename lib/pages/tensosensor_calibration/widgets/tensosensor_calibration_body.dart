@@ -69,6 +69,7 @@ class _TensosensorCalibrationBodyState extends State<TensosensorCalibrationBody>
             viewIndex: index + 1,
             fieldData: _fieldsData[index-1],
             onFinish: () => _trySaveData(context, () => _slideToPage(0)),
+            onPrevious: () => _slideToPage(index-1),
             onCancel: () {
               _cancelEditedFields();
               _slideToPage(0);
@@ -79,6 +80,7 @@ class _TensosensorCalibrationBodyState extends State<TensosensorCalibrationBody>
             viewIndex: index + 1,
             fieldData: _fieldsData[index-1],
             onNext: () => _slideToPage(index + 1),
+            onPrevious: () => _slideToPage(index - 1),
             onCancel: () {
               _cancelEditedFields();
               _slideToPage(0);
