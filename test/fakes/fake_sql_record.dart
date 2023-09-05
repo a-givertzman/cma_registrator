@@ -1,8 +1,8 @@
-import 'package:cma_registrator/core/models/persistable/sql_record.dart';
+import 'package:cma_registrator/core/models/persistable/sql_field.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hmi_core/hmi_core_result.dart';
 
-class FakeSqlRecord extends Fake implements SqlRecord {
+class FakeSqlRecord extends Fake implements SqlField {
   final Result<String>? saveResult;
   final Result<String>? fetchResult;
   FakeSqlRecord({this.saveResult, this.fetchResult});

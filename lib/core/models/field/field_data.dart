@@ -1,4 +1,4 @@
-import 'package:cma_registrator/core/models/persistable/sql_record.dart';
+import 'package:cma_registrator/core/models/persistable/sql_field.dart';
 import 'package:hmi_core/hmi_core_result.dart';
 /// 
 /// Model that holds data for [TextFormField] or [TextField].
@@ -6,7 +6,7 @@ class FieldData {
   final String label;
   String _initialValue;
   String _value;
-  final SqlRecord _record;
+  final SqlField _record;
   /// 
   /// Model that holds data for [TextFormField] or [TextField].
   /// 
@@ -16,7 +16,7 @@ class FieldData {
   FieldData({
     required this.label, 
     required String initialValue, 
-    required SqlRecord record,
+    required SqlField record,
   }) : _initialValue = initialValue, 
     _record = record, 
     _value = initialValue;
