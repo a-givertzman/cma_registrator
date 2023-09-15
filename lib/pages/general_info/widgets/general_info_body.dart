@@ -1,3 +1,4 @@
+import 'package:cma_registrator/core/models/field/field_data.dart';
 import 'package:cma_registrator/core/models/field/field_datas.dart';
 import 'package:cma_registrator/core/widgets/error_message_widget.dart';
 import 'package:cma_registrator/core/widgets/future_builder_widget.dart';
@@ -8,16 +9,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 
 class GeneralInfoBody extends StatelessWidget {
-  final FieldDatas _craneFields;
-  final FieldDatas _recorderFields;
+  // static final _log = const Log('GeneralInfoBody')..level=LogLevel.warning;
+  final FieldDatas _fields;
   ///
   const GeneralInfoBody({
     super.key, 
-    required FieldDatas craneFields, 
-    required FieldDatas recorderFields,
+    required FieldDatas fields, 
   }) : 
-    _craneFields = craneFields, 
-    _recorderFields = recorderFields;
+    _fields = fields;
+  Future<Result<List<FieldData>>> _future() async {
+    final fields = await _fields.fetchAll();
+    return fields;
+  }
   //
   @override
   Widget build(BuildContext context) {
@@ -36,19 +39,24 @@ class GeneralInfoBody extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
       ),
-      onFuture: () => Future.wait([_craneFields.all(), _recorderFields.all()]),
+      onFuture: _future,
       caseLoading: (_) => const Center(
         child: CupertinoActivityIndicator(),
       ),
       validateData: (data) {
-        return data.every((e) => !e.hasError);
+        return !data.hasError;
       },
       caseData: (_, data) {
-        final craneDataResult = data[0];
-        final recorderDataResult = data[1];
+        final fields = data.data;
+        final craneData = fields.where((field) => field.id.startsWith('1.')).toList();
+        final recorderData = fields.where((field) => field.id.startsWith('2.')).toList();
+        final operationData = fields.where((field) => field.id.startsWith('3.')).toList();
+
         return GeneralInfoForm(
-            craneData: craneDataResult.data, 
-            recorderData: recorderDataResult.data,
+            craneData: craneData, 
+            recorderData: recorderData,
+            operationData: operationData,
+            onSave: () => _fields.persistAll(fields),
           );
       },
       caseError: (_, error) => ErrorMessageWidget(

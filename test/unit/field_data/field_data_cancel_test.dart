@@ -13,9 +13,11 @@ void main() {
       ];
       for (final initialValue in initialData) {
         final fieldData = FieldData(
+          id: '',
+          type: FieldType.string,
           label: 'test', 
           initialValue: initialValue, 
-          record: FakeSqlRecord(),
+          record: FakeDatabaseField(),
         );
         fieldData.cancel();
         expect(fieldData.value, initialValue);
@@ -30,9 +32,11 @@ void main() {
       ];
       for (final initialValue in initialData) {
         final fieldData = FieldData(
+          id: '',
+          type: FieldType.string,
           label: 'test', 
           initialValue: initialValue, 
-          record: FakeSqlRecord(),
+          record: FakeDatabaseField(),
         );
         fieldData.update('updateValue1');
         fieldData.update('updateValue2');

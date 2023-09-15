@@ -1,3 +1,4 @@
+import 'package:cma_registrator/core/models/field/field_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
@@ -5,6 +6,7 @@ import 'package:hmi_widgets/hmi_widgets.dart';
 
 ///
 class CancelableField extends StatefulWidget {
+  final FieldType _fieldType;
   final String _initialValue;
   final String? _label;
   final String? _sendError;
@@ -18,12 +20,13 @@ class CancelableField extends StatefulWidget {
     String? label,
     String? sendError,
     String initialValue = '',
+    FieldType fieldType = FieldType.string,
     void Function(String)? onChanged,
     void Function(String)? onCanceled,
     Future<Result<String>>  Function(String?)? onSaved,
     Validator validator = const Validator(
       cases: [
-        MinLengthValidationCase(5),
+        MinLengthValidationCase(1),
         MaxLengthValidationCase(255),
       ],
     ),
@@ -34,7 +37,8 @@ class CancelableField extends StatefulWidget {
     _onChanged = onChanged,
     _onCanceled = onCanceled,
     _onSaved = onSaved,
-    _validator = validator;
+    _validator = validator,
+    _fieldType = fieldType;
 
   @override
   State<CancelableField> createState() => _CancelableFieldState(
@@ -45,11 +49,13 @@ class CancelableField extends StatefulWidget {
     onCanceled: _onCanceled,
     onSaved: _onSaved,
     validator: _validator,
+    fieldType: _fieldType,
   );
 }
 ///
 class _CancelableFieldState extends State<CancelableField> {
   late final TextEditingController _controller;
+  final FieldType _fieldType;
   final String? _label;
   final void Function(String)? _onChanged;
   final void Function(String)? _onCanceled;
@@ -62,6 +68,7 @@ class _CancelableFieldState extends State<CancelableField> {
   _CancelableFieldState({
     required String initialValue, 
     required Validator validator,
+    required FieldType fieldType,
     String? label, 
     String? sendError, 
     void Function(String)? onChanged, 
@@ -74,7 +81,8 @@ class _CancelableFieldState extends State<CancelableField> {
     _onChanged = onChanged,
     _onCanceled = onCanceled,
     _onSaved = onSaved,
-    _validator = validator;
+    _validator = validator,
+    _fieldType = fieldType;
 
   @override
   void initState() {
@@ -86,6 +94,24 @@ class _CancelableFieldState extends State<CancelableField> {
   Widget build(BuildContext context) {
     final suffixIconSize = IconTheme.of(context).size;
     return TextFormField(
+      onTap: switch(_fieldType) {
+        FieldType.date => () async {
+          DateTime? pickedDate = await showDatePicker(
+              context: context, 
+              initialDate: DateTime.parse(_initialValue),
+              firstDate: DateTime.fromMillisecondsSinceEpoch(0),
+              lastDate: DateTime.now(),
+          );
+          if(pickedDate != null ){
+            final formattedDate = '${pickedDate.year}-${pickedDate.month}-${pickedDate.day}';
+            _controller.text = formattedDate;
+            setState(() {
+              _onChanged?.call(formattedDate);
+            });
+          }
+        },
+        _ => null,
+      },
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: (string) {
         final message =  _validator.editFieldValidator(string);

@@ -8,9 +8,11 @@ void main() {
     test('returns success result on sql record succes', () async {
       const successData = 'successData';
       final fieldData = FieldData(
+        id: '',
+        type: FieldType.string,
         label: 'test', 
         initialValue: '', 
-        record: FakeSqlRecord(
+        record: FakeDatabaseField(
           saveResult: const Result(data: successData),
         ),
       );
@@ -25,9 +27,11 @@ void main() {
         stackTrace: StackTrace.current,
       );
       final fieldData = FieldData(
+        id: '',
+        type: FieldType.string,
         label: 'test', 
         initialValue: '', 
-        record: FakeSqlRecord(
+        record: FakeDatabaseField(
           saveResult: Result(error: failure),
         ),
       );

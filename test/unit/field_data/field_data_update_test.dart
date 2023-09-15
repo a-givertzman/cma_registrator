@@ -12,9 +12,11 @@ void main() {
         '+=-_()*;&.^,:%\$#№@"!><',
       ];
       final fieldData = FieldData(
+        id: '',
+        type: FieldType.string,
         label: 'test', 
         initialValue: 'initialValue', 
-        record: FakeSqlRecord(),
+        record: FakeDatabaseField(),
       );
       for (final newValue in updateData) {
         fieldData.update(newValue);

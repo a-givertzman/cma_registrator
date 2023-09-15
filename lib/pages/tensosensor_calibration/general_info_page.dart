@@ -5,7 +5,7 @@ import 'package:cma_registrator/pages/work_cycles/work_cycles_page.dart';
 import 'package:dart_api_client/dart_api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_translate.dart';
-import 'widgets/general_info_body.dart';
+import '../general_info/widgets/general_info_body.dart';
 ///
 class GeneralInfoPage extends StatelessWidget {
   static const routeName = '/generalInfo';
@@ -58,15 +58,10 @@ class GeneralInfoPage extends StatelessWidget {
         ],
       ),
       body: GeneralInfoBody(
-        craneFields: FieldDatas(
+        fields: FieldDatas(
           dbName: 'registrator', 
-          tableName: 'crane', 
-          apiAddress: ApiAddress.localhost(),
-        ),
-        recorderFields: FieldDatas(
-          dbName: 'registrator', 
-          tableName: 'recorder',
-          apiAddress: ApiAddress.localhost(),
+          tableName: 'operating_metric', 
+          apiAddress: ApiAddress.localhost(port: 8080),
         ),
       ),
     );

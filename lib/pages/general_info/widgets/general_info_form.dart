@@ -5,6 +5,7 @@ import 'package:cma_registrator/core/widgets/field/cancelable_field.dart';
 import 'package:cma_registrator/core/widgets/field/field_group.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:hmi_core/hmi_core_result.dart';
 import 'package:hmi_core/hmi_core_translate.dart';
 
 import 'confirmation_dialog.dart';
@@ -12,17 +13,26 @@ import 'confirmation_dialog.dart';
 class GeneralInfoForm extends StatefulWidget {
   final List<FieldData> _craneData;
   final List<FieldData> _recorderData;
+  final List<FieldData> _operationData;
+  final Future<Result<List<FieldData>>> Function()? _onSave;
 
   const GeneralInfoForm({
     super.key,  
     required List<FieldData> craneData,  
     required List<FieldData> recorderData,
-  }) : _craneData = craneData, _recorderData = recorderData;
+    required List<FieldData> operationData, 
+    Future<Result<List<FieldData>>> Function()? onSave,
+  }) : _onSave = onSave, 
+    _craneData = craneData, 
+    _recorderData = recorderData, 
+    _operationData = operationData;
 
   @override
   State<GeneralInfoForm> createState() => _GeneralInfoFormState(
     craneData: _craneData,
     recorderData: _recorderData,
+    operationData: _operationData,
+    onSave: _onSave,
   );
 }
 
@@ -30,24 +40,30 @@ class _GeneralInfoFormState extends State<GeneralInfoForm> {
   final _formKey = GlobalKey<FormState>();
   final List<FieldData> _craneData;
   final List<FieldData> _recorderData;
+  final List<FieldData> _operationData;
+  final Future<Result<List<FieldData>>> Function()? _onSave;
 
   _GeneralInfoFormState({
     required List<FieldData> craneData,  
     required List<FieldData> recorderData,
-  }) : _craneData = craneData, _recorderData = recorderData;
+    required List<FieldData> operationData,
+    required Future<Result<List<FieldData>>> Function()? onSave,
+  }) : 
+    _craneData = craneData, 
+    _recorderData = recorderData, 
+    _operationData = operationData,
+    _onSave = onSave;
 
   @override
   Widget build(BuildContext context) {
-    final isAnyFieldChanged = _craneData
+    final isAnyFieldChanged = [..._craneData, ..._recorderData, ..._operationData]
       .where((data) => data.isChanged)
-      .followedBy(
-        _recorderData
-          .where((data) => data.isChanged),
-      )
       .isNotEmpty;
     const buttonHeight = 40.0;
     const buttonWidth = 130.0;
     final blockPadding = const Setting('blockPadding').toDouble;
+    const columnFlex = 3;
+    const spacingFlex = 1;
     return Form(
       key: _formKey,
       child: Column(
@@ -58,23 +74,31 @@ class _GeneralInfoFormState extends State<GeneralInfoForm> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                const Spacer(flex: 1),
+                const Spacer(flex: spacingFlex),
                 Expanded(
-                  flex: 2,
+                  flex: columnFlex,
                   child: FieldGroup(
                     groupName: const Localized('Crane').v,
                     fields: _craneData.map(_mapDataToField).toList(),
                   ),
                 ),
-                const Spacer(flex: 1),
+                const Spacer(flex: spacingFlex),
                 Expanded(
-                  flex: 2,
+                  flex: 3,
                   child: FieldGroup(
                     groupName: const Localized('Recorder').v,
                     fields: _recorderData.map(_mapDataToField).toList(),
                   ),
                 ),
-                const Spacer(flex: 1),
+                const Spacer(flex: spacingFlex),
+                Expanded(
+                  flex: columnFlex,
+                  child: FieldGroup(
+                    groupName: const Localized('Operation').v,
+                    fields: _operationData.map(_mapDataToField).toList(),
+                  ),
+                ),
+                const Spacer(flex: spacingFlex),
               ],
             ),
           ),
@@ -109,21 +133,22 @@ class _GeneralInfoFormState extends State<GeneralInfoForm> {
   CancelableField _mapDataToField(FieldData data) => CancelableField(
     label: data.label,
     initialValue: data.initialValue,
+    fieldType: data.type,
     onChanged: (value) => setState(() {
       data.update(value);
     }),
     onCanceled: (_) => setState(() {
       data.cancel();
     }),
-    onSaved: (_) {
-      return data.save()
-        .then((result) {
-          if (!result.hasError && mounted) {
-            setState(() { return; });
-          }
-          return result;
-        });
-    },
+    // onSaved: (_) {
+    //   return data.save()
+    //     .then((result) {
+    //       if (!result.hasError && mounted) {
+    //         setState(() { return; });
+    //       }
+    //       return result;
+    //     });
+    // },
   );
   ///
   void _cancelEditedFields() {
@@ -137,8 +162,22 @@ class _GeneralInfoFormState extends State<GeneralInfoForm> {
     });
   }
   ///
-  void _trySaveData(BuildContext context) {
+  void _showSnackBarMessage(BuildContext context, String message) {
     final theme = Theme.of(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: theme.cardColor,
+        content: Text(
+          message,
+          style: TextStyle(
+            color: theme.colorScheme.onBackground,
+          ),
+        ),
+      ),
+    );
+  }
+  ///
+  void _trySaveData(BuildContext context) {
     if(_isFormValid()) {
       showDialog<bool>(
         context: context, 
@@ -153,20 +192,26 @@ class _GeneralInfoFormState extends State<GeneralInfoForm> {
         ),
       ).then((isSaveSubmitted) {
         if (isSaveSubmitted ?? false) {
-          _formKey.currentState?.save();
+          setState(() async {
+            final onSave = _onSave;
+            if(onSave != null) {
+              final result = await onSave();
+              result.fold(
+                onData: (_) {
+                  _showSnackBarMessage(context, const Localized('Data saved').v);
+                }, 
+                onError: (error) {
+                  _showSnackBarMessage(context, error.message);
+                },
+              );
+            }
+          });
         }
       });
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: theme.cardColor,
-          content: Text(
-            const Localized('Please, fix all errors before saving!').v,
-            style: TextStyle(
-              color: theme.colorScheme.onBackground,
-            ),
-          ),
-        ),
+      _showSnackBarMessage(
+        context, 
+        const Localized('Please, fix all errors before saving!').v,
       );
     }
   }

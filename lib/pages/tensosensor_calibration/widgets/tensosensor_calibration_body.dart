@@ -22,10 +22,12 @@ class _TensosensorCalibrationBodyState extends State<TensosensorCalibrationBody>
   final _fieldsData = List.generate(
     _pagesCount - 1, 
     (index) => FieldData(
+      id: '',
+      type: FieldType.string,
       label: const Localized('Target weight').v, 
       initialValue: '0.0', 
-      record: SqlField(
-        fieldName: 'target_weight',
+      record: DatabaseField(
+        id: 'target_weight',
         tableName: 'tensosensor_calibration',
         dbName: 'registrator',
         apiAddress: ApiAddress.localhost(),
@@ -70,7 +72,7 @@ class _TensosensorCalibrationBodyState extends State<TensosensorCalibrationBody>
             viewIndex: index + 1,
             onNext: () => _slideToPage(index+1),
           );
-        case _pagesCount - 1:
+        case const (_pagesCount - 1):
           return TensosensorCalibrationStep.finishing(
             viewIndex: index + 1,
             fieldData: _fieldsData[index-1],

@@ -39,5 +39,6 @@
     "Failure class": ["Failure class", "Класс аварии"],
     "Max": ["Max", "Макс"],
     "Mean": ["Mean", "Среднее"],
-    "Data": ["Data", "Данные"]
+    "Data": ["Data", "Данные"],
+    "Operation": ["Operation", "Наработка"]
 }

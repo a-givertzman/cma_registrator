@@ -13,9 +13,11 @@ void main() {
       ];
       for (final initialValue in initialData) {
         final fieldData = FieldData(
+          id: '',
+          type: FieldType.string,
           label: 'test', 
           initialValue: initialValue, 
-          record: FakeSqlRecord(),
+          record: FakeDatabaseField(),
         );
         expect(fieldData.value, initialValue);
 
