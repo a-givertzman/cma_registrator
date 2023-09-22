@@ -19,7 +19,7 @@ void main() {
           initialValue: initialValue, 
           record: FakeDatabaseField(),
         );
-        expect(fieldData.value, initialValue);
+        expect(fieldData.controller.text, initialValue);
 
       }
     });

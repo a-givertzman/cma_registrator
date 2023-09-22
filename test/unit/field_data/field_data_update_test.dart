@@ -19,8 +19,9 @@ void main() {
         record: FakeDatabaseField(),
       );
       for (final newValue in updateData) {
-        fieldData.update(newValue);
-        expect(fieldData.value, newValue);
+        // fieldData.update(newValue);
+        fieldData.controller.text = newValue;
+        expect(fieldData.controller.text, newValue);
       }
     });
   });

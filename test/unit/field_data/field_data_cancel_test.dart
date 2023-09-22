@@ -20,7 +20,7 @@ void main() {
           record: FakeDatabaseField(),
         );
         fieldData.cancel();
-        expect(fieldData.value, initialValue);
+        expect(fieldData.controller.text, initialValue);
       }
     });
     test('sets value to initial after some updates', () async {
@@ -38,11 +38,16 @@ void main() {
           initialValue: initialValue, 
           record: FakeDatabaseField(),
         );
-        fieldData.update('updateValue1');
-        fieldData.update('updateValue2');
-        fieldData.update('updateValue3');
+        // fieldData.update('updateValue1');
+        // fieldData.update('updateValue2');
+        // fieldData.update('updateValue3');
+        // fieldData.cancel();
+        // expect(fieldData.value, initialValue);
+        fieldData.controller.text = 'updateValue1';
+        fieldData.controller.text = 'updateValue2';
+        fieldData.controller.text = 'updateValue3';
         fieldData.cancel();
-        expect(fieldData.value, initialValue);
+        expect(fieldData.controller.text, initialValue);
       }
     });
   });
