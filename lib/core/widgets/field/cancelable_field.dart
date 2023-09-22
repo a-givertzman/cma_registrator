@@ -108,7 +108,8 @@ class _CancelableFieldState extends State<CancelableField> {
       onTap: switch(_fieldType) {
         FieldType.date => () async {
           DateTime? pickedDate = await showDatePicker(
-              context: context, 
+              context: context,
+              locale: const Locale('ru'),
               initialDate: DateTime.parse(_initialValue),
               firstDate: DateTime.fromMillisecondsSinceEpoch(0),
               lastDate: DateTime.now(),

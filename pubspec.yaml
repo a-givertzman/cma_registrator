@@ -17,6 +17,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # needed for date picker dialog
+  flutter_localizations:
+    sdk: flutter
   hmi_core:
     git:
       url: https://github.com/a-givertzman/hmi_core.git
@@ -42,7 +45,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   davi: ^3.3.0
-  date_field: ^3.0.5
+  # intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:
