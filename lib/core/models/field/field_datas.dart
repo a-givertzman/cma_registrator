@@ -55,7 +55,6 @@ class FieldDatas {
   /// Persists changed fields and returns them updated.
   Future<Result<List<FieldData>>> persistAll(List<FieldData> fieldDatas) async {
     _log.debug('[SqlRecord.fetch] Persisting all fields and values from value for field...');
-    await Future.delayed(const Duration(seconds: 5));
     final changedFields = fieldDatas
       .where((field) => field.isChanged)
       // Copying fields to avoid TextEditingController value changes
