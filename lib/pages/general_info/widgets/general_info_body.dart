@@ -48,14 +48,8 @@ class GeneralInfoBody extends StatelessWidget {
       },
       caseData: (_, data) {
         final fields = data.data;
-        final craneData = fields.where((field) => field.id.startsWith('1.')).toList();
-        final recorderData = fields.where((field) => field.id.startsWith('2.')).toList();
-        final operationData = fields.where((field) => field.id.startsWith('3.')).toList();
-
         return GeneralInfoForm(
-            craneData: craneData, 
-            recorderData: recorderData,
-            operationData: operationData,
+            fieldData: fields, 
             onSave: () => _fields.persistAll(fields),
           );
       },

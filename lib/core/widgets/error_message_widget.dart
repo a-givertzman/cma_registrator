@@ -28,7 +28,7 @@ class ErrorMessageWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.warning_amber_outlined, 
+              Icons.warning_amber_rounded, 
               color: _iconColor ?? theme.stateColors.error,
             ),
             SizedBox(width: padding),

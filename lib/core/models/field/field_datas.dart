@@ -25,7 +25,7 @@ class FieldDatas {
       sqlQuery: SqlQuery(
         authToken: '', 
         database: _dbName, 
-        sql: 'SELECT id, type, description, value FROM $_tableName;',
+        sql: 'SELECT id, type, description, value FROM $_tableName ORDER BY id ASC;',
       ),
     ).fetch()
     .then((result) =>
@@ -55,20 +55,23 @@ class FieldDatas {
   /// Persists changed fields and returns them updated.
   Future<Result<List<FieldData>>> persistAll(List<FieldData> fieldDatas) async {
     _log.debug('[SqlRecord.fetch] Persisting all fields and values from value for field...');
-    final changedFields = fieldDatas.where((field) => field.isChanged).toList();
+    await Future.delayed(const Duration(seconds: 5));
+    final changedFields = fieldDatas
+      .where((field) => field.isChanged)
+      // Copying fields to avoid TextEditingController value changes
+      .map((field) => field.copyWith()..controller.text = field.controller.text)
+      .toList();
     final valuesString = changedFields
-      .map((field) => "('${field.id}', '${field.value}')")
+      .map((field) => "('${field.id.trim()}', '${field.controller.text}')")
       .join(', ');
     final requestResult = await ApiRequest(
       address: _apiAddress, 
       sqlQuery: SqlQuery(
         authToken: '', 
         database: _dbName, 
-        sql: '''
-          WITH updated(id, value) AS (VALUES $valuesString)
-          UPDATE $_tableName SET value = updated.value 
-          FROM updated WHERE ($_tableName.id = updated.id);
-        ''',
+        sql: 'WITH updated(id, value) AS (VALUES $valuesString) ' 
+             'UPDATE $_tableName SET value = updated.value ' 
+             'FROM updated WHERE ($_tableName.id = updated.id);',
       ),
     ).fetch();
     return requestResult.fold(
@@ -77,7 +80,7 @@ class FieldDatas {
           return Result(
             data: changedFields.map(
               (field) => field.copyWith(
-                initialValue: field.value,
+                initialValue: field.controller.text,
               ),
             ).toList(),
           );

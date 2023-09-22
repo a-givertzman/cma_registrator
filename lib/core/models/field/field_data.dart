@@ -1,4 +1,5 @@
 import 'package:cma_registrator/core/models/persistable/sql_field.dart';
+import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_result.dart';
 ///
 enum FieldType {
@@ -23,8 +24,8 @@ class FieldData {
   final FieldType type;
   final String label;
   String _initialValue;
-  String _value;
   final DatabaseField _record;
+  final TextEditingController _controller; 
   /// 
   /// Model that holds data for [TextFormField] or [TextField].
   /// 
@@ -39,16 +40,16 @@ class FieldData {
     required DatabaseField record,
   }) : _initialValue = initialValue, 
     _record = record, 
-    _value = initialValue;
+    _controller = TextEditingController(text: initialValue);
   /// 
   /// Initial content of the target field.
   String get initialValue => _initialValue;
   /// 
-  /// Current content of the target field.
-  String get value => _value;
+  /// Controller for FormField's.
+  TextEditingController get controller => _controller;
   /// 
   /// Whether content of the target changed or not.
-  bool get isChanged => _initialValue != _value;
+  bool get isChanged => _initialValue != _controller.text;
   /// 
   /// Pull data from the database through provided [record].
   Future<Result<String>> fetch() => 
@@ -56,30 +57,35 @@ class FieldData {
     .then((result) {
       if(!result.hasError) {
         _initialValue = result.data;
-        _value = result.data;
+        _controller.text = result.data;
       }
       return result;
     });
   /// 
   /// Persist data to the database through provided [record].
   Future<Result<String>> save() => 
-    _record.persist(_value)
+    _record.persist(_controller.text)
     .then((result) {
       if (!result.hasError) {
-        _initialValue = _value;
+        refreshWith(_controller.text);
       }
       return result;
     });
+  ///
+  /// Sets initialValue to provided value.
+  void refreshWith(String text) {
+    _initialValue = text;
+  }
   /// 
   /// Set current [value] to its [initialState].
   void cancel() {
-    _value = _initialValue;
+    _controller.text = _initialValue;
   }
   /// 
   /// Set current [value] with provided [newValue].
-  void update(String newValue) {
-    _value = newValue;
-  }
+  // void update(String newValue) {
+  //   _controller.text = newValue;
+  // }
   ///
   FieldData copyWith({
     String? id,
