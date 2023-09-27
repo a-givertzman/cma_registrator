@@ -201,7 +201,6 @@ class _GeneralInfoColumns extends StatelessWidget {
   final void Function()? _onSaved;
   final List<FieldData> _fieldsData;
   const _GeneralInfoColumns({
-    super.key,
     required List<FieldData> fieldsData, 
     void Function()? onChanged, 
     void Function()? onCancelled,
@@ -262,8 +261,12 @@ class _GeneralInfoColumns extends StatelessWidget {
     fieldType: data.type,
     controller: data.controller,
     onChanged: (value) {
-      data.controller.text = value;
-      // data.update(value);
+      data.controller.value = TextEditingValue(
+        text: value,
+        selection: TextSelection.fromPosition(
+          TextPosition(offset: data.controller.selection.base.offset),
+        ),
+      );
       _onChanged?.call();
     },
     onCanceled: (_) {
