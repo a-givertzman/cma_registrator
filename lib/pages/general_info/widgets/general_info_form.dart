@@ -56,9 +56,9 @@ class _GeneralInfoFormState extends State<GeneralInfoForm> {
             flex: 7,
             child: _GeneralInfoColumns(
               fieldsData: _fieldsData,
-              onCancelled: () => setState(() {}),
-              onChanged: () => setState(() {}),
-              onSaved: () => setState(() {}),
+              onCancelled: () => setState(() { return; }),
+              onChanged: () => setState(() { return; }),
+              onSaved: () => setState(() { return; }),
             ),
           ),
           Expanded(
@@ -173,7 +173,6 @@ class _GeneralInfoFormState extends State<GeneralInfoForm> {
                 field.refreshWith(newValue);
                 field.controller.text = newValue;
               });
-              // setState(() {});
               _formKey.currentState?.save();
               _showInfoMessage(context, const Localized('Data saved').v);
             }, 
@@ -181,7 +180,6 @@ class _GeneralInfoFormState extends State<GeneralInfoForm> {
               _showErrorMessage(context, error.message);
             },
           );
-          
         }
       }
     } else {
@@ -277,14 +275,5 @@ class _GeneralInfoColumns extends StatelessWidget {
       _onSaved?.call();
       return  Future.value(const Result(data: ""));
     },
-    // onSaved: (_) {
-    //   return data.save()
-    //     .then((result) {
-    //       if (!result.hasError && mounted) {
-    //         setState(() { return; });
-    //       }
-    //       return result;
-    //     });
-    // },
   );
 }
