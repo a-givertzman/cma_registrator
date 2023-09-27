@@ -105,6 +105,10 @@ class _CancelableFieldState extends State<CancelableField> {
       },
     );
     return TextFormField(
+      readOnly: switch(_fieldType) {
+        FieldType.date => true,
+        _ => false,
+      },
       onTap: switch(_fieldType) {
         FieldType.date => () async {
           DateTime? pickedDate = await showDatePicker(
