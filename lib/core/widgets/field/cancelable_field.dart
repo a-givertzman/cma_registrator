@@ -95,13 +95,13 @@ class _CancelableFieldState extends State<CancelableField> {
     final suffixIconSize = IconTheme.of(context).size;
     final validator = _validator ?? Validator(
       cases: switch(_fieldType) {
-        FieldType.int => [const IntValidationCase()],
-        FieldType.real => [const RealValidationCase()],
-        FieldType.string => [
-          const MinLengthValidationCase(0),
-          const MaxLengthValidationCase(255),
+        FieldType.int => const [IntValidationCase()],
+        FieldType.real => const [RealValidationCase()],
+        FieldType.string => const [
+          MinLengthValidationCase(0),
+          MaxLengthValidationCase(255),
         ],
-        FieldType.date => [const DateValidationCase()],
+        FieldType.date => const [DateValidationCase()],
       },
     );
     return TextFormField(
