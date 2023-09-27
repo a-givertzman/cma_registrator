@@ -30,12 +30,12 @@ class GeneralInfoForm extends StatefulWidget {
 class _GeneralInfoFormState extends State<GeneralInfoForm> {
   final _formKey = GlobalKey<FormState>();
   late List<FieldData> _fieldsData;
-
-  _GeneralInfoFormState();
+  late bool _isSaving;
 
   @override
   void initState() {
     _fieldsData = widget._fieldsData;
+    _isSaving = false;
     super.initState();
   }
 
@@ -54,11 +54,19 @@ class _GeneralInfoFormState extends State<GeneralInfoForm> {
         children: [
           Expanded(
             flex: 7,
-            child: _GeneralInfoColumns(
-              fieldsData: _fieldsData,
-              onCancelled: () => setState(() { return; }),
-              onChanged: () => setState(() { return; }),
-              onSaved: () => setState(() { return; }),
+            child: Stack(
+              children: [
+                _GeneralInfoColumns(
+                  fieldsData: _fieldsData,
+                  onCancelled: () => setState(() { return; }),
+                  onChanged: () => setState(() { return; }),
+                  onSaved: () => setState(() { return; }),
+                ),
+                if (_isSaving)
+                  Container(
+                    color: Theme.of(context).colorScheme.background.withOpacity(0.75),
+                  ),
+              ],
             ),
           ),
           Expanded(
@@ -68,7 +76,7 @@ class _GeneralInfoFormState extends State<GeneralInfoForm> {
               children: [
                 CancellationButton(
                   height: buttonHeight,
-                  onPressed: isAnyFieldChanged
+                  onPressed: isAnyFieldChanged && !_isSaving
                     ? _cancelEditedFields
                     : null,
                 ),
@@ -142,7 +150,24 @@ class _GeneralInfoFormState extends State<GeneralInfoForm> {
     );
   }
   ///
+  void _updateFieldsWithNewData(List<FieldData> newFields) {
+    final newValues = {
+      for (final field in newFields) 
+        field.id: field.controller.text,
+    };
+    _fieldsData
+    .where((field) => newValues.containsKey(field.id))
+    .forEach((field) {
+      final newValue = newValues[field.id]!;
+      field.refreshWith(newValue);
+      field.controller.text = newValue;
+    });
+  }
+  ///
   Future<void> _trySaveData(BuildContext context) async {
+    setState(() {
+      _isSaving = true;
+    });
     if(_isFormValid()) {
       final isSaveSubmitted = await showDialog<bool>(
         context: context, 
@@ -162,17 +187,7 @@ class _GeneralInfoFormState extends State<GeneralInfoForm> {
           final result = await onSave();
           result.fold(
             onData: (newFields) {
-              final newValues = {
-                for (final field in newFields) 
-                  field.id: field.controller.text,
-              };
-              _fieldsData
-              .where((field) => newValues.containsKey(field.id))
-              .forEach((field) {
-                final newValue = newValues[field.id]!;
-                field.refreshWith(newValue);
-                field.controller.text = newValue;
-              });
+              _updateFieldsWithNewData(newFields);
               _formKey.currentState?.save();
               _showInfoMessage(context, const Localized('Data saved').v);
             }, 
@@ -188,6 +203,9 @@ class _GeneralInfoFormState extends State<GeneralInfoForm> {
         const Localized('Please, fix all errors before saving!').v,
       );
     }
+    setState(() {
+      _isSaving = false;
+    });
   }
   ///
   bool _isFormValid() => _formKey.currentState?.validate() ?? false;
