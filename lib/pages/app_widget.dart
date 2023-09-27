@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cma_registrator/core/theme/app_theme_switch.dart';
-import 'package:cma_registrator/pages/tensosensor_calibration/general_info_page.dart';
+import 'package:cma_registrator/pages/general_info/general_info_page.dart';
 import 'package:cma_registrator/pages/failures/failures_page.dart';
 import 'package:cma_registrator/pages/tensosensor_calibration/tensosensor_calibration_page.dart';
 import 'package:cma_registrator/pages/work_cycles/work_cycles_page.dart';
