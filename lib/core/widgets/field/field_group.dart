@@ -38,14 +38,21 @@ class _FieldGroupState extends State<FieldGroup> {
             controller: _scrollController,
             child: ScrollConfiguration(
               behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-              child: ListView.separated(
+              child: SingleChildScrollView(
                 controller: _scrollController,
-                itemCount: widget._fields.length,
-                itemBuilder: (context, index) => Padding(
-                  padding: EdgeInsets.only(right: padding * 2),
-                  child: widget._fields[index],
+                child: Column(
+                  children: [
+                    for (int i = 0; i < widget._fields.length; i++)
+                      ...[
+                        Padding(
+                          padding: EdgeInsets.only(right: padding * 2),
+                          child: widget._fields[i],
+                        ),
+                        if (i == widget._fields.length - 1)
+                          SizedBox(height: padding),
+                      ],
+                  ],
                 ),
-                separatorBuilder: (context, index) => SizedBox(height: padding),
               ),
             ),
           ),
