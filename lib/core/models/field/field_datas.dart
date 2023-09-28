@@ -1,7 +1,8 @@
 import 'package:cma_registrator/core/models/field/field_data.dart';
-import 'package:cma_registrator/core/models/persistable/sql_field.dart';
+import 'package:cma_registrator/core/models/persistable/database_field.dart';
 import 'package:dart_api_client/dart_api_client.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'field_type.dart';
 ///
 class FieldDatas {
   static final _log = const Log('SqlRecord')..level=LogLevel.debug;

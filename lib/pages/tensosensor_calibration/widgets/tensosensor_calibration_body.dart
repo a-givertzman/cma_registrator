@@ -1,5 +1,6 @@
 import 'package:cma_registrator/core/models/field/field_data.dart';
-import 'package:cma_registrator/core/models/persistable/sql_field.dart';
+import 'package:cma_registrator/core/models/field/field_type.dart';
+import 'package:cma_registrator/core/models/persistable/database_field.dart';
 import 'package:cma_registrator/pages/general_info/widgets/confirmation_dialog.dart';
 import 'package:cma_registrator/pages/tensosensor_calibration/widgets/tensosensor_calibration_step.dart';
 import 'package:dart_api_client/dart_api_client.dart';

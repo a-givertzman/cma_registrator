@@ -1,4 +1,4 @@
-import 'package:cma_registrator/core/models/field/field_data.dart';
+import 'package:cma_registrator/core/models/field/field_type.dart';
 import 'package:cma_registrator/core/validation/date_validation_case.dart';
 import 'package:cma_registrator/core/validation/int_validation_case.dart';
 import 'package:cma_registrator/core/validation/real_validation_case.dart';

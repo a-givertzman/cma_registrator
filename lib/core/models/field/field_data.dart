@@ -1,22 +1,7 @@
-import 'package:cma_registrator/core/models/persistable/sql_field.dart';
+import 'package:cma_registrator/core/models/field/field_type.dart';
+import 'package:cma_registrator/core/models/persistable/database_field.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_result.dart';
-///
-enum FieldType {
-  int,
-  real,
-  string,
-  date;
-  const FieldType();
-  factory FieldType.from(String value) {
-    return switch(value) {
-      "int" => FieldType.int,
-      "real" => FieldType.real,
-      "date" => FieldType.date,
-      _ => FieldType.string,
-    };
-  }
-}
 /// 
 /// Model that holds data for [TextFormField] or [TextField].
 class FieldData {
