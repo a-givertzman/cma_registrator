@@ -24,7 +24,7 @@ class OperatingCyclesAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBarWidget(
-      title: const Localized('Work cycles').v,
+      title: const Localized('Operating cycles').v,
       height: _height,
       rightWidgets: [
         SizedBox(

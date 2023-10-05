@@ -26,7 +26,7 @@ class GeneralInfoPage extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            tooltip: const Localized('Work cycles').v,
+            tooltip: const Localized('Operating cycles').v,
             onPressed:  () => Navigator.of(context).pushNamed(
               OperatingCyclesPage.routeName,
             ), 
