@@ -1,15 +1,14 @@
-import 'package:cma_registrator/core/models/work_cycle/fold_data_point_metrics.dart';
-import 'package:cma_registrator/core/models/work_cycle/work_cycle_point.dart';
+import 'package:cma_registrator/core/models/operating_cycle/operating_cycle.dart';
 import 'package:dart_api_client/dart_api_client.dart';
 import 'package:hmi_core/hmi_core.dart';
 ///
-class WorkCyclePoints {
-  static final _log = const Log('WorkCyclePoints')..level=LogLevel.debug;
+class OperatingCycles {
+  static final _log = const Log('OperatingCycles')..level=LogLevel.debug;
   final String _dbName;
   final String _tableName;
   final ApiAddress _apiAddress;
   /// 
-  const WorkCyclePoints({
+  const OperatingCycles({
     required String dbName,
     required String tableName,
     required ApiAddress apiAddress,
@@ -18,7 +17,7 @@ class WorkCyclePoints {
     _tableName = tableName,
     _apiAddress = apiAddress;
   ///
-  Future<Result<List<WorkCyclePoint>>> fetchAll() {
+  Future<Result<List<OperatingCycle>>> fetchAll() {
     _log.debug('[SqlRecord.fetch] Fetching all fields and values from value for field...');
     return ApiRequest(
       address: _apiAddress, 
@@ -31,9 +30,9 @@ class WorkCyclePoints {
     .then((result) =>
       result.fold(
         onData: (apiReply) => Result(
-          data: FoldDataPointMetrics(
-            jsons: apiReply.data,
-          ).workCycles(),
+          data: apiReply.data.map(
+            (json) => JsonOperatingCycle(json: json),
+          ).toList(),
         ), 
         onError: (error) => Result(error: error),
       ),
