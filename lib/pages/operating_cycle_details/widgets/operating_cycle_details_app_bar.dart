@@ -40,7 +40,7 @@ class OperatingCycleDetailsAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBarWidget(
-      title: const Localized('Failures').v,
+      title: const Localized('Operating Cycle Details').v,
       height: _height,
       leftWidgets: [
         DropdownMultiselectButton(

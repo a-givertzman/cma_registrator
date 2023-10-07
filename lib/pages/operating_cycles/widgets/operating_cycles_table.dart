@@ -1,7 +1,9 @@
 import 'package:cma_registrator/core/extensions/date_time_formatted_extension.dart';
 import 'package:cma_registrator/core/models/operating_cycle/operating_cycle.dart';
+import 'package:cma_registrator/core/repositories/operating_cycle_details/operating_cycle_details.dart';
 import 'package:cma_registrator/pages/operating_cycle_details/operating_cycle_details_page.dart';
 import 'package:cma_registrator/core/widgets/table/table_view.dart';
+import 'package:dart_api_client/dart_api_client.dart';
 import 'package:davi/davi.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
@@ -132,8 +134,13 @@ class _OperatingCyclesTableState extends State<OperatingCyclesTable> {
             onRowDoubleTap: (operatingCycle) => Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (_) => OperatingCycleDetailsPage(
-                  beginningTime: operatingCycle.start,
-                  endingTime: operatingCycle.stop,
+                  operatingCycle: operatingCycle,
+                  operatingCycleDetails: OperatingCycleDetails(
+                    apiAddress: ApiAddress.localhost(port: 8080),
+                    dbName: 'registrator',
+                    tableName: 'fault',
+                    operatingCycle: operatingCycle,
+                  ),
                 ),
               ),
             ),

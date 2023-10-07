@@ -1,53 +1,64 @@
 import 'dart:math';
 import 'package:cma_registrator/core/extensions/date_time_formatted_extension.dart';
+import 'package:cma_registrator/core/models/operating_cycle/operating_cycle.dart';
+import 'package:cma_registrator/core/repositories/operating_cycle_details/operating_cycle_details.dart';
+import 'package:cma_registrator/core/widgets/error_message_widget.dart';
+import 'package:cma_registrator/core/widgets/future_builder_widget.dart';
 import 'package:cma_registrator/pages/operating_cycle_details/widgets/operating_cycle_details_body.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 ///
 class OperatingCycleDetailsPage extends StatelessWidget {
-  final DateTime? _beginningTime;
-  final DateTime? _endingTime;
-  static const routeName = '/failures';
+  final OperatingCycle _operatingCycle;
+  final OperatingCycleDetails _operatingCycleDetails;
+  static const routeName = '/operatingCycleDetails';
   ///
   const OperatingCycleDetailsPage({
     super.key, 
-    DateTime? beginningTime, 
-    DateTime? endingTime,
+    required OperatingCycle operatingCycle, 
+    required OperatingCycleDetails operatingCycleDetails,
   }) : 
-    _endingTime = endingTime, 
-    _beginningTime = beginningTime;
+    _operatingCycle = operatingCycle,
+    _operatingCycleDetails = operatingCycleDetails;
   //
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      body: OperatingCycleDetailsBody(
-        beginningTime: _beginningTime,
-        endingTime: _endingTime,
-        points: _generateRandomPoints(
-          signalsCount: 20,
-          entriesCount: 1000,
+      body: FutureBuilderWidget(
+        onFuture: _operatingCycleDetails.fetchAll,
+        retryLabel: Padding(
+          padding: EdgeInsets.symmetric(
+            vertical: const Setting('padding').toDouble,
+          ),
+          child: Text(
+            const Localized('Retry').v,
+            style: theme.textTheme.titleLarge?.copyWith(
+              height: 1,
+              color: theme.colorScheme.onPrimary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        caseLoading: (_) => const Center(
+          child: CupertinoActivityIndicator(),
+        ),
+        validateData: (data) {
+          return !data.hasError;
+        },
+        caseData: (context, result) => OperatingCycleDetailsBody(
+          operatingCycle: _operatingCycle,
+          points: result.data,
+        ),
+        caseError: (_, error) => ErrorMessageWidget(
+          message: const Localized('Data loading error').v,
+        ),
+        caseNothing: (context) => ErrorMessageWidget(
+          message: const Localized('No data').v,
         ),
       ),
     );
-  }
-  List<DsDataPoint> _generateRandomPoints({
-    int signalsCount = 5,
-    int entriesCount = 100,
-  }) {
-    final names = List.generate(signalsCount, (index) => 'Signal $index');
-    final random = Random();
-    final points = <DsDataPoint>[];
-    for(int i = 0; i<entriesCount; i++) {
-      points.add(
-        DsDataPoint(
-          type: DsDataType.real, 
-          name: DsPointName('/${names[random.nextInt(names.length)]}'), 
-          value: random.nextDouble(), 
-          status: DsStatus.ok, 
-          timestamp: DateTime.now().toFormatted(),
-        ),
-      );
-    }
-    return points;
   }
 }

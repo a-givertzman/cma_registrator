@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'package:cma_registrator/core/models/operating_cycle/operating_cycle.dart';
 import 'package:cma_registrator/core/widgets/table/table_view.dart';
 import 'package:davi/davi.dart';
 import 'package:flutter/material.dart';
@@ -13,28 +14,24 @@ class OperatingCycleDetailsRecord {
 }
 ///
 class OperatingCycleDetailsBody extends StatefulWidget {
-  final DateTime? _beginningTime;
-  final DateTime? _endingTime;
+  final OperatingCycle _operatingCycle;
   final List<DsDataPoint> _points;
   final double _timeColumnWidth;
   ///
   const OperatingCycleDetailsBody({
     super.key,
-    required List<DsDataPoint> points, 
-    DateTime? beginningTime, 
-    DateTime? endingTime, 
+    required List<DsDataPoint> points,
+    required OperatingCycle operatingCycle,
     double timeColumnWidth = 220, 
   }) : 
     _timeColumnWidth = timeColumnWidth, 
-    _endingTime = endingTime, 
-    _beginningTime = beginningTime, 
+    _operatingCycle = operatingCycle, 
     _points = points;
   //
   @override
   State<OperatingCycleDetailsBody> createState() => _OperatingCycleDetailsBodyState(
     points: _points,
-    beginningTime: _beginningTime,
-    endingTime: _endingTime,
+    operatingCycle: _operatingCycle,
     timeColumnWidth: _timeColumnWidth,
   );
 }
@@ -46,36 +43,21 @@ class _OperatingCycleDetailsBodyState extends State<OperatingCycleDetailsBody> {
   final List<DsDataPoint> _points;
   late final DaviModel<OperatingCycleDetailsRecord> _model;
   late final List<DaviColumn<OperatingCycleDetailsRecord>> _columns;
-  final DateTime? _beginningTime;
-  final DateTime? _endingTime;
+  final OperatingCycle _operatingCycle;
   ///
   _OperatingCycleDetailsBodyState({
     required double timeColumnWidth,
     required List<DsDataPoint> points,
-    DateTime? beginningTime, 
-    DateTime? endingTime,
+    required OperatingCycle operatingCycle,
   }) : 
     _timeColumnWidth = timeColumnWidth,
     _points = points,
-    _beginningTime = beginningTime,
-    _endingTime = endingTime;
+    _operatingCycle = operatingCycle;
   //
   @override
   void initState() {
-    final detailsRecords = <OperatingCycleDetailsRecord>[];
-    for (int i = 0; i < _points.length; i++) {
-      final timestamp = _points[i].timestamp;
-      final pointName = _points[i].name.name;
-      final recordSignals = <String, dynamic>{};
-      if (detailsRecords.isNotEmpty) {
-        recordSignals.addAll(detailsRecords[i-1].signals);
-      }
-      recordSignals[pointName] = _points[i].value;
-      detailsRecords.add(OperatingCycleDetailsRecord(timestamp, recordSignals));
-    }
-    final signalNames = detailsRecords.last.signals.keys.toList()..sort(
-      _compareSignalNames,
-    );
+    final detailsRecords = _extractDetailsRecords(_points);
+    final signalNames = _extractSignalNames(detailsRecords);
     _columns = [
       DaviColumn<OperatingCycleDetailsRecord>(
         width: _timeColumnWidth,
@@ -113,13 +95,37 @@ class _OperatingCycleDetailsBodyState extends State<OperatingCycleDetailsBody> {
     super.initState();
   }
   //
+  List<OperatingCycleDetailsRecord> _extractDetailsRecords(List<DsDataPoint> points) {
+    final detailsRecords = <OperatingCycleDetailsRecord>[];
+    for (int i = 0; i < points.length; i++) {
+      final timestamp = points[i].timestamp;
+      final pointName = points[i].name.name;
+      final recordSignals = <String, dynamic>{};
+      if (detailsRecords.isNotEmpty) {
+        recordSignals.addAll(detailsRecords[i-1].signals);
+      }
+      recordSignals[pointName] = points[i].value;
+      detailsRecords.add(OperatingCycleDetailsRecord(timestamp, recordSignals));
+    }
+    return detailsRecords;
+  }
+  //
+  List<String> _extractSignalNames(List<OperatingCycleDetailsRecord> records) {
+    return records.isEmpty 
+      ? <String>[]
+      : records.last.signals.keys.toList()..sort(
+        _compareSignalNames,
+      );
+  }
+  //
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         OperatingCycleDetailsAppBar(
-          beginningTime: _beginningTime, 
-          endingTime: _endingTime,
+          beginningTime: _operatingCycle.start, 
+          endingTime: _operatingCycle.stop,
+          dropdownMenuWidth: 220,
           columnsVisibility: SplayTreeMap.from(
             _columnsVisibility,
             _compareSignalNames,
@@ -179,12 +185,6 @@ class _OperatingCycleDetailsBodyState extends State<OperatingCycleDetailsBody> {
   }
   ///
   int _compareSignalNames(String a, String b) {
-    return int.parse(
-      a.replaceAll(RegExp('Signal '), ''),
-    ).compareTo(
-      int.parse(
-        b.replaceAll(RegExp('Signal '), ''),
-      ),
-    );
+    return a.compareTo(b);
   }
 }
