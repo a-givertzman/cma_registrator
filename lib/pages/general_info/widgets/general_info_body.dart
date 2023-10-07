@@ -1,5 +1,5 @@
 import 'package:cma_registrator/core/models/field/field_data.dart';
-import 'package:cma_registrator/core/models/field/field_datas.dart';
+import 'package:cma_registrator/core/repositories/field/field_datas.dart';
 import 'package:cma_registrator/core/widgets/error_message_widget.dart';
 import 'package:cma_registrator/core/widgets/future_builder_widget.dart';
 import 'package:cma_registrator/pages/general_info/widgets/general_info_form.dart';

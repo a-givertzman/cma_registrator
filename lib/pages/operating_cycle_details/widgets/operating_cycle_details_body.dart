@@ -3,22 +3,22 @@ import 'package:cma_registrator/core/widgets/table/table_view.dart';
 import 'package:davi/davi.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
-import 'failures_app_bar.dart';
+import 'operating_cycle_details_app_bar.dart';
 ///
-class FailureRecord {
+class OperatingCycleDetailsRecord {
   final String timestamp;
   final Map<String, dynamic> signals;
   ///
-  FailureRecord(this.timestamp, this.signals);
+  OperatingCycleDetailsRecord(this.timestamp, this.signals);
 }
 ///
-class FailuresBody extends StatefulWidget {
+class OperatingCycleDetailsBody extends StatefulWidget {
   final DateTime? _beginningTime;
   final DateTime? _endingTime;
   final List<DsDataPoint> _points;
   final double _timeColumnWidth;
   ///
-  const FailuresBody({
+  const OperatingCycleDetailsBody({
     super.key,
     required List<DsDataPoint> points, 
     DateTime? beginningTime, 
@@ -31,7 +31,7 @@ class FailuresBody extends StatefulWidget {
     _points = points;
   //
   @override
-  State<FailuresBody> createState() => _FailuresBodyState(
+  State<OperatingCycleDetailsBody> createState() => _OperatingCycleDetailsBodyState(
     points: _points,
     beginningTime: _beginningTime,
     endingTime: _endingTime,
@@ -39,17 +39,17 @@ class FailuresBody extends StatefulWidget {
   );
 }
 ///
-class _FailuresBodyState extends State<FailuresBody> {
+class _OperatingCycleDetailsBodyState extends State<OperatingCycleDetailsBody> {
   final double _timeColumnWidth;
   final Set<String> _selectedTimestamps = {};
   late final Map<String, bool> _columnsVisibility;
   final List<DsDataPoint> _points;
-  late final DaviModel<FailureRecord> _model;
-  late final List<DaviColumn<FailureRecord>> _columns;
+  late final DaviModel<OperatingCycleDetailsRecord> _model;
+  late final List<DaviColumn<OperatingCycleDetailsRecord>> _columns;
   final DateTime? _beginningTime;
   final DateTime? _endingTime;
   ///
-  _FailuresBodyState({
+  _OperatingCycleDetailsBodyState({
     required double timeColumnWidth,
     required List<DsDataPoint> points,
     DateTime? beginningTime, 
@@ -62,22 +62,22 @@ class _FailuresBodyState extends State<FailuresBody> {
   //
   @override
   void initState() {
-    final failureRecords = <FailureRecord>[];
+    final detailsRecords = <OperatingCycleDetailsRecord>[];
     for (int i = 0; i < _points.length; i++) {
       final timestamp = _points[i].timestamp;
       final pointName = _points[i].name.name;
       final recordSignals = <String, dynamic>{};
-      if (failureRecords.isNotEmpty) {
-        recordSignals.addAll(failureRecords[i-1].signals);
+      if (detailsRecords.isNotEmpty) {
+        recordSignals.addAll(detailsRecords[i-1].signals);
       }
       recordSignals[pointName] = _points[i].value;
-      failureRecords.add(FailureRecord(timestamp, recordSignals));
+      detailsRecords.add(OperatingCycleDetailsRecord(timestamp, recordSignals));
     }
-    final signalNames = failureRecords.last.signals.keys.toList()..sort(
+    final signalNames = detailsRecords.last.signals.keys.toList()..sort(
       _compareSignalNames,
     );
     _columns = [
-      DaviColumn<FailureRecord>(
+      DaviColumn<OperatingCycleDetailsRecord>(
         width: _timeColumnWidth,
         name: const Localized('Time').v,
         stringValue: (record) => record.timestamp,
@@ -89,7 +89,7 @@ class _FailuresBodyState extends State<FailuresBody> {
         ),
       ),
       ...signalNames.map(
-        (signalName) => DaviColumn<FailureRecord>(
+        (signalName) => DaviColumn<OperatingCycleDetailsRecord>(
           name: signalName,
           stringValue: (record) {
             final recordValue = record.signals[signalName] as Object?;
@@ -106,7 +106,7 @@ class _FailuresBodyState extends State<FailuresBody> {
         ),
       ),
     ];
-    _model = DaviModel(rows: failureRecords, columns: _columns, alwaysSorted: true);
+    _model = DaviModel(rows: detailsRecords, columns: _columns, alwaysSorted: true);
     _columnsVisibility = Map.fromEntries(
       signalNames.map((signal) => MapEntry(signal, true)),
     );
@@ -117,7 +117,7 @@ class _FailuresBodyState extends State<FailuresBody> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        FailuresAppBar(
+        OperatingCycleDetailsAppBar(
           beginningTime: _beginningTime, 
           endingTime: _endingTime,
           columnsVisibility: SplayTreeMap.from(
@@ -148,7 +148,7 @@ class _FailuresBodyState extends State<FailuresBody> {
           },
         ),
         Expanded(
-          child: TableView<FailureRecord>(
+          child: TableView<OperatingCycleDetailsRecord>(
             model: _model,
             onRowTap: (record) => setState(() {
               if (_selectedTimestamps.contains(record.timestamp)) {

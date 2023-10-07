@@ -1,15 +1,15 @@
 import 'dart:math';
 import 'package:cma_registrator/core/extensions/date_time_formatted_extension.dart';
-import 'package:cma_registrator/pages/failures/widgets/failures_body.dart';
+import 'package:cma_registrator/pages/operating_cycle_details/widgets/operating_cycle_details_body.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 ///
-class FailuresPage extends StatelessWidget {
+class OperatingCycleDetailsPage extends StatelessWidget {
   final DateTime? _beginningTime;
   final DateTime? _endingTime;
   static const routeName = '/failures';
   ///
-  const FailuresPage({
+  const OperatingCycleDetailsPage({
     super.key, 
     DateTime? beginningTime, 
     DateTime? endingTime,
@@ -20,7 +20,7 @@ class FailuresPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FailuresBody(
+      body: OperatingCycleDetailsBody(
         beginningTime: _beginningTime,
         endingTime: _endingTime,
         points: _generateRandomPoints(

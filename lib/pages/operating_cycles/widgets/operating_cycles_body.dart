@@ -1,4 +1,4 @@
-import 'package:cma_registrator/core/models/operating_cycle/operating_cycles.dart';
+import 'package:cma_registrator/core/repositories/operating_cycle/operating_cycles.dart';
 import 'package:cma_registrator/core/widgets/error_message_widget.dart';
 import 'package:cma_registrator/core/widgets/future_builder_widget.dart';
 import 'package:cma_registrator/pages/operating_cycles/widgets/operating_cycles_table.dart';

@@ -1,5 +1,5 @@
-import 'package:cma_registrator/core/models/field/field_datas.dart';
-import 'package:cma_registrator/pages/failures/failures_page.dart';
+import 'package:cma_registrator/core/repositories/field/field_datas.dart';
+import 'package:cma_registrator/pages/operating_cycle_details/operating_cycle_details_page.dart';
 import 'package:cma_registrator/pages/tensosensor_calibration/tensosensor_calibration_page.dart';
 import 'package:cma_registrator/pages/operating_cycles/operating_cycles_page.dart';
 import 'package:dart_api_client/dart_api_client.dart';
@@ -38,7 +38,7 @@ class GeneralInfoPage extends StatelessWidget {
           IconButton(
             tooltip: const Localized('Failures').v,
             onPressed:  () => Navigator.of(context).pushNamed(
-              FailuresPage.routeName,
+              OperatingCycleDetailsPage.routeName,
             ), 
             icon: Icon(
               Icons.table_rows_outlined,
