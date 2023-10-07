@@ -1,5 +1,3 @@
-import 'dart:math';
-import 'package:cma_registrator/core/extensions/date_time_formatted_extension.dart';
 import 'package:cma_registrator/core/models/operating_cycle/operating_cycle.dart';
 import 'package:cma_registrator/core/repositories/operating_cycle_details/operating_cycle_details.dart';
 import 'package:cma_registrator/core/widgets/error_message_widget.dart';
