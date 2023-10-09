@@ -7,7 +7,6 @@ import 'package:dart_api_client/dart_api_client.dart';
 import 'package:davi/davi.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
-import 'operating_cycles_app_bar.dart';
 ///
 class OperatingCyclesTable extends StatefulWidget {
   final double _timeColumnWidth;
@@ -111,45 +110,35 @@ class _OperatingCyclesTableState extends State<OperatingCyclesTable> {
   //
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const OperatingCyclesAppBar(
-          // beginningTime: _beginningTime, 
-          // endingTime: _endingTime,
-        ),
-        Expanded(
-          child: TableView<OperatingCycle>(
-            model: _model,
-            columnWidthBehavior: ColumnWidthBehavior.fit,
-            onRowTap: (operatingCycle) {
-              final operatingCycleId = operatingCycle.id;
-              setState(() {
-                if(_selectedTimestamps.contains(operatingCycleId)) {
-                  _selectedTimestamps.remove(operatingCycleId);
-                } else {
-                  _selectedTimestamps.add(operatingCycleId);
-                }
-              });
-            },
-            onRowDoubleTap: (operatingCycle) => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => OperatingCycleDetailsPage(
-                  operatingCycle: operatingCycle,
-                  operatingCycleDetails: OperatingCycleDetails(
-                    apiAddress: ApiAddress.localhost(port: 8080),
-                    dbName: 'registrator',
-                    tableName: 'fault',
-                    operatingCycle: operatingCycle,
-                  ),
-                ),
-              ),
+    return TableView<OperatingCycle>(
+      model: _model,
+      columnWidthBehavior: ColumnWidthBehavior.fit,
+      onRowTap: (operatingCycle) {
+        final operatingCycleId = operatingCycle.id;
+        setState(() {
+          if(_selectedTimestamps.contains(operatingCycleId)) {
+            _selectedTimestamps.remove(operatingCycleId);
+          } else {
+            _selectedTimestamps.add(operatingCycleId);
+          }
+        });
+      },
+      onRowDoubleTap: (operatingCycle) => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => OperatingCycleDetailsPage(
+            operatingCycle: operatingCycle,
+            operatingCycleDetails: OperatingCycleDetails(
+              apiAddress: ApiAddress.localhost(port: 8080),
+              dbName: 'registrator',
+              tableName: 'fault',
+              operatingCycle: operatingCycle,
             ),
-            rowColor: (row) => _selectedTimestamps.contains(row.data.id)
-              ? Theme.of(context).colorScheme.onBackground.withOpacity(0.7)
-              : null,
           ),
         ),
-      ],
+      ),
+      rowColor: (row) => _selectedTimestamps.contains(row.data.id)
+        ? Theme.of(context).colorScheme.onBackground.withOpacity(0.7)
+        : null,
     );
   }
   ///

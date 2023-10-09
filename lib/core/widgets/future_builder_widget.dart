@@ -1,5 +1,6 @@
 import 'package:cma_registrator/core/widgets/button/retry_button.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_translate.dart';
@@ -28,6 +29,7 @@ class FutureBuilderWidget<T> extends StatefulWidget {
   final bool Function(T)? _validateData;
   final Future<T> Function() _onFuture;
   final Widget _retryLabel;
+  
   ///
   const FutureBuilderWidget({
     super.key, 
@@ -109,7 +111,9 @@ class _FutureBuilderWidgetState<T> extends State<FutureBuilderWidget<T>> {
           onRetry: _retry,
         );
         if (snapshot.connectionState != ConnectionState.done) {
-          return _caseLoading?.call(context) ?? const SizedBox();
+          return Scaffold(
+            body: _caseLoading?.call(context) ?? const SizedBox(),
+          );
         }
         if (snapshot.hasData) {
           final data = snapshot.requireData;

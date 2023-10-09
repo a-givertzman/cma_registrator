@@ -1,10 +1,11 @@
 import 'package:cma_registrator/core/models/field/field_data.dart';
 import 'package:cma_registrator/core/repositories/field/field_datas.dart';
-import 'package:cma_registrator/core/widgets/future_builder_widget.dart';
+import 'package:cma_registrator/core/widgets/future_builder_scaffold.dart';
 import 'package:cma_registrator/pages/general_info/widgets/general_info_form.dart';
+import 'package:cma_registrator/pages/operating_cycles/operating_cycles_page.dart';
+import 'package:cma_registrator/pages/tensosensor_calibration/tensosensor_calibration_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
-import 'package:hmi_core/hmi_core_app_settings.dart';
 
 class GeneralInfoBody extends StatelessWidget {
   // static final _log = const Log('GeneralInfoBody')..level=LogLevel.warning;
@@ -23,20 +24,38 @@ class GeneralInfoBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return FutureBuilderWidget(
-      retryLabel: Padding(
-        padding: EdgeInsets.symmetric(
-          vertical: const Setting('padding').toDouble,
+    return FutureBuilderScaffold(
+      title: const Localized('General info').v,
+      alwaysShowAppBarWidgets: true,
+      appBarHeight: 72.0,
+      appBarRightWidgets: [
+        const Spacer(),
+        Row(
+          children: [
+            IconButton(
+              tooltip: const Localized('Operating cycles').v,
+              onPressed:  () => Navigator.of(context).pushNamed(
+                OperatingCyclesPage.routeName,
+              ), 
+              icon: Icon(
+                Icons.table_chart_outlined,
+                color: theme.colorScheme.primary,
+              ),
+            ),
+            IconButton(
+              tooltip: const Localized('Tensosensor calibration').v,
+              onPressed:  () => Navigator.of(context).pushNamed(
+                TensosensorCalibrationPage.routeName,
+              ), 
+              icon: Icon(
+                Icons.settings_applications_outlined,
+                color: theme.colorScheme.primary,
+              ),
+            ),
+          ],
         ),
-        child: Text(
-          const Localized('Retry').v,
-          style: theme.textTheme.titleLarge?.copyWith(
-            height: 1,
-            color: theme.colorScheme.onPrimary,
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ),
+        const Spacer(),
+      ],
       onFuture: _future,
       validateData: (data) {
         return !data.hasError;

@@ -14,6 +14,7 @@ class OperatingCycleDetailsAppBar extends StatelessWidget {
   final double _dropdownMenuWidth;
   final double _dateFieldWIdth;
   final double _height;
+  final bool _showOnlyTitle;
   ///
   const OperatingCycleDetailsAppBar({
     super.key,
@@ -26,6 +27,7 @@ class OperatingCycleDetailsAppBar extends StatelessWidget {
     double dropdownMenuWidth = 200, 
     double dateFieldWIdth = 220, 
     double height = 84, 
+    bool showOnlyTitle = false,
   }) : 
     _height = height, 
     _dateFieldWIdth = dateFieldWIdth, 
@@ -35,14 +37,17 @@ class OperatingCycleDetailsAppBar extends StatelessWidget {
     _columnsVisibility = columnsVisibility, 
     _onChanged = onChanged, 
     _endingTime = endingTime, 
-    _beginningTime = beginningTime;
+    _beginningTime = beginningTime,
+    _showOnlyTitle = showOnlyTitle;
   //
   @override
   Widget build(BuildContext context) {
     return AppBarWidget(
       title: const Localized('Operating Cycle Details').v,
       height: _height,
-      leftWidgets: [
+      leftWidgets: _showOnlyTitle
+      ? const [] 
+      : [
         DropdownMultiselectButton(
           onChanged: _onChanged,
           height: _dropdownButtonHeight,
@@ -52,7 +57,9 @@ class OperatingCycleDetailsAppBar extends StatelessWidget {
           menuWidth: _dropdownMenuWidth,
         ),
       ],
-      rightWidgets: [
+      rightWidgets: _showOnlyTitle
+      ? const [] 
+      : [
         SizedBox(
           width: _dateFieldWIdth,
           child: SubmitableField<DateTime>(

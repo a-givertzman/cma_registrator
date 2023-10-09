@@ -1,8 +1,8 @@
 import 'package:cma_registrator/core/repositories/operating_cycle/operating_cycles.dart';
-import 'package:cma_registrator/core/widgets/future_builder_widget.dart';
+import 'package:cma_registrator/core/widgets/future_builder_scaffold.dart';
 import 'package:cma_registrator/pages/operating_cycles/widgets/operating_cycles_table.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_translate.dart';
 
 class OperatingCyclesBody extends StatelessWidget {
@@ -14,22 +14,10 @@ class OperatingCyclesBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return FutureBuilderWidget(
+    return FutureBuilderScaffold(
+      title: const Localized('Operating cycles').v,
+      appBarHeight: 72.0,
       onFuture: () => _points.fetchAll(),
-      retryLabel: Padding(
-        padding: EdgeInsets.symmetric(
-          vertical: const Setting('padding').toDouble,
-        ),
-        child: Text(
-          const Localized('Retry').v,
-          style: theme.textTheme.titleLarge?.copyWith(
-            height: 1,
-            color: theme.colorScheme.onPrimary,
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ),
       validateData: (data) {
         return !data.hasError;
       },
