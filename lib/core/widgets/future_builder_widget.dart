@@ -1,11 +1,28 @@
 import 'package:cma_registrator/core/widgets/button/retry_button.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
+import 'package:hmi_core/hmi_core_translate.dart';
+import 'error_message_widget.dart';
+/// 
+/// Default indicator builder for [FutureBuilderWidget] loading state
+Widget _defaultCaseLoading(BuildContext _) => const Center(
+  child: CupertinoActivityIndicator(),
+);
+///
+/// Default indicator builder for [FutureBuilderWidget] error state
+Widget _defaultCaseError(BuildContext _, Object error) => ErrorMessageWidget(
+  message: const Localized('Data loading error').v,
+);
+///
+/// Default indicator builder for [FutureBuilderWidget] empty-data state
+Widget _defaultCaseNothing(BuildContext _) => ErrorMessageWidget(
+  message: const Localized('No data').v,
+);
 ///
 class FutureBuilderWidget<T> extends StatefulWidget {
   final Widget Function(BuildContext)? _caseLoading;
-  final Widget Function(BuildContext, T)? _caseData;
+  final Widget Function(BuildContext, T) _caseData;
   final Widget Function(BuildContext, Object)? _caseError;
   final Widget Function(BuildContext)? _caseNothing;
   final bool Function(T)? _validateData;
@@ -16,10 +33,10 @@ class FutureBuilderWidget<T> extends StatefulWidget {
     super.key, 
     required Widget retryLabel,
     required Future<T> Function() onFuture,
-    Widget Function(BuildContext context)? caseLoading,
-    Widget Function(BuildContext context, T data)? caseData,
-    Widget Function(BuildContext context, Object error)? caseError,
-    Widget Function(BuildContext context)? caseNothing, 
+    required Widget Function(BuildContext context, T data) caseData,
+    Widget Function(BuildContext context)? caseLoading = _defaultCaseLoading,
+    Widget Function(BuildContext context, Object error)? caseError = _defaultCaseError,
+    Widget Function(BuildContext context)? caseNothing = _defaultCaseNothing, 
     bool Function(T data)? validateData,
   }) : _validateData = validateData, 
     _caseLoading = caseLoading,
@@ -99,7 +116,7 @@ class _FutureBuilderWidgetState<T> extends State<FutureBuilderWidget<T>> {
           if (_validate(data)) {
             return _caseData?.call(context, data) ?? const SizedBox();
           } else {
-            return _WidgetWithRetry(
+            return _WidgetWithRetryButton(
               retryButton: retryButton,
               widget: _caseError?.call(
                 context, 
@@ -113,12 +130,12 @@ class _FutureBuilderWidgetState<T> extends State<FutureBuilderWidget<T>> {
         }
         if (snapshot.hasError) {
           final error = snapshot.error!;
-          return _WidgetWithRetry(
+          return _WidgetWithRetryButton(
             retryButton: retryButton,
             widget: _caseError?.call(context, error),
           );
         }
-        return _WidgetWithRetry(
+        return _WidgetWithRetryButton(
           retryButton: retryButton,
           widget: _caseNothing?.call(context),
         );
@@ -127,11 +144,11 @@ class _FutureBuilderWidgetState<T> extends State<FutureBuilderWidget<T>> {
   }
 }
 
-class _WidgetWithRetry extends StatelessWidget {
+class _WidgetWithRetryButton extends StatelessWidget {
   final Widget? _widget;
   final Widget _retryButton;
   ///
-  const _WidgetWithRetry({
+  const _WidgetWithRetryButton({
     Widget? widget, 
     required Widget retryButton,
   }) : 

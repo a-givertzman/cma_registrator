@@ -1,11 +1,9 @@
 import 'package:cma_registrator/core/models/field/field_data.dart';
 import 'package:cma_registrator/core/repositories/field/field_datas.dart';
-import 'package:cma_registrator/core/widgets/error_message_widget.dart';
 import 'package:cma_registrator/core/widgets/future_builder_widget.dart';
 import 'package:cma_registrator/pages/general_info/widgets/general_info_form.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 
 class GeneralInfoBody extends StatelessWidget {
@@ -40,9 +38,6 @@ class GeneralInfoBody extends StatelessWidget {
         ),
       ),
       onFuture: _future,
-      caseLoading: (_) => const Center(
-        child: CupertinoActivityIndicator(),
-      ),
       validateData: (data) {
         return !data.hasError;
       },
@@ -53,12 +48,6 @@ class GeneralInfoBody extends StatelessWidget {
             onSave: () => _fields.persistAll(fields),
           );
       },
-      caseError: (_, error) => ErrorMessageWidget(
-        message: const Localized('Data loading error').v,
-      ),
-      caseNothing: (context) => ErrorMessageWidget(
-        message: const Localized('No data').v,
-      ),
     );
   }
 }

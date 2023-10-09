@@ -1,9 +1,7 @@
 import 'package:cma_registrator/core/models/operating_cycle/operating_cycle.dart';
 import 'package:cma_registrator/core/repositories/operating_cycle_details/operating_cycle_details.dart';
-import 'package:cma_registrator/core/widgets/error_message_widget.dart';
 import 'package:cma_registrator/core/widgets/future_builder_widget.dart';
 import 'package:cma_registrator/pages/operating_cycle_details/widgets/operating_cycle_details_body.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
@@ -40,21 +38,12 @@ class OperatingCycleDetailsPage extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ),
-        caseLoading: (_) => const Center(
-          child: CupertinoActivityIndicator(),
-        ),
         validateData: (data) {
           return !data.hasError;
         },
         caseData: (context, result) => OperatingCycleDetailsBody(
           operatingCycle: _operatingCycle,
           points: result.data,
-        ),
-        caseError: (_, error) => ErrorMessageWidget(
-          message: const Localized('Data loading error').v,
-        ),
-        caseNothing: (context) => ErrorMessageWidget(
-          message: const Localized('No data').v,
         ),
       ),
     );
