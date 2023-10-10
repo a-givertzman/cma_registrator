@@ -56,30 +56,5 @@ class OperatingCycleDetailsPage extends StatelessWidget {
         ),
       ),
     );
-    return Scaffold(
-      body: FutureBuilderWidget(
-        onFuture: _operatingCycleDetails.fetchAll,
-        retryLabel: Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: const Setting('padding').toDouble,
-          ),
-          child: Text(
-            const Localized('Retry').v,
-            style: theme.textTheme.titleLarge?.copyWith(
-              height: 1,
-              color: theme.colorScheme.onPrimary,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ),
-        validateData: (data) {
-          return !data.hasError;
-        },
-        caseData: (context, result) => OperatingCycleDetailsBody(
-          operatingCycle: _operatingCycle,
-          points: result.data,
-        ),
-      ),
-    );
   }
 }
