@@ -1,16 +1,18 @@
-import 'package:cma_registrator/core/models/ds_data_point/json_data_point.dart';
 import 'package:cma_registrator/core/models/operating_cycle/operating_cycle.dart';
+import 'package:cma_registrator/core/models/operating_cycle_details/data_point_metrics.dart';
+import 'package:cma_registrator/core/models/operating_cycle_details/fold_data_point_metrics.dart';
 import 'package:dart_api_client/dart_api_client.dart';
-import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_log.dart';
+import 'package:hmi_core/hmi_core_result.dart';
 ///
-class OperatingCycleDetails {
-  static final _log = const Log('OperatingCycleDetails')..level=LogLevel.debug;
+class OperatingCycleMetrics {
+  static final _log = const Log('OperatingCycleMetrics')..level=LogLevel.debug;
   final String _dbName;
   final String _tableName;
-  final OperatingCycle _operatingCycle;
   final ApiAddress _apiAddress;
+  final OperatingCycle _operatingCycle;
   /// 
-  const OperatingCycleDetails({
+  const OperatingCycleMetrics({
     required String dbName,
     required String tableName,
     required ApiAddress apiAddress,
@@ -21,24 +23,23 @@ class OperatingCycleDetails {
     _apiAddress = apiAddress,
     _operatingCycle = operatingCycle;
   ///
-  Future<Result<List<DsDataPoint>>> fetchAll() {
+  Future<Result<List<DataPointMetrics>>> fetchAll() {
     _log.debug('[SqlRecord.fetch] Fetching all fields and values from value for field...');
     return ApiRequest(
       address: _apiAddress, 
       sqlQuery: SqlQuery(
         authToken: '', 
         database: _dbName, 
-        sql: 'SELECT * FROM $_tableName JOIN tags on $_tableName.pid = tags.id ' 
-             'WHERE ($_tableName.timestamp >= \'${_operatingCycle.start}\' '
-             'AND $_tableName.timestamp <= \'${_operatingCycle.stop}\');',
+        sql: 'SELECT * FROM $_tableName '
+             'WHERE operating_cycle_id = ${_operatingCycle.id};',
       ),
     ).fetch()
     .then((result) =>
       result.fold(
         onData: (apiReply) => Result(
-          data: apiReply.data.map(
-            (json) => JsonDataPoint(json: json),
-          ).toList(),
+          data: FoldDataPointMetrics(
+            jsons: apiReply.data,
+          ).metrics(),
         ), 
         onError: (error) => Result(error: error),
       ),

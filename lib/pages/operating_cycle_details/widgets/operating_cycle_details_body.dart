@@ -125,6 +125,7 @@ class _OperatingCycleDetailsBodyState extends State<OperatingCycleDetailsBody> {
         OperatingCycleDetailsAppBar(
           beginningTime: _operatingCycle.start, 
           endingTime: _operatingCycle.stop,
+          height: 72,
           dropdownMenuWidth: 220,
           columnsVisibility: SplayTreeMap.from(
             _columnsVisibility,
