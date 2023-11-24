@@ -64,7 +64,7 @@ class _TensosensorCalibrationBodyState extends State<TensosensorCalibrationBody>
             viewIndex: index + 1,
             onNext: () => _slideToPage(index+1),
           );
-        case _pagesCount - 1:
+        case const (_pagesCount - 1):
           return TensosensorCalibrationStep.finishing(
             viewIndex: index + 1,
             fieldData: _fieldsData[index-1],
