@@ -3,13 +3,13 @@ import 'package:cma_registrator/core/widgets/field/submitable_field.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_translate.dart';
 ///
-class WorkCyclesAppBar extends StatelessWidget {
+class OperatingCyclesAppBar extends StatelessWidget {
   final DateTime? _beginningTime;
   final DateTime? _endingTime;
   final double _height;
   final double _dateFieldWidth;
   ///
-  const WorkCyclesAppBar({
+  const OperatingCyclesAppBar({
     super.key,
     DateTime? beginningTime,
     DateTime? endingTime,
@@ -24,7 +24,7 @@ class WorkCyclesAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBarWidget(
-      title: const Localized('Work cycles').v,
+      title: const Localized('Operating cycles').v,
       height: _height,
       rightWidgets: [
         SizedBox(
