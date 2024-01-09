@@ -1,6 +1,7 @@
 import 'package:cma_registrator/core/models/field/field_data.dart';
+import 'package:cma_registrator/core/models/field/field_type.dart';
 import 'package:flutter_test/flutter_test.dart';
-import '../../fakes/fake_sql_record.dart';
+import '../../../fakes/fake_database_field.dart';
 
 void main() {
   group('FieldData cancel', () { 
@@ -13,12 +14,14 @@ void main() {
       ];
       for (final initialValue in initialData) {
         final fieldData = FieldData(
+          id: '',
+          type: FieldType.string,
           label: 'test', 
           initialValue: initialValue, 
-          record: FakeSqlRecord(),
+          record: FakeDatabaseField(),
         );
         fieldData.cancel();
-        expect(fieldData.value, initialValue);
+        expect(fieldData.controller.text, initialValue);
       }
     });
     test('sets value to initial after some updates', () async {
@@ -30,15 +33,22 @@ void main() {
       ];
       for (final initialValue in initialData) {
         final fieldData = FieldData(
+          id: '',
+          type: FieldType.string,
           label: 'test', 
           initialValue: initialValue, 
-          record: FakeSqlRecord(),
+          record: FakeDatabaseField(),
         );
-        fieldData.update('updateValue1');
-        fieldData.update('updateValue2');
-        fieldData.update('updateValue3');
+        // fieldData.update('updateValue1');
+        // fieldData.update('updateValue2');
+        // fieldData.update('updateValue3');
+        // fieldData.cancel();
+        // expect(fieldData.value, initialValue);
+        fieldData.controller.text = 'updateValue1';
+        fieldData.controller.text = 'updateValue2';
+        fieldData.controller.text = 'updateValue3';
         fieldData.cancel();
-        expect(fieldData.value, initialValue);
+        expect(fieldData.controller.text, initialValue);
       }
     });
   });

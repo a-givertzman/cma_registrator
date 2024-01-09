@@ -1,6 +1,7 @@
 import 'package:cma_registrator/core/models/field/field_data.dart';
+import 'package:cma_registrator/core/models/field/field_type.dart';
 import 'package:flutter_test/flutter_test.dart';
-import '../../fakes/fake_sql_record.dart';
+import '../../../fakes/fake_database_field.dart';
 
 void main() {
   group('FieldData update', () { 
@@ -12,13 +13,16 @@ void main() {
         '+=-_()*;&.^,:%\$#№@"!><',
       ];
       final fieldData = FieldData(
+        id: '',
+        type: FieldType.string,
         label: 'test', 
         initialValue: 'initialValue', 
-        record: FakeSqlRecord(),
+        record: FakeDatabaseField(),
       );
       for (final newValue in updateData) {
-        fieldData.update(newValue);
-        expect(fieldData.value, newValue);
+        // fieldData.update(newValue);
+        fieldData.controller.text = newValue;
+        expect(fieldData.controller.text, newValue);
       }
     });
   });

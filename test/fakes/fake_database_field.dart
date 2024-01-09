@@ -1,11 +1,11 @@
-import 'package:cma_registrator/core/models/persistable/sql_record.dart';
+import 'package:cma_registrator/core/models/persistable/database_field.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hmi_core/hmi_core_result.dart';
 
-class FakeSqlRecord extends Fake implements SqlRecord {
+class FakeDatabaseField extends Fake implements DatabaseField {
   final Result<String>? saveResult;
   final Result<String>? fetchResult;
-  FakeSqlRecord({this.saveResult, this.fetchResult});
+  FakeDatabaseField({this.saveResult, this.fetchResult});
   @override
   Future<Result<String>> persist(String value) => Future.value(saveResult);
   @override

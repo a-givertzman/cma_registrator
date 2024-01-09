@@ -5,8 +5,8 @@ homepage: https://github.com/a-givertzman/cma_registrator
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 environment:
-  sdk: '>=2.19.4 <3.0.0'
-  # sdk: '>=3.0.0-0 <4.0.0'
+  # sdk: '>=2.19.4 <3.0.0'
+  sdk: '>=3.0.0-0 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -17,6 +17,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # needed for date picker dialog
+  flutter_localizations:
+    sdk: flutter
   hmi_core:
     git:
       url: https://github.com/a-givertzman/hmi_core.git
@@ -25,16 +28,24 @@ dependencies:
     git:
       url: https://github.com/a-givertzman/hmi_networking.git
       ref: master
+  dart_api_client:
+    git:
+      url: https://github.com/a-givertzman/dart_api_client.git
+      ref: master
   hmi_widgets:
     git:
       url: https://github.com/a-givertzman/hmi_widgets.git
       ref: master
+  fl_chart:
+    git:
+      url: https://github.com/a-givertzman/fl_chart.git
+      ref: master
   another_flushbar: ^1.10.29
-  fl_chart: ^0.61.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   davi: ^3.3.0
+  # intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:

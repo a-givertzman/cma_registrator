@@ -1,6 +1,8 @@
+import 'package:cma_registrator/core/models/field/field_datas.dart';
 import 'package:cma_registrator/pages/failures/failures_page.dart';
 import 'package:cma_registrator/pages/tensosensor_calibration/tensosensor_calibration_page.dart';
 import 'package:cma_registrator/pages/work_cycles/work_cycles_page.dart';
+import 'package:dart_api_client/dart_api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_translate.dart';
 import 'widgets/general_info_body.dart';
@@ -55,7 +57,13 @@ class GeneralInfoPage extends StatelessWidget {
           ),
         ],
       ),
-      body: const GeneralInfoBody(),
+      body: GeneralInfoBody(
+        fields: FieldDatas(
+          dbName: 'registrator', 
+          tableName: 'operating_metric', 
+          apiAddress: ApiAddress.localhost(port: 8080),
+        ),
+      ),
     );
   }
 }

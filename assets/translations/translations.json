@@ -19,6 +19,7 @@
     "Too few characters": ["Too few characters", "Cлишком мало символов"],
     "Too many characters": ["Too many characters", "Слишком много символов"],
     "Data saving": ["Data saving", "Сохранение данных"],
+    "Data saved": ["Data saved", "Данные сохранены"],
     "Data will be persisted on the server. Do you want to proceed?": ["Data will be persisted on the server. Do you want to proceed?", "Данные будут сохранены на сервере. Хотите продолжить?"],
     "Something went wrong": ["Something went wrong", "Что-то пошло не так"],
     "Work cycles": ["Work cycles", "Циклы работы"],
@@ -39,5 +40,12 @@
     "Failure class": ["Failure class", "Класс аварии"],
     "Max": ["Max", "Макс"],
     "Mean": ["Mean", "Среднее"],
-    "Data": ["Data", "Данные"]
+    "Data": ["Data", "Данные"],
+    "Operation": ["Operation", "Наработка"],
+    "Invalid date": ["Invalid date", "Некорректная дата"],
+    "Invalid real value": ["Invalid real value", "Некорректное дробное значение"],
+    "Invalid integer value": ["Invalid integer value", "Некорректное целочисленное значение"],
+    "Data loading error": ["Data loading error", "Ошибка загрузки данных"],
+    "No data": ["No data", "Нет данных"],
+    "Retry": ["Retry", "Повторить"]
 }

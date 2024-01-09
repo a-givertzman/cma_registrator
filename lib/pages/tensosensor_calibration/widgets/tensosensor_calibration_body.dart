@@ -1,7 +1,9 @@
 import 'package:cma_registrator/core/models/field/field_data.dart';
-import 'package:cma_registrator/core/models/persistable/sql_record.dart';
+import 'package:cma_registrator/core/models/field/field_type.dart';
+import 'package:cma_registrator/core/models/persistable/database_field.dart';
 import 'package:cma_registrator/pages/general_info/widgets/confirmation_dialog.dart';
 import 'package:cma_registrator/pages/tensosensor_calibration/widgets/tensosensor_calibration_step.dart';
+import 'package:dart_api_client/dart_api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_translate.dart';
 ///
@@ -21,9 +23,16 @@ class _TensosensorCalibrationBodyState extends State<TensosensorCalibrationBody>
   final _fieldsData = List.generate(
     _pagesCount - 1, 
     (index) => FieldData(
+      id: '',
+      type: FieldType.string,
       label: const Localized('Target weight').v, 
       initialValue: '0.0', 
-      record: const SqlRecord('Target weight'),
+      record: DatabaseField(
+        id: 'target_weight',
+        tableName: 'tensosensor_calibration',
+        dbName: 'registrator',
+        apiAddress: ApiAddress.localhost(),
+      ),
     ),
   );
   //
@@ -64,7 +73,7 @@ class _TensosensorCalibrationBodyState extends State<TensosensorCalibrationBody>
             viewIndex: index + 1,
             onNext: () => _slideToPage(index+1),
           );
-        case _pagesCount - 1:
+        case const (_pagesCount - 1):
           return TensosensorCalibrationStep.finishing(
             viewIndex: index + 1,
             fieldData: _fieldsData[index-1],

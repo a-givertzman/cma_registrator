@@ -4,6 +4,7 @@ import 'package:cma_registrator/pages/general_info/general_info_page.dart';
 import 'package:cma_registrator/pages/failures/failures_page.dart';
 import 'package:cma_registrator/pages/tensosensor_calibration/tensosensor_calibration_page.dart';
 import 'package:cma_registrator/pages/work_cycles/work_cycles_page.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 ///
 final appRoutes = {
   GeneralInfoPage.routeName: (BuildContext context) => const GeneralInfoPage(),
@@ -27,6 +28,12 @@ class AppWidget extends StatelessWidget {
       initialRoute: GeneralInfoPage.routeName,
       routes: appRoutes,
       theme: _themeSwitch.themeData,
+      supportedLocales: const [Locale('ru'), Locale('en')],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
     );
   }
 }
