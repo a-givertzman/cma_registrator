@@ -4,7 +4,7 @@ import 'package:cma_registrator/core/widgets/field/submitable_field.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_translate.dart';
 ///
-class FailuresAppBar extends StatelessWidget {
+class OperatingCycleDetailsAppBar extends StatelessWidget {
   final DateTime? _beginningTime;
   final DateTime? _endingTime;
   final Map<String, bool> _columnsVisibility;
@@ -14,8 +14,9 @@ class FailuresAppBar extends StatelessWidget {
   final double _dropdownMenuWidth;
   final double _dateFieldWIdth;
   final double _height;
+  final bool _showOnlyTitle;
   ///
-  const FailuresAppBar({
+  const OperatingCycleDetailsAppBar({
     super.key,
     required Map<String, bool> columnsVisibility,
     DateTime? beginningTime,
@@ -26,6 +27,7 @@ class FailuresAppBar extends StatelessWidget {
     double dropdownMenuWidth = 200, 
     double dateFieldWIdth = 220, 
     double height = 84, 
+    bool showOnlyTitle = false,
   }) : 
     _height = height, 
     _dateFieldWIdth = dateFieldWIdth, 
@@ -35,14 +37,18 @@ class FailuresAppBar extends StatelessWidget {
     _columnsVisibility = columnsVisibility, 
     _onChanged = onChanged, 
     _endingTime = endingTime, 
-    _beginningTime = beginningTime;
+    _beginningTime = beginningTime,
+    _showOnlyTitle = showOnlyTitle;
   //
   @override
   Widget build(BuildContext context) {
     return AppBarWidget(
-      title: const Localized('Failures').v,
+      title: const Localized('Operating cycle details').v,
       height: _height,
-      leftWidgets: [
+      showLeading: false,
+      leftWidgets: _showOnlyTitle
+      ? const [] 
+      : [
         DropdownMultiselectButton(
           onChanged: _onChanged,
           height: _dropdownButtonHeight,
@@ -52,7 +58,9 @@ class FailuresAppBar extends StatelessWidget {
           menuWidth: _dropdownMenuWidth,
         ),
       ],
-      rightWidgets: [
+      rightWidgets: _showOnlyTitle
+      ? const [] 
+      : [
         SizedBox(
           width: _dateFieldWIdth,
           child: SubmitableField<DateTime>(

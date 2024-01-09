@@ -5,6 +5,7 @@ class AppBarWidget extends StatelessWidget {
   final double? _height;
   final List<Widget> _leftWidgets;
   final List<Widget> _rightWidgets;
+  final bool _showLeading;
   ///
   const AppBarWidget({
     super.key, 
@@ -12,11 +13,13 @@ class AppBarWidget extends StatelessWidget {
     List<Widget> rightWidgets = const [], 
     double? height, 
     String? title,
+    bool showLeading = true,
   }) : 
     _title = title, 
     _height = height, 
     _rightWidgets = rightWidgets, 
-    _leftWidgets = leftWidgets;
+    _leftWidgets = leftWidgets,
+    _showLeading = showLeading;
   //
   @override
   Widget build(BuildContext context) {
@@ -29,7 +32,7 @@ class AppBarWidget extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                if (Navigator.of(context).canPop())
+                if (Navigator.of(context).canPop() && _showLeading)
                   IconButton(
                     onPressed: () => Navigator.of(context).pop(), 
                     icon: const Icon(Icons.arrow_back),

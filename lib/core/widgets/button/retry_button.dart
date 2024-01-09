@@ -13,10 +13,17 @@ class RetryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton.icon(
+    final theme = Theme.of(context);
+    return _retryLabel != null 
+    ? ElevatedButton.icon(
       onPressed: _onRetry, 
       icon: const Icon(Icons.replay), 
       label: _retryLabel ?? const Text('Retry'),
+    ) 
+    : FloatingActionButton.small(
+      onPressed: _onRetry,
+      backgroundColor: theme.colorScheme.primary,
+      child: Icon(Icons.replay, color: theme.colorScheme.onPrimary),
     );
   }
 }
