@@ -19,5 +19,4 @@ class IntValidationCase implements ValidationCase {
       );
     }
   }
-
 }

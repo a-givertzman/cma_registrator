@@ -8,6 +8,7 @@ class OperatingCyclesAppBar extends StatelessWidget {
   final DateTime? _endingTime;
   final double _height;
   final double _dateFieldWidth;
+  final bool _showOnlyTitle;
   ///
   const OperatingCyclesAppBar({
     super.key,
@@ -15,18 +16,22 @@ class OperatingCyclesAppBar extends StatelessWidget {
     DateTime? endingTime,
     double dateFieldWidth = 220,
     double height = 72,
+    bool showOnlyTitle = false,
   }) : 
     _endingTime = endingTime, 
     _beginningTime = beginningTime,
     _dateFieldWidth = dateFieldWidth,
-    _height = height;
+    _height = height,
+    _showOnlyTitle = showOnlyTitle;
   //
   @override
   Widget build(BuildContext context) {
     return AppBarWidget(
       title: const Localized('Operating cycles').v,
       height: _height,
-      rightWidgets: [
+      rightWidgets: _showOnlyTitle 
+      ? const[] 
+      : [
         SizedBox(
           width: _dateFieldWidth,
           child: SubmitableField<DateTime>(

@@ -19,5 +19,4 @@ class DateValidationCase implements ValidationCase {
       );
     }
   }
-
 }

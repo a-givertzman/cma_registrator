@@ -47,5 +47,7 @@
     "Invalid integer value": ["Invalid integer value", "Некорректное целочисленное значение"],
     "Data loading error": ["Data loading error", "Ошибка загрузки данных"],
     "No data": ["No data", "Нет данных"],
-    "Retry": ["Retry", "Повторить"]
+    "Retry": ["Retry", "Повторить"],
+    "Metrics": ["Metrics", "Метрики"],
+    "Operating cycle details": ["Operating cycle details", "Детали операционного цикла"]
 }
