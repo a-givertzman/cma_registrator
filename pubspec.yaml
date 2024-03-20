@@ -1,7 +1,7 @@
 name: cma_registrator
 description: View data stored in the registrator database.
 version: 0.0.2
-# homepage: https://github.com/a-givertzman/cma_registrator
+homepage: https://github.com/a-givertzman/cma_registrator
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 environment:
