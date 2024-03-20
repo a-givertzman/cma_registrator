@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_core/hmi_core_translate.dart';
 
 import 'error_message_widget.dart';
@@ -29,7 +30,7 @@ class FutureBuilderScaffold<T> extends StatefulWidget {
   final Widget Function(BuildContext, Object)? _caseError;
   final Widget Function(BuildContext)? _caseNothing;
   final bool Function(T)? _validateData;
-  final Future<T> Function() _onFuture;
+  final Future<ResultF<T>> Function() _onFuture;
   final Widget? _retryLabel;
   final String? _title;
   final double _appBarHeight;
@@ -39,7 +40,7 @@ class FutureBuilderScaffold<T> extends StatefulWidget {
   ///
   const FutureBuilderScaffold({
     super.key, 
-    required Future<T> Function() onFuture,
+    required Future<ResultF<T>> Function() onFuture,
     Widget? retryLabel,
     Widget Function(BuildContext context)? caseLoading = _defaultCaseLoading,
     Widget Function(BuildContext context, T data)? caseData,
@@ -87,14 +88,14 @@ class _FutureBuilderScaffoldState<T> extends State<FutureBuilderScaffold<T>> {
   final Widget Function(BuildContext, Object)? _caseError;
   final Widget Function(BuildContext)? _caseNothing;
   final bool Function(T)? _validateData;
-  final Future<T> Function() _onFuture;
+  final Future<ResultF<T>> Function() _onFuture;
   final Widget? _retryLabel;
   final String? _title;
   final double _appBarHeight;
   final List<Widget> _appBarLeftWidgets;
   final List<Widget> _appBarRightWidgets;
   final bool _alwaysShowAppBarWidgets;
-  late Future<T> _future;
+  late Future<ResultF<T>> _future;
   ///
   _FutureBuilderScaffoldState({
     required Widget? retryLabel,
@@ -103,7 +104,7 @@ class _FutureBuilderScaffoldState<T> extends State<FutureBuilderScaffold<T>> {
     required Widget Function(BuildContext, Object)? caseError,
     required Widget Function(BuildContext)? caseNothing,
     required bool Function(T)? validateData,
-    required Future<T> Function() onFuture,
+    required Future<ResultF<T>> Function() onFuture,
     required String? title,
     required double appBarHeight,
     required List<Widget> appBarLeftWidgets,
@@ -134,8 +135,6 @@ class _FutureBuilderScaffoldState<T> extends State<FutureBuilderScaffold<T>> {
       _future = _onFuture();
     });
   }
-  ///
-  bool _validate(T data) => _validateData?.call(data) ?? true;
   //
   @override
   Widget build(BuildContext context) {
@@ -147,110 +146,175 @@ class _FutureBuilderScaffoldState<T> extends State<FutureBuilderScaffold<T>> {
           onRetry: _retry,
         );
         final spacedRetryButton = [
-          // const Spacer(), 
           retryButton, 
           SizedBox(width: const Setting('blockPadding').toDouble),
         ];
-        if (snapshot.connectionState != ConnectionState.done) {
-          return Scaffold(
-            appBar: PreferredSize(
-              preferredSize: Size.fromHeight(_appBarHeight),
-              child: AppBarWidget(
-                height: _appBarHeight,
-                title: _title,
-                leftWidgets: _alwaysShowAppBarWidgets 
-                  ? _appBarLeftWidgets 
-                  : const [],
-                rightWidgets: _alwaysShowAppBarWidgets 
-                  ? _appBarRightWidgets 
-                  : const [],
-              ),
-            ),
-            body: _caseLoading?.call(context) ?? const SizedBox(),
-          );
-        }
-        if (snapshot.hasData) {
-          final data = snapshot.requireData;
-          if (_validate(data)) {
-            return Scaffold(
-              appBar:  PreferredSize(
-                preferredSize: Size.fromHeight(_appBarHeight),
-                child: AppBarWidget(
-                  height: _appBarHeight,
-                  title: _title,
-                  leftWidgets: _appBarLeftWidgets,
-                  rightWidgets: [..._appBarRightWidgets, ...spacedRetryButton],
-                ),
-              ),
-              body: _caseData?.call(context, data) ?? const SizedBox(),
-            );
-          } else {
-            return Scaffold(
-              appBar:  PreferredSize(
-                preferredSize: Size.fromHeight(_appBarHeight),
-                child: AppBarWidget(
-                  height: _appBarHeight,
-                  title: _title,
-                  leftWidgets: _alwaysShowAppBarWidgets 
-                  ? _appBarLeftWidgets 
-                  : const [],
-                  rightWidgets: [
-                    if (_alwaysShowAppBarWidgets)
-                      ..._appBarRightWidgets,
-                    ...spacedRetryButton,
-                  ],
-                ),
-              ),
-              body: _caseError?.call(
-                context, 
-                Failure(
-                  message: 'Invalid data', 
-                  stackTrace: StackTrace.current,
-                ),
-              ),
-            );
-          }
-        }
-        if (snapshot.hasError) {
-          final error = snapshot.error!;
-          return Scaffold(
-            appBar:  PreferredSize(
-              preferredSize: Size.fromHeight(_appBarHeight),
-              child: AppBarWidget(
-                height: _appBarHeight,
-                title: _title,
-                leftWidgets: _alwaysShowAppBarWidgets 
-                  ? _appBarLeftWidgets 
-                  : const [],
-                rightWidgets: [
-                  if (_alwaysShowAppBarWidgets)
-                    ..._appBarRightWidgets,
-                  ...spacedRetryButton,
-                ],
-              ),
-            ),
-            body: _caseError?.call(context, error),
-          );
-        }
-        return Scaffold(
-          appBar: PreferredSize(
-              preferredSize: Size.fromHeight(_appBarHeight),
-              child: AppBarWidget(
-                height: _appBarHeight,
-                title: _title,
-                leftWidgets: _alwaysShowAppBarWidgets 
-                  ? _appBarLeftWidgets 
-                  : const [],
-                rightWidgets: [
-                  if (_alwaysShowAppBarWidgets)
-                    ..._appBarRightWidgets,
-                  ...spacedRetryButton,
-                ],
-              ),
-            ),
-          body: _caseNothing?.call(context),
+        final snapshotState = _AsyncSnapshotState.fromSnapshot(
+          snapshot,
+          _validateData,
         );
+        return switch(snapshotState) {
+          _LoadingState() => _FutureBuilderStateWidget(
+            appBarHeight: _appBarHeight, 
+            title: _title,  
+            appBarLeftWidgets: _alwaysShowAppBarWidgets 
+              ? _appBarLeftWidgets 
+              : const [], 
+            appBarRightWidgets: _alwaysShowAppBarWidgets 
+              ? _appBarRightWidgets 
+              : const [],
+            body: _caseLoading?.call(context),
+          ),
+          _NothingState() => _FutureBuilderStateWidget(
+            appBarHeight: _appBarHeight, 
+            title: _title, 
+            appBarLeftWidgets: _alwaysShowAppBarWidgets 
+              ? _appBarLeftWidgets 
+              : const [], 
+            appBarRightWidgets: [
+              if (_alwaysShowAppBarWidgets)
+                ..._appBarRightWidgets,
+              ...spacedRetryButton,
+            ],
+            body:  _caseNothing?.call(context),
+          ),
+          _DataState<T>(:final data) => _FutureBuilderStateWidget(
+            appBarHeight: _appBarHeight, 
+            title: _title, 
+            appBarLeftWidgets: _appBarLeftWidgets, 
+            appBarRightWidgets: [..._appBarRightWidgets, ...spacedRetryButton],
+            body: _caseData?.call(context, data),
+          ),
+          _ErrorState(:final error) => _FutureBuilderStateWidget(
+            appBarHeight: _appBarHeight, 
+            title: _title, 
+            appBarLeftWidgets: _alwaysShowAppBarWidgets 
+              ? _appBarLeftWidgets 
+              : const [], 
+            appBarRightWidgets: [
+              if (_alwaysShowAppBarWidgets)
+                ..._appBarRightWidgets,
+              ...spacedRetryButton,
+            ],
+            body: _caseError?.call(context, error),
+          ),
+        };
       },
     );
   }
+}
+///
+class _AppBar extends PreferredSize {
+  _AppBar({
+    Key? key,
+    required double appBarHeight,
+    required String? title,
+    required List<Widget> appBarLeftWidgets,
+    required List<Widget> appBarRightWidgets,
+  }) : super(
+      key: key, 
+      preferredSize: Size.fromHeight(appBarHeight),
+      child: AppBarWidget(
+        height: appBarHeight,
+        title: title,
+        leftWidgets: appBarLeftWidgets,
+        rightWidgets: appBarRightWidgets,
+      ),
+    );
+}
+///
+class _FutureBuilderStateWidget extends StatelessWidget {
+  const _FutureBuilderStateWidget({
+    required double appBarHeight,
+    required String? title,
+    required List<Widget> appBarLeftWidgets,
+    required List<Widget> appBarRightWidgets,
+    Widget? body = const SizedBox(),
+  }) : 
+    _appBarHeight = appBarHeight, 
+    _title = title, 
+    _appBarLeftWidgets = appBarLeftWidgets, 
+    _appBarRightWidgets = appBarRightWidgets,
+    _body = body ?? const SizedBox();
+
+  final double _appBarHeight;
+  final String? _title;
+  final List<Widget> _appBarLeftWidgets;
+  final List<Widget> _appBarRightWidgets;
+  final Widget _body;
+  //
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar:  _AppBar(
+        appBarHeight: _appBarHeight, 
+        title: _title, 
+        appBarLeftWidgets: _appBarLeftWidgets, 
+        appBarRightWidgets: _appBarRightWidgets, 
+      ),
+      body: _body,
+    );
+  }
+}
+///
+sealed class _AsyncSnapshotState<T> {
+  factory _AsyncSnapshotState.fromSnapshot(
+    AsyncSnapshot<ResultF<T>> snapshot,
+    bool Function(T)? validateData,
+  ) {
+    return switch(snapshot) {
+      const AsyncSnapshot.waiting() => const _LoadingState(),
+      const AsyncSnapshot.nothing() => const _NothingState(),
+      AsyncSnapshot(
+        hasData: true,
+        hasError: false,
+        requireData: final result,
+      ) => switch(result) {
+        Ok(:final value) => switch(validateData?.call(value) ?? true) {
+          true => _DataState(value),
+          false => _ErrorState(
+            Failure(
+              message: 'Invalid data',
+              stackTrace: StackTrace.current,
+            ),
+          ) as _AsyncSnapshotState<T>,
+        },
+        Err(:final error) => _ErrorState(error),
+      },
+      AsyncSnapshot(
+        hasError: true,
+        :final error,
+        :final stackTrace,
+      ) => _ErrorState(
+        Failure(
+          message: error?.toString() ?? 'Something went wrong',
+          stackTrace: stackTrace ?? StackTrace.current,
+        ),
+      ),
+      _ => _ErrorState(
+        Failure(
+          message: 'Something went wrong',
+          stackTrace: StackTrace.current,
+        ),
+      ),
+    };
+  }
+}
+///
+final class _LoadingState implements _AsyncSnapshotState<Never> {
+  const _LoadingState();
+}
+///
+final class _NothingState implements _AsyncSnapshotState<Never> {
+  const _NothingState();
+}
+///
+final class _DataState<T> implements _AsyncSnapshotState<T> {
+  final T data;
+  const _DataState(this.data);
+}
+///
+final class _ErrorState implements _AsyncSnapshotState<Never> {
+  final Failure error;
+  const _ErrorState(this.error);
 }

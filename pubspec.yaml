@@ -1,7 +1,7 @@
 name: cma_registrator
 description: View data stored in the registrator database.
-version: 0.0.1
-homepage: https://github.com/a-givertzman/cma_registrator
+version: 0.0.2
+# homepage: https://github.com/a-givertzman/cma_registrator
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 environment:
@@ -23,23 +23,19 @@ dependencies:
   hmi_core:
     git:
       url: https://github.com/a-givertzman/hmi_core.git
-      ref: master
+      ref: 1.0.1
   hmi_networking:
     git:
       url: https://github.com/a-givertzman/hmi_networking.git
-      ref: master
-  dart_api_client:
+      ref: 1.1.0
+  ext_rw:
     git:
-      url: https://github.com/a-givertzman/dart_api_client.git
-      ref: master
+      url: https://github.com/a-givertzman/dart_ext_rw.git
+      ref: 1.0.1
   hmi_widgets:
     git:
       url: https://github.com/a-givertzman/hmi_widgets.git
-      ref: master
-  fl_chart:
-    git:
-      url: https://github.com/a-givertzman/fl_chart.git
-      ref: master
+      ref: 1.0.1
   another_flushbar: ^1.10.29
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

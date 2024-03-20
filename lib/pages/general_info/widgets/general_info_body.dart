@@ -6,6 +6,7 @@ import 'package:cma_registrator/pages/operating_cycles/operating_cycles_page.dar
 import 'package:cma_registrator/pages/tensosensor_calibration/tensosensor_calibration_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 
 class GeneralInfoBody extends StatelessWidget {
   // static final _log = const Log('GeneralInfoBody')..level=LogLevel.warning;
@@ -16,9 +17,8 @@ class GeneralInfoBody extends StatelessWidget {
     required FieldDatas fields, 
   }) : 
     _fields = fields;
-  Future<Result<List<FieldData>>> _future() async {
-    final fields = await _fields.fetchAll();
-    return fields;
+  Future<ResultF<List<FieldData>>> _future() async {
+    return _fields.fetchAll();
   }
   //
   @override
@@ -58,10 +58,10 @@ class GeneralInfoBody extends StatelessWidget {
       ],
       onFuture: _future,
       validateData: (data) {
-        return !data.hasError;
+        return data is Err;
       },
       caseData: (_, data) {
-        final fields = data.data;
+        final fields = data;
         return GeneralInfoForm(
             fieldData: fields, 
             onSave: () => _fields.persistAll(fields),

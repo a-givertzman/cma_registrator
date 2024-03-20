@@ -21,11 +21,7 @@ class OperatingCycleMetricsWidget extends StatelessWidget {
       onFuture: _metrics.fetchAll,
       title: const Localized('Metrics').v,
       appBarRightWidgets: const [Spacer()],
-      validateData: (data) {
-        return !data.hasError;
-      },
-      caseData: (context, data) {
-        final pointsMetrics = data.data;
+      caseData: (context, pointsMetrics) {
         final padding = const Setting('padding').toDouble;
         final blockPadding = const Setting('blockPadding').toDouble;
         final controller = ScrollController();

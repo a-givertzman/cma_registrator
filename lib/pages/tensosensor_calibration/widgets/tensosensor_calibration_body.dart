@@ -3,7 +3,7 @@ import 'package:cma_registrator/core/models/field/field_type.dart';
 import 'package:cma_registrator/core/models/persistable/database_field.dart';
 import 'package:cma_registrator/pages/general_info/widgets/confirmation_dialog.dart';
 import 'package:cma_registrator/pages/tensosensor_calibration/widgets/tensosensor_calibration_step.dart';
-import 'package:dart_api_client/dart_api_client.dart';
+import 'package:ext_rw/ext_rw.dart' hide FieldType;
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_translate.dart';
 ///

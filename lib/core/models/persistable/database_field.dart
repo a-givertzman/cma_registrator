@@ -1,5 +1,7 @@
-import 'package:dart_api_client/dart_api_client.dart';
-import 'package:hmi_core/hmi_core.dart';
+import 'package:ext_rw/ext_rw.dart';
+import 'package:hmi_core/hmi_core_failure.dart';
+import 'package:hmi_core/hmi_core_log.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 ///
 class DatabaseField {
   static final _log = const Log('SqlRecord')..level=LogLevel.debug;
@@ -19,36 +21,47 @@ class DatabaseField {
     _dbName = dbName, 
     _apiAddress = apiAddress;
   ///
-  Future<Result<String>> persist(String value) {
+  Future<ResultF<String>> persist(String value) {
     _log.debug('[SqlField.persist] Persisting value \'$value\' for field with id \'$_id\'...');
     return ApiRequest(
       address: _apiAddress,
-      sqlQuery: SqlQuery(
-        authToken: '', 
+      authToken: '',
+      query: SqlQuery(
         database: _dbName, 
         sql: 'UPDATE $_tableName SET value = \'$value\' WHERE id = \'$_id\';',
       ),
     ).fetch()
-    .then((result) => result.fold(
-      onData: (data) => Result(data: data.toString()), 
-      onError: (error) => Result(error: error),
+    .then<ResultF<String>>((result) => switch(result) {
+      Ok(value:final reply) => Ok(reply.toString()),
+      Err(:final error) => Err(error),
+    })
+    .onError((error, stackTrace) => Err(
+      Failure(
+        message: error.toString(),
+        stackTrace: stackTrace,
+      ),
     ));
   }
   ///
-  Future<Result<String>> fetch() {
+  Future<ResultF<String>> fetch() {
     _log.debug('[SqlField.fetch] Fetching value for field with id \'$_id\'...');
     return ApiRequest(
       address: _apiAddress, 
-      sqlQuery: SqlQuery(
-        authToken: '', 
+      authToken: '',
+      query: SqlQuery(
         database: _dbName, 
         sql: 'SELECT value FROM $_tableName WHERE id = \'$_id\' LIMIT 1;',
       ),
     ).fetch()
-    .then((result) => result.fold(
-      onData: (apiReply) => Result(data: apiReply.data.first['value'] as String), 
-      onError: (error) => Result<String>(error: error),
-    ))
-    .catchError((error) => Result<String>(error: error));
+    .then<ResultF<String>>((result) => switch(result) {
+      Ok(value:final reply) => Ok(reply.data.first['value'] as String),
+      Err(:final error) => Err(error),
+    })
+    .onError((error, stackTrace) => Err(
+      Failure(
+        message: error.toString(),
+        stackTrace: stackTrace,
+      ),
+    ));
   }
 }

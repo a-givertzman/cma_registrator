@@ -5,20 +5,19 @@ import 'package:cma_registrator/core/widgets/field/cancelable_field.dart';
 import 'package:cma_registrator/core/widgets/field/field_group.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-import 'package:hmi_core/hmi_core_result.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_core/hmi_core_translate.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
-
 import 'confirmation_dialog.dart';
 
 class GeneralInfoForm extends StatefulWidget {
   final List<FieldData> _fieldsData;
-  final Future<Result<List<FieldData>>> Function()? _onSave;
+  final Future<ResultF<List<FieldData>>> Function()? _onSave;
 
   const GeneralInfoForm({
     super.key,  
     required List<FieldData> fieldData,   
-    Future<Result<List<FieldData>>> Function()? onSave,
+    Future<ResultF<List<FieldData>>> Function()? onSave,
   }) : _onSave = onSave, 
     _fieldsData = fieldData;
 
@@ -185,16 +184,22 @@ class _GeneralInfoFormState extends State<GeneralInfoForm> {
         final onSave = widget._onSave;
         if(onSave != null) {
           final result = await onSave();
-          result.fold(
-            onData: (newFields) {
+          switch(result) {
+            case Ok(value:final newFields):
               _updateFieldsWithNewData(newFields);
               _formKey.currentState?.save();
-              _showInfoMessage(context, const Localized('Data saved').v);
-            }, 
-            onError: (error) {
-              _showErrorMessage(context, error.message);
-            },
-          );
+              if(mounted) {
+                // ignore: use_build_context_synchronously
+                _showInfoMessage(context, const Localized('Data saved').v);
+              }
+              break;
+            case Err(:final error):
+              if(mounted) {
+                // ignore: use_build_context_synchronously
+                _showErrorMessage(context, error.message);
+              }
+              break;
+          }
         }
       }
     } else {
@@ -291,7 +296,7 @@ class _GeneralInfoColumns extends StatelessWidget {
     },
     onSaved: (_) {
       _onSaved?.call();
-      return  Future.value(const Result(data: ""));
+      return  Future.value(const Ok(""));
     },
   );
 }
