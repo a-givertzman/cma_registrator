@@ -21,9 +21,10 @@ class RetryButton extends StatelessWidget {
       label: _retryLabel ?? const Text('Retry'),
     ) 
     : FloatingActionButton.small(
+      heroTag: 'RetryButton',
       onPressed: _onRetry,
-      backgroundColor: theme.colorScheme.primary,
-      child: Icon(Icons.replay, color: theme.colorScheme.onPrimary),
+      backgroundColor: _onRetry == null ? theme.splashColor : theme.colorScheme.primary,
+      child: Icon(Icons.replay, color: _onRetry == null ? theme.disabledColor: theme.colorScheme.onPrimary),
     );
   }
 }

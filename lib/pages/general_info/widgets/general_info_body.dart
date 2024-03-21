@@ -57,9 +57,6 @@ class GeneralInfoBody extends StatelessWidget {
         const Spacer(),
       ],
       onFuture: _future,
-      validateData: (data) {
-        return data is Err;
-      },
       caseData: (_, data) {
         final fields = data;
         return GeneralInfoForm(

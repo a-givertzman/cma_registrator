@@ -44,7 +44,7 @@ class _GeneralInfoFormState extends State<GeneralInfoForm> {
       .where((data) => data.isChanged)
       .isNotEmpty;
     const buttonHeight = 40.0;
-    const buttonWidth = 158.0;
+    const buttonWidth = 168.0;
     final blockPadding = const Setting('blockPadding').toDouble;
     return Form(
       key: _formKey,

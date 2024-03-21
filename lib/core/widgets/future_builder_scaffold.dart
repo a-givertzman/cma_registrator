@@ -141,18 +141,21 @@ class _FutureBuilderScaffoldState<T> extends State<FutureBuilderScaffold<T>> {
     return FutureBuilder(
       future: _future, 
       builder: (context, snapshot) {
+        final snapshotState = _AsyncSnapshotState.fromSnapshot(
+          snapshot,
+          _validateData,
+        );
         final retryButton = RetryButton(
           retryLabel: _retryLabel,
-          onRetry: _retry,
+          onRetry: switch(snapshotState) {
+            _LoadingState() => null,
+            _ => _retry,
+          },
         );
         final spacedRetryButton = [
           retryButton, 
           SizedBox(width: const Setting('blockPadding').toDouble),
         ];
-        final snapshotState = _AsyncSnapshotState.fromSnapshot(
-          snapshot,
-          _validateData,
-        );
         return switch(snapshotState) {
           _LoadingState() => _FutureBuilderStateWidget(
             appBarHeight: _appBarHeight, 
@@ -160,9 +163,11 @@ class _FutureBuilderScaffoldState<T> extends State<FutureBuilderScaffold<T>> {
             appBarLeftWidgets: _alwaysShowAppBarWidgets 
               ? _appBarLeftWidgets 
               : const [], 
-            appBarRightWidgets: _alwaysShowAppBarWidgets 
-              ? _appBarRightWidgets 
-              : const [],
+            appBarRightWidgets: [
+              if (_alwaysShowAppBarWidgets)
+                ..._appBarRightWidgets,
+              ...spacedRetryButton,
+            ],
             body: _caseLoading?.call(context),
           ),
           _NothingState() => _FutureBuilderStateWidget(
@@ -263,11 +268,12 @@ sealed class _AsyncSnapshotState<T> {
     bool Function(T)? validateData,
   ) {
     return switch(snapshot) {
-      const AsyncSnapshot.waiting() => const _LoadingState(),
-      const AsyncSnapshot.nothing() => const _NothingState(),
       AsyncSnapshot(
+        connectionState: ConnectionState.waiting,
+      ) => const _LoadingState(),
+      AsyncSnapshot(
+        connectionState: != ConnectionState.waiting,
         hasData: true,
-        hasError: false,
         requireData: final result,
       ) => switch(result) {
         Ok(:final value) => switch(validateData?.call(value) ?? true) {
@@ -282,6 +288,8 @@ sealed class _AsyncSnapshotState<T> {
         Err(:final error) => _ErrorState(error),
       },
       AsyncSnapshot(
+        connectionState: != ConnectionState.waiting,
+        hasData: false,
         hasError: true,
         :final error,
         :final stackTrace,
@@ -291,12 +299,7 @@ sealed class _AsyncSnapshotState<T> {
           stackTrace: stackTrace ?? StackTrace.current,
         ),
       ),
-      _ => _ErrorState(
-        Failure(
-          message: 'Something went wrong',
-          stackTrace: StackTrace.current,
-        ),
-      ),
+      _ => const _NothingState(),
     };
   }
 }
