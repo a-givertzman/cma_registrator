@@ -129,8 +129,8 @@ class _OperatingCyclesTableState extends State<OperatingCyclesTable> {
             operatingCycle: operatingCycle,
             operatingCycleDetails: OperatingCycleDetails(
               apiAddress: ApiAddress.localhost(port: 8080),
-              dbName: 'registrator',
-              tableName: 'fault',
+              dbName: 'crane_data_server',
+              tableName: 'event',
               operatingCycle: operatingCycle,
             ),
           ),

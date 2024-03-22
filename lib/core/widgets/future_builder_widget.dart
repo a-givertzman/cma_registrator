@@ -1,9 +1,8 @@
-import 'package:cma_registrator/core/widgets/button/retry_button.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_core/hmi_core_translate.dart';
+
 import 'error_message_widget.dart';
 /// 
 /// Default indicator builder for [FutureBuilderWidget] loading state
@@ -12,45 +11,41 @@ Widget _defaultCaseLoading(BuildContext _) => const Center(
 );
 ///
 /// Default indicator builder for [FutureBuilderWidget] error state
-Widget _defaultCaseError(BuildContext _, Object error) => ErrorMessageWidget(
+Widget _defaultCaseError(BuildContext _, Object error, void Function() __) => ErrorMessageWidget(
   message: const Localized('Data loading error').v,
 );
 ///
 /// Default indicator builder for [FutureBuilderWidget] empty-data state
-Widget _defaultCaseNothing(BuildContext _) => ErrorMessageWidget(
+Widget _defaultCaseNothing(BuildContext _, void Function() __) => ErrorMessageWidget(
   message: const Localized('No data').v,
 );
 ///
 class FutureBuilderWidget<T> extends StatefulWidget {
-  final Widget Function(BuildContext)? _caseLoading;
-  final Widget Function(BuildContext, T) _caseData;
-  final Widget Function(BuildContext, Object)? _caseError;
-  final Widget Function(BuildContext)? _caseNothing;
+  final Widget Function(BuildContext) _caseLoading;
+  final Widget Function(BuildContext, T, void Function()) _caseData;
+  final Widget Function(BuildContext, Object, void Function()) _caseError;
+  final Widget Function(BuildContext, void Function()) _caseNothing;
   final bool Function(T)? _validateData;
-  final Future<T> Function() _onFuture;
-  final Widget _retryLabel;
-  
+  final Future<ResultF<T>> Function() _onFuture;
   ///
   const FutureBuilderWidget({
     super.key, 
-    required Widget retryLabel,
-    required Future<T> Function() onFuture,
-    required Widget Function(BuildContext context, T data) caseData,
-    Widget Function(BuildContext context)? caseLoading = _defaultCaseLoading,
-    Widget Function(BuildContext context, Object error)? caseError = _defaultCaseError,
-    Widget Function(BuildContext context)? caseNothing = _defaultCaseNothing, 
+    required Future<ResultF<T>> Function() onFuture,
+    Widget Function(BuildContext context) caseLoading = _defaultCaseLoading,
+    required Widget Function(BuildContext context, T data, void Function() retry) caseData,
+    Widget Function(BuildContext context, Object error, void Function() retry) caseError = _defaultCaseError,
+    Widget Function(BuildContext context, void Function() retry) caseNothing = _defaultCaseNothing, 
     bool Function(T data)? validateData,
-  }) : _validateData = validateData, 
+  }) : 
+    _validateData = validateData, 
     _caseLoading = caseLoading,
     _caseData = caseData,
     _caseError = caseError,
     _caseNothing = caseNothing,
-    _onFuture = onFuture,
-    _retryLabel = retryLabel;
+    _onFuture = onFuture;
   //
   @override
   State<FutureBuilderWidget> createState() => _FutureBuilderWidgetState<T>(
-    retryLabel: _retryLabel,
     caseLoading: _caseLoading,
     caseData:  _caseData,
     caseError: _caseError,
@@ -61,30 +56,27 @@ class FutureBuilderWidget<T> extends StatefulWidget {
 }
 ///
 class _FutureBuilderWidgetState<T> extends State<FutureBuilderWidget<T>> {
-  final Widget Function(BuildContext)? _caseLoading;
-  final Widget Function(BuildContext, T)? _caseData;
-  final Widget Function(BuildContext, Object)? _caseError;
-  final Widget Function(BuildContext)? _caseNothing;
+  final Widget Function(BuildContext) _caseLoading;
+  final Widget Function(BuildContext, T, void Function()) _caseData;
+  final Widget Function(BuildContext, Object, void Function()) _caseError;
+  final Widget Function(BuildContext, void Function()) _caseNothing;
   final bool Function(T)? _validateData;
-  final Future<T> Function() _onFuture;
-  final Widget _retryLabel;
-  late Future<T> _future;
+  final Future<ResultF<T>> Function() _onFuture;
+  late Future<ResultF<T>> _future;
   ///
   _FutureBuilderWidgetState({
-    required Widget retryLabel,
-    required Widget Function(BuildContext)? caseLoading,
-    required Widget Function(BuildContext, T)? caseData,
-    required Widget Function(BuildContext, Object)? caseError,
-    required Widget Function(BuildContext)? caseNothing,
+    required Widget Function(BuildContext) caseLoading,
+    required Widget Function(BuildContext, T, void Function()) caseData,
+    required Widget Function(BuildContext, Object, void Function()) caseError,
+    required Widget Function(BuildContext, void Function()) caseNothing,
     required bool Function(T)? validateData,
-    required Future<T> Function() onFuture,
+    required Future<ResultF<T>> Function() onFuture,
   }) : 
     _caseLoading = caseLoading,
     _caseData = caseData,
     _caseError = caseError,
     _caseNothing = caseNothing,
     _onFuture = onFuture,
-    _retryLabel = retryLabel,
     _validateData = validateData;
   //
   @override
@@ -98,79 +90,83 @@ class _FutureBuilderWidgetState<T> extends State<FutureBuilderWidget<T>> {
       _future = _onFuture();
     });
   }
-  ///
-  bool _validate(T data) => _validateData?.call(data) ?? true;
   //
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: _future, 
       builder: (context, snapshot) {
-        final retryButton = RetryButton(
-          retryLabel: _retryLabel,
-          onRetry: _retry,
+        final snapshotState = _AsyncSnapshotState.fromSnapshot(
+          snapshot,
+          _validateData,
         );
-        if (snapshot.connectionState != ConnectionState.done) {
-          return Scaffold(
-            body: _caseLoading?.call(context) ?? const SizedBox(),
-          );
-        }
-        if (snapshot.hasData) {
-          final data = snapshot.requireData;
-          if (_validate(data)) {
-            return _caseData?.call(context, data) ?? const SizedBox();
-          } else {
-            return _WidgetWithRetryButton(
-              retryButton: retryButton,
-              widget: _caseError?.call(
-                context, 
-                Failure(
-                  message: 'Invalid data', 
-                  stackTrace: StackTrace.current,
-                ),
-              ),
-            );
-          }
-        }
-        if (snapshot.hasError) {
-          final error = snapshot.error!;
-          return _WidgetWithRetryButton(
-            retryButton: retryButton,
-            widget: _caseError?.call(context, error),
-          );
-        }
-        return _WidgetWithRetryButton(
-          retryButton: retryButton,
-          widget: _caseNothing?.call(context),
-        );
+        return switch(snapshotState) {
+          _LoadingState() => _caseLoading.call(context),
+          _NothingState() => _caseNothing.call(context, _retry),
+          _DataState<T>(:final data) => _caseData.call(context, data, _retry),
+          _ErrorState(:final error) => _caseError.call(context, error, _retry),
+        };
       },
     );
   }
 }
-
-class _WidgetWithRetryButton extends StatelessWidget {
-  final Widget? _widget;
-  final Widget _retryButton;
-  ///
-  const _WidgetWithRetryButton({
-    Widget? widget, 
-    required Widget retryButton,
-  }) : 
-    _retryButton = retryButton, 
-    _widget = widget;
-  //
-  @override
-  Widget build(BuildContext context) {
-    final widget = _widget;
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        if (widget != null) ...[
-          widget,
-          SizedBox(height: const Setting('blockPadding').toDouble),
-        ],
-        _retryButton,
-      ],
-    );
+///
+sealed class _AsyncSnapshotState<T> {
+  factory _AsyncSnapshotState.fromSnapshot(
+    AsyncSnapshot<ResultF<T>> snapshot,
+    bool Function(T)? validateData,
+  ) {
+    return switch(snapshot) {
+      AsyncSnapshot(
+        connectionState: ConnectionState.waiting,
+      ) => const _LoadingState(),
+      AsyncSnapshot(
+        connectionState: != ConnectionState.waiting,
+        hasData: true,
+        requireData: final result,
+      ) => switch(result) {
+        Ok(:final value) => switch(validateData?.call(value) ?? true) {
+          true => _DataState(value),
+          false => _ErrorState(
+            Failure(
+              message: 'Invalid data',
+              stackTrace: StackTrace.current,
+            ),
+          ) as _AsyncSnapshotState<T>,
+        },
+        Err(:final error) => _ErrorState(error),
+      },
+      AsyncSnapshot(
+        connectionState: != ConnectionState.waiting,
+        hasData: false,
+        hasError: true,
+        :final error,
+        :final stackTrace,
+      ) => _ErrorState(
+        Failure(
+          message: error?.toString() ?? 'Something went wrong',
+          stackTrace: stackTrace ?? StackTrace.current,
+        ),
+      ),
+      _ => const _NothingState(),
+    };
   }
+}
+///
+final class _LoadingState implements _AsyncSnapshotState<Never> {
+  const _LoadingState();
+}
+///
+final class _NothingState implements _AsyncSnapshotState<Never> {
+  const _NothingState();
+}
+///
+final class _DataState<T> implements _AsyncSnapshotState<T> {
+  final T data;
+  const _DataState(this.data);
+}
+///
+final class _ErrorState implements _AsyncSnapshotState<Never> {
+  final Failure error;
+  const _ErrorState(this.error);
 }

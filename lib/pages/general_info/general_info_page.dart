@@ -12,7 +12,7 @@ class GeneralInfoPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GeneralInfoBody(
       fields: FieldDatas(
-        dbName: 'registrator', 
+        dbName: 'crane_data_server', 
         tableName: 'operating_metric', 
         apiAddress: ApiAddress.localhost(port: 8080),
       ),

@@ -13,7 +13,7 @@ class OperatingCyclesPage extends StatelessWidget {
     return Scaffold(
       body: OperatingCyclesBody(
         points: OperatingCycles(
-          dbName: 'registrator', 
+          dbName: 'crane_data_server', 
           tableName: 'operating_cycle', 
           apiAddress: ApiAddress.localhost(port: 8080),
         ),

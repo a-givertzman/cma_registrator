@@ -32,11 +32,11 @@ final class JsonDataPoint<T> implements DsDataPoint<T> {
   //
   @override
   T get value => switch(type) {
-    DsDataType.real => double.parse(_json['value']) as T,
-    DsDataType.integer || DsDataType.dInt || DsDataType.lInt || DsDataType.uInt || DsDataType.word => double.parse(_json['value']).toInt() as T,
-    DsDataType.bool => double.parse(_json['value']).toInt() > 0 as T,
-    DsDataType.time => DateTime.parse(_json['value']) as T,
-    DsDataType.dateAndTime => DateTime.parse(_json['value']) as T,
+    DsDataType.real => _json['value'] as T,
+    DsDataType.integer || DsDataType.dInt || DsDataType.lInt || DsDataType.uInt || DsDataType.word => _json['value'] as T,
+    DsDataType.bool => _json['value'] > 0 as T,
+    DsDataType.time => DateTime.fromMicrosecondsSinceEpoch(_json['value']) as T,
+    DsDataType.dateAndTime => DateTime.fromMicrosecondsSinceEpoch(_json['value']) as T,
     DsDataType.string => _json['value'].toString() as T,
   };
   //

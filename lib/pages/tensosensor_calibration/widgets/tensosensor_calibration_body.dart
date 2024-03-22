@@ -30,7 +30,7 @@ class _TensosensorCalibrationBodyState extends State<TensosensorCalibrationBody>
       record: DatabaseField(
         id: 'target_weight',
         tableName: 'tensosensor_calibration',
-        dbName: 'registrator',
+        dbName: 'crane_data_server',
         apiAddress: ApiAddress.localhost(),
       ),
     ),
