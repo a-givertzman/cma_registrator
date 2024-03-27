@@ -11,7 +11,7 @@ void main() {
   Log.initialize();
   group('DatabaseField .fetch()', () {
     const host = 'localhost';
-    const port = 9022;
+    const port = 0;
     late ServerSocket server;
     final replies = [
       {
@@ -44,11 +44,11 @@ void main() {
       await server.close();
     });
     test('pulls data correctly', () async {
-      const field = DatabaseField(
+      final field = DatabaseField(
         id: '1',
         tableName: 'TestTable',
         dbName: 'TestDb',
-        apiAddress: ApiAddress(host: host, port: port),
+        apiAddress: ApiAddress(host: host, port: server.port),
       );
       for(final {'reply_data': targetValue} in replies) {
         final result = await field.fetch();

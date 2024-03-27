@@ -10,7 +10,7 @@ void main() {
   Log.initialize();
   group('DatabaseField .persist(value)', () {
     const host = 'localhost';
-    const port = 9023;
+    const port = 0;
     late ServerSocket server;
     setUpAll(() async {
       server = await ServerSocket.bind(host, port);
@@ -32,11 +32,11 @@ void main() {
         'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
         'abcdefghijklmnopqrstuvwxyz',
       ];
-      const field = DatabaseField(
+      final field = DatabaseField(
         id: '1',
         tableName: 'TestTable',
         dbName: 'TestDb',
-        apiAddress: ApiAddress(host: host, port: port),
+        apiAddress: ApiAddress(host: host, port: server.port),
       );
       for(final string in testStrings) {
         final result = await field.persist(string);
