@@ -158,7 +158,7 @@ class _CancelableFieldState extends State<CancelableField> {
               _isInProcess = false;
             }),
             Err(:final error) => setState(() {
-              _sendError = error.message;
+              _sendError = '${error.message}';
               _isInProcess = false;
             }), 
           });
