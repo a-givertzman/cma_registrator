@@ -15,15 +15,15 @@ void main() {
     late ServerSocket server;
     final replies = [
       {
-        "reply_str": '{"id":"1","authToken":"","data":[{"value":"b"},{"value":"d"},{"value":"f"}]}',
+        "reply_str": '{"id":"1","authToken":"","data":[{"value":"b"},{"value":"d"},{"value":"f"}],"query":"{}"}',
         "reply_data": 'b',
       },
       {
-        "reply_str": '{"id":"1","authToken":"","data":[{"value":"321"},{"value":"123"}]}',
+        "reply_str": '{"id":"1","authToken":"","data":[{"value":"321"},{"value":"123"}],"query":"{}"}',
         "reply_data": '321',
       },
       {
-        "reply_str": '{"id":"1","authToken":"","data":[{"value":"some_Value!2#%\$()"}]}',
+        "reply_str": '{"id":"1","authToken":"","data":[{"value":"some_Value!2#%\$()"}],"query":"{}"}',
         "reply_data": 'some_Value!2#%\$()',
       },
     ];

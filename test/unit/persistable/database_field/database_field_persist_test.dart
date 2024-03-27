@@ -17,7 +17,7 @@ void main() {
       server.listen(
         (socket) { 
           socket.listen((_) {
-            socket.add(utf8.encode('{"id":"1","authToken":"","data":[{"a":"b"},{"c":"d"},{"e":"f"}]}'));
+            socket.add(utf8.encode('{"id":"1","authToken":"","data":[{"a":"b"},{"c":"d"},{"e":"f"}],"query":"{}"}'));
           });
         },
       );
