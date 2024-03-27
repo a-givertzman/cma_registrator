@@ -1,7 +1,7 @@
 import 'package:cma_registrator/core/models/field/field_type.dart';
 import 'package:cma_registrator/core/models/persistable/database_field.dart';
 import 'package:flutter/material.dart';
-import 'package:hmi_core/hmi_core_result.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 /// 
 /// Model that holds data for [TextFormField] or [TextField].
 class FieldData {
@@ -37,21 +37,21 @@ class FieldData {
   bool get isChanged => _initialValue != _controller.text;
   /// 
   /// Pull data from the database through provided [record].
-  Future<Result<String>> fetch() => 
+  Future<ResultF<String>> fetch() => 
     _record.fetch()
     .then((result) {
-      if(!result.hasError) {
-        _initialValue = result.data;
-        _controller.text = result.data;
+      if(result case Ok(value:final data)) {
+        _initialValue = data;
+        _controller.text = data;
       }
       return result;
     });
   /// 
   /// Persist data to the database through provided [record].
-  Future<Result<String>> save() => 
+  Future<ResultF<String>> save() => 
     _record.persist(_controller.text)
     .then((result) {
-      if (!result.hasError) {
+      if (result case Ok()) {
         refreshWith(_controller.text);
       }
       return result;

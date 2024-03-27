@@ -18,11 +18,8 @@ class OperatingCyclesBody extends StatelessWidget {
       title: const Localized('Operating cycles').v,
       appBarHeight: 72.0,
       onFuture: () => _points.fetchAll(),
-      validateData: (data) {
-        return !data.hasError;
-      },
       caseData: (context, data) => OperatingCyclesTable(
-        operatingCycles: data.data,
+        operatingCycles: data,
         timeColumnWidth: 200,
       ),
     );

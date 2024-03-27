@@ -191,6 +191,7 @@ class _TensosensorCalibrationStepState extends State<TensosensorCalibrationStep>
                       value: random.nextDouble() * 40000, 
                       status: DsStatus.ok, 
                       timestamp: DsTimeStamp.now().toString(),
+                      cot: DsCot.inf,
                     ),
                   ),
                   valueUnit: const Localized('kg').v,
