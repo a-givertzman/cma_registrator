@@ -20,20 +20,16 @@ class OperatingCycleMetricsWidget extends StatelessWidget {
     return FutureBuilderScaffold(
       onFuture: _metrics.fetchAll,
       title: const Localized('Metrics').v,
-      appBarRightWidgets: const [Spacer()],
-      validateData: (data) {
-        return !data.hasError;
-      },
-      caseData: (context, data) {
-        final pointsMetrics = data.data;
+      alwaysShowAppBarWidgets: true,
+      caseData: (context, pointsMetrics) {
         final padding = const Setting('padding').toDouble;
         final blockPadding = const Setting('blockPadding').toDouble;
         final controller = ScrollController();
         return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
-              flex: 3,
+              flex: 1,
               child: Scrollbar(
                 thickness: 10,
                 thumbVisibility: true,

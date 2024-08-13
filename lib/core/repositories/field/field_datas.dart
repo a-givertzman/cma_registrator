@@ -1,8 +1,9 @@
 import 'package:cma_registrator/core/models/field/field_data.dart';
+import 'package:cma_registrator/core/models/field/field_type.dart';
 import 'package:cma_registrator/core/models/persistable/database_field.dart';
-import 'package:dart_api_client/dart_api_client.dart';
+import 'package:ext_rw/ext_rw.dart' hide FieldType;
 import 'package:hmi_core/hmi_core.dart';
-import '../../models/field/field_type.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 ///
 class FieldDatas {
   static final _log = const Log('SqlRecord')..level=LogLevel.debug;
@@ -19,20 +20,19 @@ class FieldDatas {
     _tableName = tableName,
     _apiAddress = apiAddress;
   ///
-  Future<Result<List<FieldData>>> fetchAll() {
+  Future<ResultF<List<FieldData>>> fetchAll() {
     _log.debug('[SqlRecord.fetch] Fetching all fields and values from value for field...');
     return ApiRequest(
       address: _apiAddress, 
-      sqlQuery: SqlQuery(
-        authToken: '', 
+      authToken: '', 
+      query: SqlQuery(
         database: _dbName, 
         sql: 'SELECT id, type, description, value FROM $_tableName ORDER BY id ASC;',
       ),
     ).fetch()
-    .then((result) =>
-      result.fold(
-        onData: (apiReply) => Result(
-          data: apiReply.data
+    .then((result) => switch(result) {
+      Ok(value:final apiReply) => Ok(
+        apiReply.data
           .map(
             (map) => FieldData(
               id: map['id'],
@@ -47,14 +47,13 @@ class FieldDatas {
               ),
             ),
           ).toList(),
-        ), 
-        onError: (error) => Result(error: error),
       ),
-    );
+      Err(:final error) => Err(error),
+    });
   }
   /// 
   /// Persists changed fields and returns them updated.
-  Future<Result<List<FieldData>>> persistAll(List<FieldData> fieldDatas) async {
+  Future<ResultF<List<FieldData>>> persistAll(List<FieldData> fieldDatas) async {
     _log.debug('[SqlRecord.fetch] Persisting all fields and values from value for field...');
     final changedFields = fieldDatas
       .where((field) => field.isChanged)
@@ -66,34 +65,31 @@ class FieldDatas {
       .join(', ');
     final requestResult = await ApiRequest(
       address: _apiAddress, 
-      sqlQuery: SqlQuery(
-        authToken: '', 
+      authToken: '', 
+      query: SqlQuery(
         database: _dbName, 
         sql: 'WITH updated(id, value) AS (VALUES $valuesString) ' 
              'UPDATE $_tableName SET value = updated.value ' 
              'FROM updated WHERE ($_tableName.id = updated.id);',
       ),
     ).fetch();
-    return requestResult.fold(
-      onData: (apiReply) {
-        if (apiReply.errors.isEmpty) {
-          return Result(
-            data: changedFields.map(
-              (field) => field.copyWith(
-                initialValue: field.controller.text,
-              ),
-            ).toList(),
-          );
-        } else {
-          return Result(
-            error: Failure(
-              message: apiReply.errors.first, 
-              stackTrace: StackTrace.current,
+    return switch(requestResult) {
+      Ok(value: final apiReply) => switch(apiReply.hasError) {
+        true => Err(
+          Failure(
+            message: apiReply.error.message,
+            stackTrace: StackTrace.current,
+          ),
+        ),
+        false => Ok(
+          changedFields.map(
+            (field) => field.copyWith(
+              initialValue: field.controller.text,
             ),
-          );
-        }
-      }, 
-      onError: (error) => Result(error: error),
-    );
+          ).toList(),
+        ),
+      },
+      Err(:final error) => Err(error),
+    };
   }
 }

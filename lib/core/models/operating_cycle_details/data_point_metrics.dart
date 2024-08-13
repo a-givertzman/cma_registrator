@@ -29,5 +29,5 @@ final class JsonDataPointMetrics implements DataPointMetrics {
   List<Metric> get metrics => [...?_additionalMetrics, JsonMetric(json: _json)];
   //
   @override
-  DsPointName get name => DsPointName(_json['point_name']);
+  DsPointName get name => DsPointName('/${_json['point_name']}');
 }

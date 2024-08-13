@@ -1,6 +1,7 @@
 import 'package:cma_registrator/core/models/operating_cycle/operating_cycle.dart';
-import 'package:dart_api_client/dart_api_client.dart';
+import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 ///
 class OperatingCycles {
   static final _log = const Log('OperatingCycles')..level=LogLevel.debug;
@@ -17,25 +18,23 @@ class OperatingCycles {
     _tableName = tableName,
     _apiAddress = apiAddress;
   ///
-  Future<Result<List<OperatingCycle>>> fetchAll() {
+  Future<ResultF<List<OperatingCycle>>> fetchAll() {
     _log.debug('[SqlRecord.fetch] Fetching all fields and values from value for field...');
     return ApiRequest(
       address: _apiAddress, 
-      sqlQuery: SqlQuery(
-        authToken: '', 
+      authToken: '', 
+      query: SqlQuery(
         database: _dbName, 
         sql: 'SELECT * FROM $_tableName;',
       ),
     ).fetch()
-    .then((result) =>
-      result.fold(
-        onData: (apiReply) => Result(
-          data: apiReply.data.map(
-            (json) => JsonOperatingCycle(json: json),
-          ).toList(),
-        ), 
-        onError: (error) => Result(error: error),
+    .then((result) => switch(result) {
+      Ok(value:final apiReply) => Ok(
+        apiReply.data.map(
+          (json) => JsonOperatingCycle(json: json),
+        ).toList(),
       ),
-    );
+      Err(:final error) => Err(error),
+    });
   }
 }
