@@ -1,6 +1,6 @@
 abstract interface class Metric {
-  String get name;
-  double get value;
+  String? get name;
+  double? get value;
 }
 /// 
 /// [Metric] that parses itself from json map.
@@ -13,8 +13,17 @@ final class JsonMetric implements Metric {
   }) : _json = json;
   //
   @override
-  String get name => _json['metric_name'];
+  String? get name => _json['name'];
   //
   @override
-  double get value => double.parse(_json['value']);
+  double? get value => double.tryParse("${_json['value']}");
+}
+///
+final class RawMetric implements Metric {
+  @override
+  final String? name;
+  @override
+  final double? value;
+  ///
+  const RawMetric({required this.name, required this.value});
 }

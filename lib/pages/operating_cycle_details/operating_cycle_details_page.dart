@@ -26,14 +26,15 @@ class OperatingCycleDetailsPage extends StatelessWidget {
       metrics: OperatingCycleMetrics(
         apiAddress: ApiAddress.localhost(port: 8080),
         dbName: 'crane_data_server',
-        tableName: 'operating_cycle_metric_value_view',
+        metricsTableName: 'public.rec_operating_metric',
+        metricNamesTableName: 'public.rec_name',
         operatingCycle: _operatingCycle,
       ),
       child: FutureBuilderWidget(
         onFuture: _operatingCycleDetails.fetchAll,
         caseData: (context, points, _) => OperatingCycleDetailsBody(
           operatingCycle: _operatingCycle,
-          points: points,
+          events: points,
         ),
 
       ),

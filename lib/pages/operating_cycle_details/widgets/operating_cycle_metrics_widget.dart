@@ -21,7 +21,7 @@ class OperatingCycleMetricsWidget extends StatelessWidget {
       onFuture: _metrics.fetchAll,
       title: const Localized('Metrics').v,
       alwaysShowAppBarWidgets: true,
-      caseData: (context, pointsMetrics) {
+      caseData: (context, metrics) {
         final padding = const Setting('padding').toDouble;
         final blockPadding = const Setting('blockPadding').toDouble;
         final controller = ScrollController();
@@ -36,40 +36,21 @@ class OperatingCycleMetricsWidget extends StatelessWidget {
                 controller: controller,
                 child: ScrollConfiguration(
                   behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-                  child: ListView.builder(
+                  child: SingleChildScrollView(
                     controller: controller,
-                    itemCount: pointsMetrics.length,
-                    itemBuilder: (context, index) {
-                      final point = pointsMetrics[index];
-                      final theme = Theme.of(context);
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            point.name.name,
-                            style: theme.textTheme.labelLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: blockPadding),
+                      child: Wrap(
+                        spacing: padding,
+                        runSpacing: padding,
+                        children: metrics.map(
+                          (metric) => Chip(
+                            padding: EdgeInsets.all(padding),
+                            label: Text('${metric.name}: ${metric.value}'),
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                              top: padding,
-                              bottom: blockPadding,
-                            ),
-                            child: Wrap(
-                              spacing: padding,
-                              runSpacing: padding,
-                              children: point.metrics.map(
-                                (metric) => Chip(
-                                  padding: EdgeInsets.all(padding),
-                                  label: Text('${metric.name}: ${metric.value}'),
-                                ),
-                              ).toList(),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
+                        ).toList(),
+                      ),
+                    ),
                   ),
                 ),
               ),

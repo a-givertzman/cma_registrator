@@ -1,5 +1,8 @@
+import 'dart:collection';
+
 import 'package:cma_registrator/core/extensions/date_time_formatted_extension.dart';
 import 'package:cma_registrator/core/models/operating_cycle/operating_cycle.dart';
+import 'package:cma_registrator/core/models/operating_cycle_details/metric.dart';
 import 'package:cma_registrator/core/repositories/operating_cycle_details/operating_cycle_details.dart';
 import 'package:cma_registrator/pages/operating_cycle_details/operating_cycle_details_page.dart';
 import 'package:cma_registrator/core/widgets/table/table_view.dart';
@@ -43,6 +46,14 @@ class _OperatingCyclesTableState extends State<OperatingCyclesTable> {
   @override
   // ignore: long-method
   void initState() {
+    final metrics = HashSet<Metric>(
+      equals: (metric1, metric2) => metric1.name == metric2.name,
+      hashCode: (metric) => metric.name.hashCode,
+    )..addAll(
+      _operatingCycles
+        .map((cycle) => cycle.metrics)
+        .expand((e) => e),
+    );
     _model = DaviModel(
       columns: [
         DaviColumn<OperatingCycle>(
@@ -76,7 +87,7 @@ class _OperatingCyclesTableState extends State<OperatingCyclesTable> {
           resizable: true,
           // width: _timeColumnWidth,
           name: const Localized('Duration, sec').v,
-          intValue: (operatingCycle) => operatingCycle.stop?.difference(operatingCycle.start).inSeconds,
+          doubleValue: (operatingCycle) => (operatingCycle.stop?.difference(operatingCycle.start).inMilliseconds ?? 0) / 1000,
           dataComparator: (a, b, column) {
             final otherDifference = b.stop?.difference(b.start);
             if (otherDifference == null) {
@@ -91,15 +102,17 @@ class _OperatingCyclesTableState extends State<OperatingCyclesTable> {
           intValue: (operatingCycle) => operatingCycle.alarmClass,
           cellStyleBuilder: (row) => _buildCellStyle(row),
         ),
-        DaviColumn<OperatingCycle>(
-          name: const Localized('Max load, t').v,
-          doubleValue: (operatingCycle) => operatingCycle.maxLoad,
-          cellStyleBuilder: (row) => _buildCellStyle(row),
-        ),
-        DaviColumn<OperatingCycle>(
-          name: const Localized('Average load, t').v,
-          doubleValue: (operatingCycle) => operatingCycle.averageLoad,
-          cellStyleBuilder: (row) => _buildCellStyle(row),
+        ...metrics.map(
+          (metric) => DaviColumn<OperatingCycle>(
+            name: Localized(metric.name ?? '').v,
+            doubleValue: (operatingCycle) {
+              final matchedMetrics = operatingCycle.metrics.where(
+                (cycleMetric) => cycleMetric.name == metric.name,
+              );
+              return matchedMetrics.isNotEmpty ? matchedMetrics.first.value : null;
+            },
+            cellStyleBuilder: (row) => _buildCellStyle(row),
+          ),
         ),
       ],
       rows: _operatingCycles,
@@ -130,7 +143,8 @@ class _OperatingCyclesTableState extends State<OperatingCyclesTable> {
             operatingCycleDetails: OperatingCycleDetails(
               apiAddress: ApiAddress.localhost(port: 8080),
               dbName: 'crane_data_server',
-              tableName: 'event',
+              tableName: 'public.rec_operating_event',
+              
               operatingCycle: operatingCycle,
             ),
           ),

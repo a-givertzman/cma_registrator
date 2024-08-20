@@ -1,3 +1,5 @@
+import 'package:cma_registrator/core/models/operating_cycle_details/metric.dart';
+
 /// 
 /// Common data for corresponding operating cycle.
 abstract interface class OperatingCycle {
@@ -10,10 +12,8 @@ abstract interface class OperatingCycle {
   Duration get duration;
   ///
   int get alarmClass;
-  /// Maximum lifting load value during all operating cycle.
-  double get maxLoad;
-  /// Average lifting load value during all operating cycle.
-  double get averageLoad;
+  ///
+  List<Metric> get metrics;
 }
 /// 
 /// [OperatingCycle] that parses itself from json map.
@@ -39,10 +39,8 @@ final class JsonOperatingCycle implements OperatingCycle {
   //
   @override
   int get alarmClass => int.parse(_json['alarm_class']);
-  // TODO swap to json field when it'll be ready on backend
   @override
-  double get averageLoad => 0;
-  // TODO swap to json field when it'll be ready on backend
-  @override
-  double get maxLoad => 0;
+  List<Metric> get metrics => (_json['metrics'] as List)
+    .map((json) => JsonMetric(json: json))
+    .toList();
 }

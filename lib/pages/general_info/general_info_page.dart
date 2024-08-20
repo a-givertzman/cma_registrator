@@ -13,7 +13,7 @@ class GeneralInfoPage extends StatelessWidget {
     return GeneralInfoBody(
       fields: FieldDatas(
         dbName: 'crane_data_server', 
-        tableName: 'operating_metric', 
+        tableName: 'public.rec_basic_metric', 
         apiAddress: ApiAddress.localhost(port: 8080),
       ),
     );
