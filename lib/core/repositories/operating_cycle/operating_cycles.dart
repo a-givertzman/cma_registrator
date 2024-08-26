@@ -31,11 +31,11 @@ class OperatingCycles {
       authToken: '', 
       query: SqlQuery(
         database: _dbName, 
-        sql: 'SELECT oc.id as id, timestamp_start, timestamp_stop, alarm_class, '
-             'json_agg(json_build_object(\'name\',n.name,\'value\', m.value)) as metrics '
-             'FROM $_operatingCyclesTableName as oc '
-             'LEFT JOIN $_metricsTableName as m ON m.operating_cycle_id=oc.id '
-             'LEFT JOIN $_metricNamesTableName as n ON n.id=m.metric_id '
+        sql: 'SELECT oc.id, oc.timestamp_start, oc.timestamp_stop, oc.alarm_class, '
+             'COALESCE(NULLIF(json_agg(json_strip_nulls(json_build_object(\'name\',n.name,\'value\', m.value)))::TEXT, \'[{}]\'), \'[]\')::JSON AS metrics '
+             'FROM $_operatingCyclesTableName AS oc '
+             'LEFT JOIN $_metricsTableName AS m ON m.operating_cycle_id=oc.id '
+             'LEFT JOIN $_metricNamesTableName AS n ON n.id=m.metric_id '
              'GROUP BY oc.id;',
       ),
     ).fetch()

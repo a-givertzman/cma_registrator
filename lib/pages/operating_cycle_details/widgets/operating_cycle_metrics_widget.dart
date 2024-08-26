@@ -46,7 +46,7 @@ class OperatingCycleMetricsWidget extends StatelessWidget {
                         children: metrics.map(
                           (metric) => Chip(
                             padding: EdgeInsets.all(padding),
-                            label: Text('${metric.name}: ${metric.value}'),
+                            label: Text('${Localized(metric.name)}: ${metric.value}'),
                           ),
                         ).toList(),
                       ),

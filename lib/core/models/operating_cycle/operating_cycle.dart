@@ -13,7 +13,7 @@ abstract interface class OperatingCycle {
   ///
   int get alarmClass;
   ///
-  List<Metric> get metrics;
+  Map<String, Metric> get metrics;
 }
 /// 
 /// [OperatingCycle] that parses itself from json map.
@@ -40,7 +40,9 @@ final class JsonOperatingCycle implements OperatingCycle {
   @override
   int get alarmClass => int.parse(_json['alarm_class']);
   @override
-  List<Metric> get metrics => (_json['metrics'] as List)
-    .map((json) => JsonMetric(json: json))
-    .toList();
+  Map<String, Metric> get metrics => Map.fromEntries(
+     (_json['metrics'] as List)
+      .map((json) => JsonMetric(json: json))
+      .map((metric) => MapEntry(metric.name, metric)),
+  );
 }

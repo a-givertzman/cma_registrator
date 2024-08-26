@@ -18,14 +18,17 @@ class OperatingCycleDetailsBody extends StatefulWidget {
   final OperatingCycle _operatingCycle;
   final List<Event> _events;
   final double _timeColumnWidth;
+  final double _metricColumnWidth;
   ///
   const OperatingCycleDetailsBody({
     super.key,
     required List<Event> events,
     required OperatingCycle operatingCycle,
-    double timeColumnWidth = 220, 
+    double timeColumnWidth = 240, 
+    double metricColumnWidth = 150, 
   }) : 
     _timeColumnWidth = timeColumnWidth, 
+    _metricColumnWidth = metricColumnWidth, 
     _operatingCycle = operatingCycle, 
     _events = events;
   //
@@ -34,11 +37,13 @@ class OperatingCycleDetailsBody extends StatefulWidget {
     events: _events,
     operatingCycle: _operatingCycle,
     timeColumnWidth: _timeColumnWidth,
+    metricColumnWidth: _metricColumnWidth,
   );
 }
 ///
 class _OperatingCycleDetailsBodyState extends State<OperatingCycleDetailsBody> {
   final double _timeColumnWidth;
+  final double _metricColumnWidth;
   final Set<String> _selectedTimestamps = {};
   late final Map<String, bool> _columnsVisibility;
   final List<Event> _events;
@@ -48,10 +53,12 @@ class _OperatingCycleDetailsBodyState extends State<OperatingCycleDetailsBody> {
   ///
   _OperatingCycleDetailsBodyState({
     required double timeColumnWidth,
+    required double metricColumnWidth,
     required List<Event> events,
     required OperatingCycle operatingCycle,
   }) : 
     _timeColumnWidth = timeColumnWidth,
+    _metricColumnWidth = metricColumnWidth,
     _events = events,
     _operatingCycle = operatingCycle;
   //
@@ -73,6 +80,7 @@ class _OperatingCycleDetailsBodyState extends State<OperatingCycleDetailsBody> {
       ),
       ...signalNames.map(
         (signalName) => DaviColumn<OperatingCycleDetailsRecord>(
+          width: _metricColumnWidth,
           name: signalName,
           stringValue: (record) {
             final recordValue = record.signals[signalName] as Object?;

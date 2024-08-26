@@ -13,34 +13,41 @@ import 'package:hmi_core/hmi_core.dart';
 ///
 class OperatingCyclesTable extends StatefulWidget {
   final double _timeColumnWidth;
+  final double _metricColumnWidth;
   final List<OperatingCycle> _operatingCycles;
   ///
   const OperatingCyclesTable({
     super.key,
     required List<OperatingCycle> operatingCycles, 
-    double timeColumnWidth = 220,
+    double timeColumnWidth = 240,
+    double metricColumnWidth = 200,
   }) : 
     _timeColumnWidth = timeColumnWidth, 
+    _metricColumnWidth = metricColumnWidth, 
     _operatingCycles = operatingCycles;
   //
   @override
   State<OperatingCyclesTable> createState() => _OperatingCyclesTableState(
     operatingCycles: _operatingCycles,
     timeColumnWidth: _timeColumnWidth,
+    metricColumnWidth: _metricColumnWidth,
   );
 }
 ///
 class _OperatingCyclesTableState extends State<OperatingCyclesTable> {
   final Set<int> _selectedTimestamps = {};
   final double _timeColumnWidth;
+  final double _metricColumnWidth;
   final List<OperatingCycle> _operatingCycles;
   late final DaviModel<OperatingCycle> _model;
   ///
   _OperatingCyclesTableState({
     required List<OperatingCycle>  operatingCycles,
     required double timeColumnWidth,
+    required double metricColumnWidth,
   }) :
     _operatingCycles = operatingCycles,
+    _metricColumnWidth = metricColumnWidth,
     _timeColumnWidth = timeColumnWidth;
   //
   @override
@@ -51,7 +58,7 @@ class _OperatingCyclesTableState extends State<OperatingCyclesTable> {
       hashCode: (metric) => metric.name.hashCode,
     )..addAll(
       _operatingCycles
-        .map((cycle) => cycle.metrics)
+        .map((cycle) => cycle.metrics.values)
         .expand((e) => e),
     );
     _model = DaviModel(
@@ -83,10 +90,9 @@ class _OperatingCyclesTableState extends State<OperatingCyclesTable> {
           cellStyleBuilder: (row) => _buildCellStyle(row),
         ),
         DaviColumn<OperatingCycle>(
-          // grow: 2,
+          width: 140,
           resizable: true,
-          // width: _timeColumnWidth,
-          name: const Localized('Duration, sec').v,
+          name: const Localized('Duration, s').v,
           doubleValue: (operatingCycle) => (operatingCycle.stop?.difference(operatingCycle.start).inMilliseconds ?? 0) / 1000,
           dataComparator: (a, b, column) {
             final otherDifference = b.stop?.difference(b.start);
@@ -98,19 +104,17 @@ class _OperatingCyclesTableState extends State<OperatingCyclesTable> {
           cellStyleBuilder: (row) => _buildCellStyle(row),
         ),
         DaviColumn<OperatingCycle>(
+          width: 120,
           name: const Localized('Alarm class').v,
           intValue: (operatingCycle) => operatingCycle.alarmClass,
           cellStyleBuilder: (row) => _buildCellStyle(row),
         ),
         ...metrics.map(
           (metric) => DaviColumn<OperatingCycle>(
-            name: Localized(metric.name ?? '').v,
-            doubleValue: (operatingCycle) {
-              final matchedMetrics = operatingCycle.metrics.where(
-                (cycleMetric) => cycleMetric.name == metric.name,
-              );
-              return matchedMetrics.isNotEmpty ? matchedMetrics.first.value : null;
-            },
+            width: _metricColumnWidth,
+            name: Localized(metric.name).v,
+            doubleValue: (operatingCycle) => operatingCycle.metrics[metric.name]?.value,
+            stringValue: (operatingCycle) => operatingCycle.metrics[metric.name]?.value.toString() ?? '-',
             cellStyleBuilder: (row) => _buildCellStyle(row),
           ),
         ),
@@ -125,7 +129,6 @@ class _OperatingCyclesTableState extends State<OperatingCyclesTable> {
   Widget build(BuildContext context) {
     return TableView<OperatingCycle>(
       model: _model,
-      columnWidthBehavior: ColumnWidthBehavior.fit,
       onRowTap: (operatingCycle) {
         final operatingCycleId = operatingCycle.id;
         setState(() {
