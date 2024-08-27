@@ -2604,9 +2604,9 @@ INSERT INTO public.rec_operating_metric VALUES (3, 'average_load    ', 42.287880
 INSERT INTO public.rec_operating_metric VALUES (3, 'max_load        ', 133.00000000);
 INSERT INTO public.rec_operating_metric VALUES (9, 'average_load    ', 43.48437500);
 INSERT INTO public.rec_operating_metric VALUES (9, 'max_load        ', 133.00000000);
-INSERT INTO public.rec_operating_metric VALUES (10, 'average_load    ', 43.48437500);
-INSERT INTO public.rec_operating_metric VALUES (10, 'max_load        ', 133.00000000);
-INSERT INTO public.rec_operating_metric VALUES (10, 'min_load        ', 5.00000000);
+INSERT INTO public.rec_operating_metric VALUES (275, 'average_load    ', 43.48437500);
+INSERT INTO public.rec_operating_metric VALUES (275, 'max_load        ', 133.00000000);
+INSERT INTO public.rec_operating_metric VALUES (275, 'min_load        ', 5.00000000);
 
 
 --
