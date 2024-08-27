@@ -164,7 +164,7 @@ class _OperatingCycleDetailsBodyState extends State<OperatingCycleDetailsBody> {
           },
         ),
         Expanded(
-          child: TableView<OperatingCycleDetailsRecord>(
+          child: _events.isNotEmpty ? TableView<OperatingCycleDetailsRecord>(
             model: _model,
             onRowTap: (record) => setState(() {
               if (_selectedTimestamps.contains(record.timestamp)) {
@@ -179,6 +179,8 @@ class _OperatingCycleDetailsBodyState extends State<OperatingCycleDetailsBody> {
             rowCursor: (row) => _selectedTimestamps.contains(row.data.timestamp) 
               ? SystemMouseCursors.basic 
               : SystemMouseCursors.click,
+          ) : Center(
+            child: Text(const Localized('No events').v),
           ),
         ),
       ],

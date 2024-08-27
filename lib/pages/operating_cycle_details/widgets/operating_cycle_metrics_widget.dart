@@ -53,7 +53,9 @@ class OperatingCycleMetricsWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-              ) : Center(child: Text(const Localized('No metrics').v)),
+              ) : Center(
+                child: Text(const Localized('No metrics').v),
+              ),
             ),
             Expanded(
               flex: 7,
