@@ -30,7 +30,7 @@ class OperatingCycleMetricsWidget extends StatelessWidget {
           children: [
             Expanded(
               flex: 1,
-              child: Scrollbar(
+              child: metrics.isNotEmpty ? Scrollbar(
                 thickness: 10,
                 thumbVisibility: true,
                 controller: controller,
@@ -53,7 +53,7 @@ class OperatingCycleMetricsWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-              ),
+              ) : Center(child: Text(const Localized('No metrics').v)),
             ),
             Expanded(
               flex: 7,

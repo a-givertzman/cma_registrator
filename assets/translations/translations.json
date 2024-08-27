@@ -59,5 +59,6 @@
     "Maximum load": ["Maximum load", "Максимальная нагрузка"],
     "Minimum load": ["Minimum load", "Минимальная нагрузка"],
     "Alarm class": ["Alarm class", "Класс аварии"],
-    "Duration, s": ["Duration, s", "Длительность, с"]
+    "Duration, s": ["Duration, s", "Длительность, с"],
+    "No metrics": ["No metrics", "Нет метрик"]
 }
