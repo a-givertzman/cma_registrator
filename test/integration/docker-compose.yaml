@@ -1,0 +1,38 @@
+networks:
+  vsz:
+
+services:
+  db:
+    image: postgres:16.4
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=crane_data_server
+      - POSTGRES_PASSWORD=00d0-25e4-*&s2-ccds
+      - POSTGRES_DB=crane_data_server1
+    volumes:
+      - ./db/postgres:/var/lib/postgresql/data
+      - ./db/cma-recorder-dump-202408141255.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - 5432:5432
+    networks:
+      - vsz
+
+  api:
+    build: ./api-server
+    ports:
+      - 8080:8080
+    networks:
+      - vsz
+  
+  # recorder:
+  #   build: ./cma-server
+  #   ports:
+  #     - 16688:16688
+  #   networks:
+  #     - vsz
+
+  # client:
+  #   build: ./client
+  #   environment:
+  #     DISPLAY: ${DISPLAY}
+  #   network_mode: host
