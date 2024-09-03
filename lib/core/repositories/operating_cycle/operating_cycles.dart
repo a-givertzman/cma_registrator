@@ -6,16 +6,22 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 class OperatingCycles {
   static final _log = const Log('OperatingCycles')..level=LogLevel.debug;
   final String _dbName;
-  final String _tableName;
+  final String _operatingCyclesTableName;
+  final String _metricsTableName;
+  final String _metricNamesTableName;
   final ApiAddress _apiAddress;
   /// 
   const OperatingCycles({
     required String dbName,
-    required String tableName,
+    required String operatingCyclesTableName,
+    required String metricsTableName,
+    required String metricNamesTableName,
     required ApiAddress apiAddress,
   }) : 
     _dbName = dbName,
-    _tableName = tableName,
+    _operatingCyclesTableName = operatingCyclesTableName,
+    _metricsTableName = metricsTableName,
+    _metricNamesTableName = metricNamesTableName,
     _apiAddress = apiAddress;
   ///
   Future<ResultF<List<OperatingCycle>>> fetchAll() {
@@ -25,7 +31,12 @@ class OperatingCycles {
       authToken: '', 
       query: SqlQuery(
         database: _dbName, 
-        sql: 'SELECT * FROM $_tableName;',
+        sql: 'SELECT oc.id, oc.timestamp_start, oc.timestamp_stop, oc.alarm_class, '
+             'COALESCE(NULLIF(json_agg(json_strip_nulls(json_build_object(\'name\',n.name,\'value\', m.value)))::TEXT, \'[{}]\'), \'[]\')::JSON AS metrics '
+             'FROM $_operatingCyclesTableName AS oc '
+             'LEFT JOIN $_metricsTableName AS m ON m.operating_cycle_id=oc.id '
+             'LEFT JOIN $_metricNamesTableName AS n ON n.id=m.metric_id '
+             'GROUP BY oc.id;',
       ),
     ).fetch()
     .then((result) => switch(result) {

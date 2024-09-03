@@ -1,5 +1,8 @@
+import 'dart:collection';
+
 import 'package:cma_registrator/core/extensions/date_time_formatted_extension.dart';
 import 'package:cma_registrator/core/models/operating_cycle/operating_cycle.dart';
+import 'package:cma_registrator/core/models/operating_cycle_details/metric.dart';
 import 'package:cma_registrator/core/repositories/operating_cycle_details/operating_cycle_details.dart';
 import 'package:cma_registrator/pages/operating_cycle_details/operating_cycle_details_page.dart';
 import 'package:cma_registrator/core/widgets/table/table_view.dart';
@@ -10,39 +13,54 @@ import 'package:hmi_core/hmi_core.dart';
 ///
 class OperatingCyclesTable extends StatefulWidget {
   final double _timeColumnWidth;
+  final double _metricColumnWidth;
   final List<OperatingCycle> _operatingCycles;
   ///
   const OperatingCyclesTable({
     super.key,
     required List<OperatingCycle> operatingCycles, 
-    double timeColumnWidth = 220,
+    double timeColumnWidth = 240,
+    double metricColumnWidth = 200,
   }) : 
     _timeColumnWidth = timeColumnWidth, 
+    _metricColumnWidth = metricColumnWidth, 
     _operatingCycles = operatingCycles;
   //
   @override
   State<OperatingCyclesTable> createState() => _OperatingCyclesTableState(
     operatingCycles: _operatingCycles,
     timeColumnWidth: _timeColumnWidth,
+    metricColumnWidth: _metricColumnWidth,
   );
 }
 ///
 class _OperatingCyclesTableState extends State<OperatingCyclesTable> {
   final Set<int> _selectedTimestamps = {};
   final double _timeColumnWidth;
+  final double _metricColumnWidth;
   final List<OperatingCycle> _operatingCycles;
   late final DaviModel<OperatingCycle> _model;
   ///
   _OperatingCyclesTableState({
     required List<OperatingCycle>  operatingCycles,
     required double timeColumnWidth,
+    required double metricColumnWidth,
   }) :
     _operatingCycles = operatingCycles,
+    _metricColumnWidth = metricColumnWidth,
     _timeColumnWidth = timeColumnWidth;
   //
   @override
   // ignore: long-method
   void initState() {
+    final metrics = HashSet<Metric>(
+      equals: (metric1, metric2) => metric1.name == metric2.name,
+      hashCode: (metric) => metric.name.hashCode,
+    )..addAll(
+      _operatingCycles
+        .map((cycle) => cycle.metrics.values)
+        .expand((e) => e),
+    );
     _model = DaviModel(
       columns: [
         DaviColumn<OperatingCycle>(
@@ -72,11 +90,10 @@ class _OperatingCyclesTableState extends State<OperatingCyclesTable> {
           cellStyleBuilder: (row) => _buildCellStyle(row),
         ),
         DaviColumn<OperatingCycle>(
-          // grow: 2,
+          width: 140,
           resizable: true,
-          // width: _timeColumnWidth,
-          name: const Localized('Duration, sec').v,
-          intValue: (operatingCycle) => operatingCycle.stop?.difference(operatingCycle.start).inSeconds,
+          name: const Localized('Duration, s').v,
+          doubleValue: (operatingCycle) => (operatingCycle.stop?.difference(operatingCycle.start).inMilliseconds ?? 0) / 1000,
           dataComparator: (a, b, column) {
             final otherDifference = b.stop?.difference(b.start);
             if (otherDifference == null) {
@@ -87,19 +104,19 @@ class _OperatingCyclesTableState extends State<OperatingCyclesTable> {
           cellStyleBuilder: (row) => _buildCellStyle(row),
         ),
         DaviColumn<OperatingCycle>(
+          width: 120,
           name: const Localized('Alarm class').v,
           intValue: (operatingCycle) => operatingCycle.alarmClass,
           cellStyleBuilder: (row) => _buildCellStyle(row),
         ),
-        DaviColumn<OperatingCycle>(
-          name: const Localized('Max load, t').v,
-          doubleValue: (operatingCycle) => operatingCycle.maxLoad,
-          cellStyleBuilder: (row) => _buildCellStyle(row),
-        ),
-        DaviColumn<OperatingCycle>(
-          name: const Localized('Average load, t').v,
-          doubleValue: (operatingCycle) => operatingCycle.averageLoad,
-          cellStyleBuilder: (row) => _buildCellStyle(row),
+        ...metrics.map(
+          (metric) => DaviColumn<OperatingCycle>(
+            width: _metricColumnWidth,
+            name: Localized(metric.name).v,
+            doubleValue: (operatingCycle) => operatingCycle.metrics[metric.name]?.value,
+            stringValue: (operatingCycle) => operatingCycle.metrics[metric.name]?.value.toString() ?? '-',
+            cellStyleBuilder: (row) => _buildCellStyle(row),
+          ),
         ),
       ],
       rows: _operatingCycles,
@@ -112,7 +129,6 @@ class _OperatingCyclesTableState extends State<OperatingCyclesTable> {
   Widget build(BuildContext context) {
     return TableView<OperatingCycle>(
       model: _model,
-      columnWidthBehavior: ColumnWidthBehavior.fit,
       onRowTap: (operatingCycle) {
         final operatingCycleId = operatingCycle.id;
         setState(() {
@@ -130,7 +146,8 @@ class _OperatingCyclesTableState extends State<OperatingCyclesTable> {
             operatingCycleDetails: OperatingCycleDetails(
               apiAddress: ApiAddress.localhost(port: 8080),
               dbName: 'crane_data_server',
-              tableName: 'event',
+              tableName: 'public.rec_operating_event',
+              
               operatingCycle: operatingCycle,
             ),
           ),

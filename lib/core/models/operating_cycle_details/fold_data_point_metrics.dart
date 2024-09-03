@@ -12,7 +12,7 @@ class FoldDataPointMetrics {
     return _jsons.fold(
       <String, DataPointMetrics>{}, 
       (previousValue, json) {
-        final pointName = json['point_name'] as String;
+        final pointName = json['metric_id'] as String;
         return previousValue..addAll({
           pointName: JsonDataPointMetrics(
             json: json,

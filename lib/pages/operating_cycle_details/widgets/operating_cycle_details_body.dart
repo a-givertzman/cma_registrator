@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'package:cma_registrator/core/models/event/event.dart';
 import 'package:cma_registrator/core/models/operating_cycle/operating_cycle.dart';
 import 'package:cma_registrator/core/widgets/table/table_view.dart';
 import 'package:davi/davi.dart';
@@ -15,48 +16,55 @@ class OperatingCycleDetailsRecord {
 ///
 class OperatingCycleDetailsBody extends StatefulWidget {
   final OperatingCycle _operatingCycle;
-  final List<DsDataPoint> _points;
+  final List<Event> _events;
   final double _timeColumnWidth;
+  final double _metricColumnWidth;
   ///
   const OperatingCycleDetailsBody({
     super.key,
-    required List<DsDataPoint> points,
+    required List<Event> events,
     required OperatingCycle operatingCycle,
-    double timeColumnWidth = 220, 
+    double timeColumnWidth = 240, 
+    double metricColumnWidth = 150, 
   }) : 
     _timeColumnWidth = timeColumnWidth, 
+    _metricColumnWidth = metricColumnWidth, 
     _operatingCycle = operatingCycle, 
-    _points = points;
+    _events = events;
   //
   @override
   State<OperatingCycleDetailsBody> createState() => _OperatingCycleDetailsBodyState(
-    points: _points,
+    events: _events,
     operatingCycle: _operatingCycle,
     timeColumnWidth: _timeColumnWidth,
+    metricColumnWidth: _metricColumnWidth,
   );
 }
 ///
 class _OperatingCycleDetailsBodyState extends State<OperatingCycleDetailsBody> {
   final double _timeColumnWidth;
+  final double _metricColumnWidth;
   final Set<String> _selectedTimestamps = {};
   late final Map<String, bool> _columnsVisibility;
-  final List<DsDataPoint> _points;
+  final List<Event> _events;
   late final DaviModel<OperatingCycleDetailsRecord> _model;
   late final List<DaviColumn<OperatingCycleDetailsRecord>> _columns;
   final OperatingCycle _operatingCycle;
   ///
   _OperatingCycleDetailsBodyState({
     required double timeColumnWidth,
-    required List<DsDataPoint> points,
+    required double metricColumnWidth,
+    required List<Event> events,
     required OperatingCycle operatingCycle,
   }) : 
     _timeColumnWidth = timeColumnWidth,
-    _points = points,
+    _metricColumnWidth = metricColumnWidth,
+    _events = events,
     _operatingCycle = operatingCycle;
   //
   @override
   void initState() {
-    final detailsRecords = _extractDetailsRecords(_points);
+    final detailsRecords = _extractDetailsRecords(_events);
     final signalNames = _extractSignalNames(detailsRecords);
     _columns = [
       DaviColumn<OperatingCycleDetailsRecord>(
@@ -72,6 +80,7 @@ class _OperatingCycleDetailsBodyState extends State<OperatingCycleDetailsBody> {
       ),
       ...signalNames.map(
         (signalName) => DaviColumn<OperatingCycleDetailsRecord>(
+          width: _metricColumnWidth,
           name: signalName,
           stringValue: (record) {
             final recordValue = record.signals[signalName] as Object?;
@@ -95,16 +104,16 @@ class _OperatingCycleDetailsBodyState extends State<OperatingCycleDetailsBody> {
     super.initState();
   }
   //
-  List<OperatingCycleDetailsRecord> _extractDetailsRecords(List<DsDataPoint> points) {
+  List<OperatingCycleDetailsRecord> _extractDetailsRecords(List<Event> events) {
     final detailsRecords = <OperatingCycleDetailsRecord>[];
-    for (int i = 0; i < points.length; i++) {
-      final timestamp = points[i].timestamp;
-      final pointName = points[i].name.name;
+    for (int i = 0; i < events.length; i++) {
+      final timestamp = events[i].timestamp;
+      final pointName = events[i].name;
       final recordSignals = <String, dynamic>{};
       if (detailsRecords.isNotEmpty) {
         recordSignals.addAll(detailsRecords[i-1].signals);
       }
-      recordSignals[pointName] = points[i].value;
+      recordSignals[pointName] = events[i].value;
       detailsRecords.add(OperatingCycleDetailsRecord(timestamp, recordSignals));
     }
     return detailsRecords;
@@ -155,7 +164,7 @@ class _OperatingCycleDetailsBodyState extends State<OperatingCycleDetailsBody> {
           },
         ),
         Expanded(
-          child: TableView<OperatingCycleDetailsRecord>(
+          child: _events.isNotEmpty ? TableView<OperatingCycleDetailsRecord>(
             model: _model,
             onRowTap: (record) => setState(() {
               if (_selectedTimestamps.contains(record.timestamp)) {
@@ -170,6 +179,8 @@ class _OperatingCycleDetailsBodyState extends State<OperatingCycleDetailsBody> {
             rowCursor: (row) => _selectedTimestamps.contains(row.data.timestamp) 
               ? SystemMouseCursors.basic 
               : SystemMouseCursors.click,
+          ) : Center(
+            child: Text(const Localized('No events').v),
           ),
         ),
       ],

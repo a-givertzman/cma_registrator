@@ -13,8 +13,8 @@ final class JsonMetric implements Metric {
   }) : _json = json;
   //
   @override
-  String get name => _json['metric_name'];
+  String get name => _json['name'];
   //
   @override
-  double get value => double.parse(_json['value']);
+  double get value => double.parse("${_json['value']}");
 }

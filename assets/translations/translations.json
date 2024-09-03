@@ -49,5 +49,16 @@
     "No data": ["No data", "Нет данных"],
     "Retry": ["Retry", "Повторить"],
     "Metrics": ["Metrics", "Метрики"],
-    "Operating cycle details": ["Operating cycle details", "Детали операционного цикла"]
+    "Events": ["Events", "События"],
+    "Trip count": ["Trip count", "Количество срабатываний"],
+    "Diviation max": ["Diviation max", "Максимальное отклонение"],
+    "Average load": ["Average load", "Средняя нагрузка за цикл"],
+    "Average": ["Average", "Среднее арифметическое"],
+    "Maximum": ["Maximum", "Максимальное"],
+    "Minimum": ["Minimum", "Минимальное"],
+    "Maximum load": ["Maximum load", "Максимальная нагрузка"],
+    "Minimum load": ["Minimum load", "Минимальная нагрузка"],
+    "Alarm class": ["Alarm class", "Класс аварии"],
+    "Duration, s": ["Duration, s", "Длительность, с"],
+    "No metrics": ["No metrics", "Нет метрик"]
 }

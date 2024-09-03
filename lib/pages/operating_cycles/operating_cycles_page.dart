@@ -14,7 +14,9 @@ class OperatingCyclesPage extends StatelessWidget {
       body: OperatingCyclesBody(
         points: OperatingCycles(
           dbName: 'crane_data_server', 
-          tableName: 'operating_cycle', 
+          operatingCyclesTableName: 'public.rec_operating_cycle', 
+          metricsTableName: 'public.rec_operating_metric',
+          metricNamesTableName: 'public.rec_name',
           apiAddress: ApiAddress.localhost(port: 8080),
         ),
       ),

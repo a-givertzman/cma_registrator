@@ -20,7 +20,8 @@ class OperatingCyclesBody extends StatelessWidget {
       onFuture: () => _points.fetchAll(),
       caseData: (context, data) => OperatingCyclesTable(
         operatingCycles: data,
-        timeColumnWidth: 200,
+        timeColumnWidth: 240,
+        metricColumnWidth: 200,
       ),
     );
   }

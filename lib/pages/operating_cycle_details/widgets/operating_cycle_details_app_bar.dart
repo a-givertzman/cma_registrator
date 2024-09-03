@@ -43,7 +43,7 @@ class OperatingCycleDetailsAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBarWidget(
-      title: const Localized('Operating cycle details').v,
+      title: const Localized('Events').v,
       height: _height,
       showLeading: false,
       leftWidgets: _showOnlyTitle
