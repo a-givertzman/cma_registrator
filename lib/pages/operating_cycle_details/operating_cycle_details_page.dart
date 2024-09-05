@@ -1,5 +1,6 @@
 import 'package:cma_registrator/core/models/operating_cycle/operating_cycle.dart';
 import 'package:cma_registrator/core/repositories/operating_cycle_details/operating_cycle_details.dart';
+import 'package:cma_registrator/core/repositories/operating_cycle_details/operating_cycle_events.dart';
 import 'package:cma_registrator/core/repositories/operating_cycle_details/operating_cycle_metrics.dart';
 import 'package:cma_registrator/pages/operating_cycle_details/widgets/operating_cycle_metrics_widget.dart';
 import 'package:cma_registrator/pages/operating_cycle_details/widgets/queriable_operating_cycle_details.dart';
@@ -32,6 +33,12 @@ class OperatingCycleDetailsPage extends StatelessWidget {
       child: QueriableOperatingCycleDetails(
         operatingCycleDetails: _operatingCycleDetails,
         operatingCycle: _operatingCycle,
+        operatingCycleEventIds: OperatingCycleEventIds(
+          apiAddress: ApiAddress.localhost(port: 8080),
+          dbName: 'crane_data_server',
+          tableName: 'public.rec_operating_event',
+          operatingCycle: _operatingCycle,
+        ),
       ),
     );
   }

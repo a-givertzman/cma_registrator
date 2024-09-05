@@ -1,47 +1,19 @@
+import 'dart:developer';
+
+import 'package:cma_registrator/core/models/filter/filters.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_translate.dart';
 ///
-class Filters {
-  final Iterable<Filter> _filters;
-  ///
-  const Filters({
-    required Iterable<Filter> filters,
-  }) : _filters = filters;
-  ///
-  factory Filters.fromString(String source, RegExp regexp) => Filters(
-    filters: regexp
-      .allMatches(source)
-      .map(
-        (match) => Filter.fromString(
-          source.substring(match.start, match.end),
-        ),
-      ),
-  );
-  ///
-  Iterable<Filter> enumerate() => _filters;
-}
-class Filter {
-  final String name;
-  final String rule;
-  const Filter({required this.name, required this.rule});
-  factory Filter.fromString(String source) {
-    final parts = source.split(':');
-    return Filter(name: parts[0], rule: parts[1]);
-  }
-  @override
-  String toString() {
-    return '$Filter($name with $rule)';
-  }
-  //
-  String toSqlCondition() {
-    return name+rule;
-  }
-}
-///
 class FiltersField extends StatefulWidget {
+  final List<String> _signalNames;
+  final ValueNotifier<Filters> _filtersNotifier;
   const FiltersField({
     super.key,
-  });
+    required ValueNotifier<Filters> filtersNotifier,
+    required List<String> signalNames,
+  }) :
+    _filtersNotifier = filtersNotifier,
+    _signalNames = signalNames;
 
   @override
   State<FiltersField> createState() => _FiltersFieldState();
@@ -49,23 +21,36 @@ class FiltersField extends StatefulWidget {
 ///
 class _FiltersFieldState extends State<FiltersField> {
   final TextEditingController _controller = TextEditingController();
-  final _regexp = RegExp(r'(Start|start|End|end|Signal1|Signal2|Signal\.3):(\x22|\x27)(.+?)\2(?:[ \t]+|$)');
+  late final RegExp _regexp;
   //
   @override
   void initState() {
+    final escapedSignalNames = widget._signalNames.map((signalName) => signalName.replaceAll('.', r'\.'));
+    final signalNamesPattern = escapedSignalNames.isEmpty ? '' : '|${escapedSignalNames.join('|')}';
+    _regexp = RegExp(
+      '(Start|start|End|end$signalNamesPattern)'
+      r':(\x22|\x27|)(.+?)\2(?:[ \t]+|$)',
+    );
+    log('RegExp: ${'(Start|start|End|end$signalNamesPattern)'r':(\x22|\x27|)(.+?)\2(?:[ \t]+|$)'}');
     _controller.addListener(_parseFilters);
+    widget._filtersNotifier.addListener(_printFilters);
     super.initState();
   }
   //
   @override
   void dispose() {
     _controller.dispose();
+    widget._filtersNotifier.removeListener(_printFilters);
     super.dispose();
+  }
+  //
+  void _printFilters() {
+    log(widget._filtersNotifier.value.enumerate().toString());
   }
   //
   void _parseFilters() {
     final query = _controller.text;
-    print(Filters.fromString(query, _regexp).enumerate());
+    widget._filtersNotifier.value = Filters.fromString(query, _regexp);
   }
   //
   @override

@@ -146,7 +146,7 @@ class _TableViewState<T> extends State<TableView<T>> {
         scrollbar: TableScrollbarThemeData(
           margin: theme.scrollbarTheme.mainAxisMargin
             ?? TableScrollbarThemeDataDefaults.margin,
-          thickness: theme.scrollbarTheme.thickness?.resolve({MaterialState.hovered}) 
+          thickness: theme.scrollbarTheme.thickness?.resolve({WidgetState.hovered}) 
             ?? TableScrollbarThemeDataDefaults.thickness,
           verticalColor: scrollbarBackgroundColor,
           verticalBorderColor: Colors.transparent,
