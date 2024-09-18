@@ -1,5 +1,6 @@
 import 'package:cma_registrator/core/models/event/event.dart';
 import 'package:cma_registrator/core/models/event/json_event.dart';
+import 'package:cma_registrator/core/models/filter/filters.dart';
 import 'package:cma_registrator/core/models/operating_cycle/operating_cycle.dart';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core.dart';
@@ -24,14 +25,54 @@ class OperatingCycleDetails {
     _operatingCycle = operatingCycle;
   ///
   Future<ResultF<List<Event>>> fetchAll() {
-    _log.debug('[SqlRecord.fetch] Fetching all fields and values from value for field...');
+    _log.debug('[OperatingCycleDetails.fetchAll] Fetching all operating cycle events...');
+    return _fetch(
+      'SELECT * FROM $_tableName '
+      'WHERE operating_cycle_id=${_operatingCycle.id};',
+    );
+  }
+  ///
+  Future<ResultF<List<Event>>> fetchFiltered(Filters filters) {
+    if(filters.enumerate().isEmpty) {
+      return fetchAll();
+    }
+    const startFilterName = 'start';
+    const endFilterName = 'end';
+    final startTimestamp = filters.enumerate().where((filter) => filter.name.toLowerCase() == startFilterName).firstOrNull?.rule.value;
+    final endTimestamp = filters.enumerate().where((filter) => filter.name.toLowerCase() == endFilterName).firstOrNull?.rule.value;
+    final valueFilters = filters.enumerate().where((filter) {
+      final name = filter.name.toLowerCase();
+      return name != startFilterName && name != endFilterName;
+    });
+    final sqlConditions = ['operating_cycle_id=${_operatingCycle.id}'];
+    if(startTimestamp!=null) {
+      sqlConditions.add("timestamp>='$startTimestamp'");
+    }
+    if(endTimestamp!=null) {
+      sqlConditions.add("timestamp<='$endTimestamp'");
+    }
+    if(valueFilters.isNotEmpty) {
+      sqlConditions.add('(${valueFilters.map((filter) => filter.toSqlCondition()).join(' OR ')})');
+    }
+    if(sqlConditions.length > 1) {
+      _log.debug('[OperatingCycleDetails.fetchFiltered] Fetching filtered operating cycle events...');
+      final whereCondition = sqlConditions.join(' AND ');
+      return _fetch(
+        'SELECT * FROM $_tableName '
+        'WHERE ($whereCondition);',
+      );
+    } else {
+      return fetchAll();
+    }
+  }
+  ///
+  Future<ResultF<List<Event>>> _fetch(String sqlQuery) {
     return ApiRequest(
       address: _apiAddress, 
       authToken: '', 
       query: SqlQuery(
         database: _dbName, 
-        sql: 'SELECT * FROM $_tableName '
-             'WHERE operating_cycle_id=${_operatingCycle.id};',
+        sql: sqlQuery,
       ),
     ).fetch()
     .then((result) => switch(result) {

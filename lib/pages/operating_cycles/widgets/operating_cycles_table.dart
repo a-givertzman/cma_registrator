@@ -154,7 +154,7 @@ class _OperatingCyclesTableState extends State<OperatingCyclesTable> {
         ),
       ),
       rowColor: (row) => _selectedTimestamps.contains(row.data.id)
-        ? Theme.of(context).colorScheme.onBackground.withOpacity(0.7)
+        ? Theme.of(context).colorScheme.onSurface.withOpacity(0.7)
         : null,
     );
   }
@@ -162,7 +162,7 @@ class _OperatingCyclesTableState extends State<OperatingCyclesTable> {
   CellStyle _buildCellStyle(DaviRow<OperatingCycle> row) {
     return CellStyle(
       textStyle: _selectedTimestamps.contains(row.data.id) 
-        ? TextStyle(color: Theme.of(context).colorScheme.background)
+        ? TextStyle(color: Theme.of(context).colorScheme.surface)
         : null, 
     );
   }

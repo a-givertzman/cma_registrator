@@ -74,7 +74,7 @@ class _OperatingCycleDetailsBodyState extends State<OperatingCycleDetailsBody> {
         pinStatus: PinStatus.left,
         cellStyleBuilder: (row) => CellStyle(
           textStyle: _selectedTimestamps.contains(row.data.timestamp) 
-            ? TextStyle(color: Theme.of(context).colorScheme.background)
+            ? TextStyle(color: Theme.of(context).colorScheme.surface)
             : null, 
         ),
       ),
@@ -132,8 +132,6 @@ class _OperatingCycleDetailsBodyState extends State<OperatingCycleDetailsBody> {
     return Column(
       children: [
         OperatingCycleDetailsAppBar(
-          beginningTime: _operatingCycle.start, 
-          endingTime: _operatingCycle.stop,
           height: 72,
           dropdownMenuWidth: 220,
           columnsVisibility: SplayTreeMap.from(
@@ -174,7 +172,7 @@ class _OperatingCycleDetailsBodyState extends State<OperatingCycleDetailsBody> {
               }
             }),
             rowColor: (row) => _selectedTimestamps.contains(row.data.timestamp)
-              ? Theme.of(context).colorScheme.onBackground.withOpacity(0.7)
+              ? Theme.of(context).colorScheme.onSurface.withOpacity(0.7)
               : null,
             rowCursor: (row) => _selectedTimestamps.contains(row.data.timestamp) 
               ? SystemMouseCursors.basic 
@@ -190,7 +188,7 @@ class _OperatingCycleDetailsBodyState extends State<OperatingCycleDetailsBody> {
   TextStyle? _defineCellTextStyle(String columnName, String timestamp) {
     if (_columnsVisibility[columnName] ?? false) {
       return _selectedTimestamps.contains(timestamp) 
-            ? TextStyle(color: Theme.of(context).colorScheme.background)
+            ? TextStyle(color: Theme.of(context).colorScheme.surface)
             : null;
     }
     return const TextStyle(color: Colors.transparent);

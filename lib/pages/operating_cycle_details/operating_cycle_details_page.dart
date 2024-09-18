@@ -1,9 +1,9 @@
 import 'package:cma_registrator/core/models/operating_cycle/operating_cycle.dart';
 import 'package:cma_registrator/core/repositories/operating_cycle_details/operating_cycle_details.dart';
+import 'package:cma_registrator/core/repositories/operating_cycle_details/operating_cycle_events.dart';
 import 'package:cma_registrator/core/repositories/operating_cycle_details/operating_cycle_metrics.dart';
-import 'package:cma_registrator/core/widgets/future_builder_widget.dart';
-import 'package:cma_registrator/pages/operating_cycle_details/widgets/operating_cycle_details_body.dart';
 import 'package:cma_registrator/pages/operating_cycle_details/widgets/operating_cycle_metrics_widget.dart';
+import 'package:cma_registrator/pages/operating_cycle_details/widgets/queriable_operating_cycle_details.dart';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 ///
@@ -30,13 +30,15 @@ class OperatingCycleDetailsPage extends StatelessWidget {
         metricNamesTableName: 'public.rec_name',
         operatingCycle: _operatingCycle,
       ),
-      child: FutureBuilderWidget(
-        onFuture: _operatingCycleDetails.fetchAll,
-        caseData: (context, points, _) => OperatingCycleDetailsBody(
+      child: QueriableOperatingCycleDetails(
+        operatingCycleDetails: _operatingCycleDetails,
+        operatingCycle: _operatingCycle,
+        operatingCycleEventIds: OperatingCycleEventIds(
+          apiAddress: ApiAddress.localhost(port: 8080),
+          dbName: 'crane_data_server',
+          tableName: 'public.rec_operating_event',
           operatingCycle: _operatingCycle,
-          events: points,
         ),
-
       ),
     );
   }
