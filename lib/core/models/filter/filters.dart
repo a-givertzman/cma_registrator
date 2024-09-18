@@ -1,4 +1,5 @@
 import 'package:cma_registrator/core/models/filter/filter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hmi_core/hmi_core.dart';
 ///
 class Filters {
@@ -26,7 +27,7 @@ class Filters {
   @override
   bool operator ==(Object other) {
     return other is Filters
-      && Set.from(_filters).containsAll(other.enumerate());
+      && setEquals(Set.from(_filters), Set.from(other.enumerate()));
   }
   //
   @override

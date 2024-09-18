@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cma_registrator/core/models/filter/filters.dart';
 import 'package:cma_registrator/core/models/operating_cycle/operating_cycle.dart';
 import 'package:cma_registrator/core/repositories/operating_cycle_details/operating_cycle_details.dart';
@@ -9,6 +7,7 @@ import 'package:cma_registrator/pages/operating_cycle_details/widgets/filters_fi
 import 'package:cma_registrator/pages/operating_cycle_details/widgets/operating_cycle_details_body.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:hmi_core/hmi_core_log.dart';
 
 class QueriableOperatingCycleDetails extends StatefulWidget {
   const QueriableOperatingCycleDetails({
@@ -30,6 +29,7 @@ class QueriableOperatingCycleDetails extends StatefulWidget {
 }
 
 class _QueriableOperatingCycleDetailsState extends State<QueriableOperatingCycleDetails> {
+  static const _log = Log('_QueriableOperatingCycleDetailsState');
   late final ValueNotifier<Filters> _filtersNotifier;
   @override
   void initState() {
@@ -49,7 +49,7 @@ class _QueriableOperatingCycleDetailsState extends State<QueriableOperatingCycle
             onFuture: widget._operatingCycleEventIds.fetchAll,
             caseData: (context, signalNames, _) => FiltersField(
               filtersNotifier: _filtersNotifier,
-              signalNames: signalNames,
+              filterNames: signalNames,
             ),
           ),
         ),
@@ -57,7 +57,7 @@ class _QueriableOperatingCycleDetailsState extends State<QueriableOperatingCycle
           child: ValueListenableBuilder(
             valueListenable: _filtersNotifier,
             builder: (context, filters, child) {
-              log('ValueListenableBuilder: ${filters.enumerate()}');
+              _log.debug('ValueListenableBuilder: ${filters.enumerate()}');
               return FutureBuilderWidget(
                 key: ValueKey(filters),
                 onFuture: () => widget._operatingCycleDetails.fetchFiltered(filters),
@@ -66,7 +66,7 @@ class _QueriableOperatingCycleDetailsState extends State<QueriableOperatingCycle
                   events: points,
                 ),
               );
-            }
+            },
           ),
         ),
       ],

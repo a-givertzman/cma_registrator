@@ -1,37 +1,38 @@
-import 'dart:developer';
-
 import 'package:cma_registrator/core/models/filter/filters.dart';
 import 'package:flutter/material.dart';
+import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/hmi_core_translate.dart';
 ///
 class FiltersField extends StatefulWidget {
-  final List<String> _signalNames;
+  final List<String> _filterNames;
   final ValueNotifier<Filters> _filtersNotifier;
+  ///
   const FiltersField({
     super.key,
     required ValueNotifier<Filters> filtersNotifier,
-    required List<String> signalNames,
+    required List<String> filterNames,
   }) :
     _filtersNotifier = filtersNotifier,
-    _signalNames = signalNames;
-
+    _filterNames = filterNames;
+  //
   @override
   State<FiltersField> createState() => _FiltersFieldState();
 }
 ///
 class _FiltersFieldState extends State<FiltersField> {
+  static const _log = Log('_FiltersFieldState');
   final TextEditingController _controller = TextEditingController();
   late final RegExp _regexp;
   //
   @override
   void initState() {
-    final escapedSignalNames = widget._signalNames.map((signalName) => signalName.replaceAll('.', r'\.'));
+    final escapedSignalNames = widget._filterNames.map((signalName) => signalName.replaceAll('.', r'\.'));
     final signalNamesPattern = escapedSignalNames.isEmpty ? '' : '|${escapedSignalNames.join('|')}';
     _regexp = RegExp(
       '(Start|start|End|end$signalNamesPattern)'
       r':(\x22|\x27|)(.+?)\2(?:[ \t]+|$)',
     );
-    log('RegExp: ${'(Start|start|End|end$signalNamesPattern)'r':(\x22|\x27|)(.+?)\2(?:[ \t]+|$)'}');
+    _log.debug(_regexp.pattern);
     _controller.addListener(_parseFilters);
     widget._filtersNotifier.addListener(_printFilters);
     super.initState();
@@ -45,7 +46,7 @@ class _FiltersFieldState extends State<FiltersField> {
   }
   //
   void _printFilters() {
-    log(widget._filtersNotifier.value.enumerate().toString());
+    _log.debug(widget._filtersNotifier.value.enumerate().toString());
   }
   //
   void _parseFilters() {
