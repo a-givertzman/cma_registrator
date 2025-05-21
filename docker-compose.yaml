@@ -1,0 +1,6 @@
+services:
+  domestic-docs:
+    platform: linux/amd64
+    build: ./domestic-docs
+    volumes:
+      - ./domestic-docs/builded-docs/:/manuals/build/
