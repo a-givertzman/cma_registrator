@@ -36,7 +36,7 @@ class TensosensorCalibrationStep extends StatefulWidget {
     void Function()? onCancel,
     double buttonHeight = 40, 
     double itemWidth = 150, 
-    double indicatorHeight = 50, 
+    double indicatorHeight = 60, 
     int? viewIndex, 
   }) : 
     _indicatorHeight = indicatorHeight, 

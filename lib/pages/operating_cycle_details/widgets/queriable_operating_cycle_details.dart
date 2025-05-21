@@ -3,7 +3,7 @@ import 'package:cma_registrator/core/models/operating_cycle/operating_cycle.dart
 import 'package:cma_registrator/core/repositories/operating_cycle_details/operating_cycle_details.dart';
 import 'package:cma_registrator/core/repositories/operating_cycle_details/operating_cycle_events.dart';
 import 'package:cma_registrator/core/widgets/future_builder_widget.dart';
-import 'package:cma_registrator/pages/operating_cycle_details/widgets/filters_field.dart';
+import 'package:cma_registrator/pages/operating_cycle_details/widgets/filters_bar.dart';
 import 'package:cma_registrator/pages/operating_cycle_details/widgets/operating_cycle_details_body.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
@@ -47,9 +47,10 @@ class _QueriableOperatingCycleDetailsState extends State<QueriableOperatingCycle
           ),
           child: FutureBuilderWidget(
             onFuture: widget._operatingCycleEventIds.fetchAll,
-            caseData: (context, signalNames, _) => FiltersField(
+            caseData: (context, signalNames, _) => FiltersBar(
               filtersNotifier: _filtersNotifier,
               filterNames: signalNames,
+              buttonWidth: 200,
             ),
           ),
         ),

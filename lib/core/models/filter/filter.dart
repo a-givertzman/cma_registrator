@@ -13,9 +13,7 @@ class Filter {
   );
   //
   @override
-  String toString() {
-    return '$Filter($name $rule)';
-  }
+  String toString() => '$name:$rule';
   //
   String toSqlCondition() => "event_id = '$name' AND value ${rule.toSqlRule()}";
   //
@@ -28,5 +26,4 @@ class Filter {
   //
   @override
   int get hashCode => name.hashCode ^ rule.hashCode;
-  
 }
