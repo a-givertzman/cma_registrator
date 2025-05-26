@@ -28,7 +28,7 @@
 ```
 /
 └── config
-    ├── craneware-client    # Директория с файлами клиента CraneWare.Registrator
+    ├── craneware-registrator-client    # Директория с файлами клиента CraneWare.Registrator
     │                       # для графического интерфейса
     │
     ├── craneware-db        # Директория с файлами базы данных для приложения CraneWare.Registrator

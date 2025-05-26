@@ -5,7 +5,7 @@ import 'package:cma_registrator/core/widgets/field/cancelable_field.dart';
 import 'package:cma_registrator/core/widgets/field/field_group.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core_result.dart';
 import 'package:hmi_core/hmi_core_translate.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'confirmation_dialog.dart';

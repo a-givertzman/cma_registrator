@@ -16,6 +16,13 @@ Future<void> main() async {
   final appThemeSwitch = AppThemeSwitch();
   runZonedGuarded(
     () async {
+      await AppSettings.initialize(
+        readOnly: JsonMap.fromTextFile(
+          const TextFile.asset(
+            'assets/settings/app-settings.json',
+          ),
+        ),
+      );
       runApp(
         AppWidget(
           themeSwitch: appThemeSwitch,

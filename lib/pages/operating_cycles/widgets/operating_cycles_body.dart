@@ -4,7 +4,7 @@ import 'package:cma_registrator/core/widgets/future_builder_scaffold.dart';
 import 'package:cma_registrator/pages/operating_cycles/widgets/queriable_operating_cycles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core_result.dart';
 import 'package:hmi_core/hmi_core_translate.dart';
 
 class OperatingCyclesBody extends StatelessWidget {
