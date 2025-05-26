@@ -1,7 +1,7 @@
 import 'package:cma_registrator/core/models/operating_cycle/metric_info.dart';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core.dart';
-import 'package:hmi_core/hmi_core_result.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 ///
 class MetricInfos {
   static final _log = const Log('OperatingCycles')..level=LogLevel.debug;

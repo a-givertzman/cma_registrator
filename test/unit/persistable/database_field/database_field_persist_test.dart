@@ -4,7 +4,7 @@ import 'package:cma_registrator/core/models/persistable/database_field.dart';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hmi_core/hmi_core_log.dart';
-import 'package:hmi_core/hmi_core_result.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 
 void main() {
   Log.initialize();
