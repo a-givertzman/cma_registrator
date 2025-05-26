@@ -4,7 +4,7 @@ import 'package:hmi_widgets/hmi_widgets.dart';
 
 ///
 class AppThemeSwitch with ChangeNotifier {
-  static const _debug = true;
+  static const _log = Log('AppThemeSwitch');
   // final _streamController = StreamController<AppTheme>();
   late ThemeData _themeData;
   AppTheme _theme = AppTheme.dark;
@@ -17,7 +17,7 @@ class AppThemeSwitch with ChangeNotifier {
   ThemeData get themeData => _themeData;
   ///
   AppThemeSwitch() : super() {
-    log(_debug, '[$AppThemeSwitch]');
+    _log.debug('[$AppThemeSwitch]');
     if (appThemes.containsKey(_theme)) {
       final defaultThemeData = appThemes[_theme];
       if (defaultThemeData != null) {
@@ -45,7 +45,7 @@ class AppThemeSwitch with ChangeNotifier {
   }
   ///
   void toggleTheme(AppTheme? theme) {
-    log(_debug, '[$AppThemeSwitch.toggleTheme()] theme: $theme');
+    _log.debug('[$AppThemeSwitch.toggleTheme()] theme: $theme');
     if (theme != null) {
       if (appThemes.containsKey(theme)) {
         _theme = theme;

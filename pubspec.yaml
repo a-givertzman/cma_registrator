@@ -46,7 +46,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  mockito: ^5.3.2
+  # mockito: ^5.3.2
   # lint: ^2.0.1
   flutter_lints: ^2.0.1
   dart_code_metrics: ^5.6.0
@@ -69,6 +69,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/translations/
+    - assets/settings/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

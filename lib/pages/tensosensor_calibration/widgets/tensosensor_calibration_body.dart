@@ -5,6 +5,7 @@ import 'package:cma_registrator/pages/general_info/widgets/confirmation_dialog.d
 import 'package:cma_registrator/pages/tensosensor_calibration/widgets/tensosensor_calibration_step.dart';
 import 'package:ext_rw/ext_rw.dart' hide FieldType;
 import 'package:flutter/material.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_translate.dart';
 ///
 class TensosensorCalibrationBody extends StatefulWidget {
@@ -17,7 +18,7 @@ class TensosensorCalibrationBody extends StatefulWidget {
 ///
 class _TensosensorCalibrationBodyState extends State<TensosensorCalibrationBody> {
   static const _slideDuration = Duration(milliseconds: 300);
-  static const _pagesCount = 3;
+  static const _pagesCount = 2;
   late final PageController _pageController;
 
   final _fieldsData = List.generate(
@@ -30,8 +31,8 @@ class _TensosensorCalibrationBodyState extends State<TensosensorCalibrationBody>
       record: DatabaseField(
         id: 'target_weight',
         tableName: 'tensosensor_calibration',
-        dbName: 'crane_data_server',
-        apiAddress: ApiAddress.localhost(),
+        dbName: const Setting('api-database').toString(), 
+        apiAddress: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
       ),
     ),
   );

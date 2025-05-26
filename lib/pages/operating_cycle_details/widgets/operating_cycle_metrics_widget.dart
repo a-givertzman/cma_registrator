@@ -8,7 +8,7 @@ class OperatingCycleMetricsWidget extends StatelessWidget {
   final OperatingCycleMetrics _metrics;
   final Widget? _child;
   const OperatingCycleMetricsWidget({
-    super.key, 
+    super.key,
     required OperatingCycleMetrics metrics,
     Widget? child,
   }) : 

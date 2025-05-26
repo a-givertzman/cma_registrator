@@ -63,7 +63,7 @@ class _GeneralInfoFormState extends State<GeneralInfoForm> {
                 ),
                 if (_isSaving)
                   Container(
-                    color: Theme.of(context).colorScheme.background.withOpacity(0.75),
+                    color: Theme.of(context).colorScheme.surface.withOpacity(0.75),
                   ),
               ],
             ),
@@ -140,7 +140,7 @@ class _GeneralInfoFormState extends State<GeneralInfoForm> {
             Text(
               message,
               style: TextStyle(
-                color: theme.colorScheme.onBackground,
+                color: theme.colorScheme.onSurface,
               ),
             ),
           ],

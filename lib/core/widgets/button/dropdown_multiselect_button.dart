@@ -90,7 +90,7 @@ class _DropdownMultiselectButtonState extends State<DropdownMultiselectButton> {
       child: ElevatedButton(
         onPressed: () => _toggleMenu(context),
         style: ButtonStyle(
-          textStyle: MaterialStateProperty.resolveWith<TextStyle?>(
+          textStyle: WidgetStateProperty.resolveWith<TextStyle?>(
             (states) => theme.textTheme.titleLarge?.copyWith(
               color: theme.colorScheme.onPrimary,
               height: _labelLineHeight,

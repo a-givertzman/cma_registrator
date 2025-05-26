@@ -28,24 +28,25 @@ class AsyncActionButton extends StatefulWidget {
 
 class _AsyncActionButtonState extends State<AsyncActionButton> {
   late bool _isInProgress;
+  //
   @override
   void initState() {
     _isInProgress = false;
     super.initState();
   }
   void _onPressed() {
+    final onPressed = widget._onPressed;
+    if (onPressed == null) return;
     setState(() {
       _isInProgress = true;
     });
-    widget._onPressed
-      ?.call()
-      .then((_) {
-        if (mounted) {
-          setState(() {
-            _isInProgress = false;
-          });
-        }
-      });
+    onPressed().whenComplete(() {
+      if (mounted) {
+        setState(() {
+          _isInProgress = false;
+        });
+      }
+    });
   }
   //
   @override
@@ -67,7 +68,7 @@ class _AsyncActionButtonState extends State<AsyncActionButton> {
           textAlign: TextAlign.center,
         ),
         style: ButtonStyle(
-          textStyle: MaterialStateProperty.resolveWith<TextStyle?>(
+          textStyle: WidgetStateProperty.resolveWith<TextStyle?>(
             (states) => theme.textTheme.titleLarge?.copyWith(
               color: theme.colorScheme.onPrimary,
               height: widget._labelLineHeight,

@@ -31,7 +31,7 @@ class CancellationButton extends StatelessWidget {
       child: TextButton(
         onPressed: _onPressed,
         style: ButtonStyle(
-          textStyle: MaterialStateProperty.resolveWith<TextStyle?>(
+          textStyle: WidgetStateProperty.resolveWith<TextStyle?>(
             (states) => theme.textTheme.titleLarge?.copyWith(
               color: theme.colorScheme.primary,
               height: _labelLineHeught,

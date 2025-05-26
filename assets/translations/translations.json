@@ -60,5 +60,7 @@
     "Minimum load": ["Minimum load", "Минимальная нагрузка"],
     "Alarm class": ["Alarm class", "Класс аварии"],
     "Duration, s": ["Duration, s", "Длительность, с"],
-    "No metrics": ["No metrics", "Нет метрик"]
+    "No metrics": ["No metrics", "Нет метрик"],
+    "Filters": ["Filters", "Фильтры"],
+    "Input filtration params, e.g. Start:26.08.2024 End:27.08.2024 Signal1:>=100 Signal2:0": ["Input filtration params, e.g. Start:26.08.2024 End:27.08.2024 Signal1:>=100 Signal2:0", "Введите параметры поиска, например Start:26.08.2024 End:27.08.2024 Signal1:>=100 Signal2:0"]
 }

@@ -30,7 +30,7 @@ class ActionButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: _onPressed,
         style: ButtonStyle(
-          textStyle: MaterialStateProperty.resolveWith<TextStyle?>(
+          textStyle: WidgetStateProperty.resolveWith<TextStyle?>(
             (states) => theme.textTheme.titleLarge?.copyWith(
               color: theme.colorScheme.onPrimary,
               height: _labelLineHeight,

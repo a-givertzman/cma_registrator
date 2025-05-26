@@ -10,6 +10,7 @@ import 'package:davi/davi.dart';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 ///
 class OperatingCyclesTable extends StatefulWidget {
   final double _timeColumnWidth;
@@ -144,8 +145,8 @@ class _OperatingCyclesTableState extends State<OperatingCyclesTable> {
           builder: (_) => OperatingCycleDetailsPage(
             operatingCycle: operatingCycle,
             operatingCycleDetails: OperatingCycleDetails(
-              apiAddress: ApiAddress.localhost(port: 8080),
-              dbName: 'crane_data_server',
+              apiAddress: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
+              dbName: const Setting('api-database').toString(), 
               tableName: 'public.rec_operating_event',
               
               operatingCycle: operatingCycle,
@@ -154,7 +155,7 @@ class _OperatingCyclesTableState extends State<OperatingCyclesTable> {
         ),
       ),
       rowColor: (row) => _selectedTimestamps.contains(row.data.id)
-        ? Theme.of(context).colorScheme.onBackground.withOpacity(0.7)
+        ? Theme.of(context).colorScheme.onSurface.withOpacity(0.7)
         : null,
     );
   }
@@ -162,7 +163,7 @@ class _OperatingCyclesTableState extends State<OperatingCyclesTable> {
   CellStyle _buildCellStyle(DaviRow<OperatingCycle> row) {
     return CellStyle(
       textStyle: _selectedTimestamps.contains(row.data.id) 
-        ? TextStyle(color: Theme.of(context).colorScheme.background)
+        ? TextStyle(color: Theme.of(context).colorScheme.surface)
         : null, 
     );
   }

@@ -36,7 +36,7 @@ class TensosensorCalibrationStep extends StatefulWidget {
     void Function()? onCancel,
     double buttonHeight = 40, 
     double itemWidth = 150, 
-    double indicatorHeight = 50, 
+    double indicatorHeight = 60, 
     int? viewIndex, 
   }) : 
     _indicatorHeight = indicatorHeight, 
@@ -164,44 +164,44 @@ class _TensosensorCalibrationStepState extends State<TensosensorCalibrationStep>
           headline,
           style: Theme.of(context).textTheme.titleLarge,
         ),
-        Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if(_stepType != StepType.starter && fieldData != null) ...[
-                  SizedBox(
-                    width: _itemWidth,
-                    child: Form(
-                      key: _formKey,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      child: _mapDataToField(fieldData),
-                    ),
+        const Spacer(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if(_stepType != StepType.starter && fieldData != null) ...[
+                SizedBox(
+                  width: _itemWidth,
+                  child: Form(
+                    key: _formKey,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    child: _mapDataToField(fieldData),
                   ),
-                  SizedBox(width: padding),
-                ],
-              TextIndicatorWidget(
-                height: _indicatorHeight,
-                width: _itemWidth,
-                indicator: TextValueIndicator(
-                  stream: Stream.periodic(
-                    const Duration(milliseconds: 500),
-                    (_) => DsDataPoint(
-                      type: DsDataType.real, 
-                      name: DsPointName('/test'), 
-                      value: random.nextDouble() * 40000, 
-                      status: DsStatus.ok, 
-                      timestamp: DsTimeStamp.now().toString(),
-                      cot: DsCot.inf,
-                    ),
+                ),
+                SizedBox(width: padding),
+              ],
+            TextIndicatorWidget(
+              // height: _indicatorHeight,
+              width: _itemWidth,
+              indicator: TextValueIndicator(
+                stream: Stream.periodic(
+                  const Duration(milliseconds: 500),
+                  (_) => DsDataPoint(
+                    type: DsDataType.real, 
+                    name: DsPointName('/test'), 
+                    value: random.nextDouble() * 40000, 
+                    status: DsStatus.ok, 
+                    timestamp: DsTimeStamp.now().toString(),
+                    cot: DsCot.inf,
                   ),
-                  valueUnit: const Localized('kg').v,
-                ), 
-                caption: Text(const Localized('Sensor value').v), 
-                alignment: Alignment.topRight,
-              ),
-            ],
-          ),
+                ),
+                valueUnit: const Localized('kg').v,
+              ), 
+              caption: Text(const Localized('Sensor value').v), 
+              alignment: Alignment.topRight,
+            ),
+          ],
         ),
+        const Spacer(),
         Expanded(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
