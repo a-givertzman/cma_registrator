@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core_result.dart';
 import 'package:hmi_core/hmi_core_translate.dart';
 
 import 'error_message_widget.dart';

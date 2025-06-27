@@ -17,7 +17,7 @@ Future<void> main() async {
   runZonedGuarded(
     () async {
       await AppSettings.initialize(
-        jsonMap: JsonMap.fromTextFile(
+        readOnly: JsonMap.fromTextFile(
           const TextFile.asset(
             'assets/settings/app-settings.json',
           ),

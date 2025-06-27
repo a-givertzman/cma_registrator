@@ -4,7 +4,7 @@ import 'package:cma_registrator/core/widgets/future_builder_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core_result.dart';
 import 'package:hmi_core/hmi_core_translate.dart';
 import 'error_message_widget.dart';
 /// 

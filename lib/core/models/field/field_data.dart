@@ -1,7 +1,7 @@
 import 'package:cma_registrator/core/models/field/field_type.dart';
 import 'package:cma_registrator/core/models/persistable/database_field.dart';
 import 'package:flutter/material.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core_result.dart';
 /// 
 /// Model that holds data for [TextFormField] or [TextField].
 class FieldData {
