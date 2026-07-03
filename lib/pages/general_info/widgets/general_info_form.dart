@@ -44,7 +44,7 @@ class _GeneralInfoFormState extends State<GeneralInfoForm> {
       .where((data) => data.isChanged)
       .isNotEmpty;
     const buttonHeight = 40.0;
-    const buttonWidth = 180.0;
+    const buttonWidth = 190.0;
     final blockPadding = const Setting('blockPadding').toDouble;
     return Form(
       key: _formKey,
@@ -235,45 +235,50 @@ class _GeneralInfoColumns extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const columnFlex = 3;
-    const spacingFlex = 1;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        const Spacer(flex: spacingFlex),
-        Expanded(
-          flex: columnFlex,
-          child: FieldGroup(
-            groupName: const Localized('Crane').v,
-            fields: _fieldsData
-              .where((field) => field.id.startsWith('1.'))
-              .map(_mapDataToField)
-              .toList(),
+    // const spacingFlex = 1;
+    const blockPadding = 16.0;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        spacing: blockPadding,
+        children: [
+          // const Spacer(flex: spacingFlex),
+          Expanded(
+            flex: columnFlex,
+            child: FieldGroup(
+              groupName: const Localized('Crane').v,
+              fields: _fieldsData
+                .where((field) => field.id.startsWith('1.'))
+                .map(_mapDataToField)
+                .toList(),
+            ),
           ),
-        ),
-        const Spacer(flex: spacingFlex),
-        Expanded(
-          flex: 3,
-          child: FieldGroup(
-            groupName: const Localized('Recorder').v,
-            fields: _fieldsData
-              .where((field) => field.id.startsWith('2.'))
-              .map(_mapDataToField)
-              .toList(),
+          // const Spacer(flex: spacingFlex),
+          Expanded(
+            flex: 3,
+            child: FieldGroup(
+              groupName: const Localized('Recorder').v,
+              fields: _fieldsData
+                .where((field) => field.id.startsWith('2.'))
+                .map(_mapDataToField)
+                .toList(),
+            ),
           ),
-        ),
-        const Spacer(flex: spacingFlex),
-        Expanded(
-          flex: columnFlex,
-          child: FieldGroup(
-            groupName: const Localized('Operation').v,
-            fields: _fieldsData
-              .where((field) => field.id.startsWith('3.'))
-              .map(_mapDataToField)
-              .toList(),
+          // const Spacer(flex: spacingFlex),
+          Expanded(
+            flex: columnFlex,
+            child: FieldGroup(
+              groupName: const Localized('Operation').v,
+              fields: _fieldsData
+                .where((field) => field.id.startsWith('3.'))
+                .map(_mapDataToField)
+                .toList(),
+            ),
           ),
-        ),
-        const Spacer(flex: spacingFlex),
-      ],
+          // const Spacer(flex: spacingFlex),
+        ],
+      ),
     );
   }
   CancelableField _mapDataToField(FieldData data) => CancelableField(

@@ -176,7 +176,7 @@ class _FutureBuilderScaffoldStateWidget extends StatelessWidget {
           SizedBox(width: const Setting('blockPadding').toDouble),
         ], 
       ),
-      body: Expanded(child: _body),
+      body: _body,
     );
   }
 }

@@ -3,7 +3,7 @@
     "connectionStatusMenuWidth": 230,
     "connectionStatusMenuItemHeight": 50,
     
-    "api-host": "api",
+    "api-host": "0.0.0.0",
     "api-port": 8080,
     "api-auth-token": "cma-ysz-api-auth-token",
     "api-database": "crane_data_server",
