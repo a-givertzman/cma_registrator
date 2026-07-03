@@ -70,9 +70,11 @@ class _OperatingCyclesTableState extends State<OperatingCyclesTable> {
           width: _timeColumnWidth,
           name: const Localized('Beginning').v,
           pinStatus: PinStatus.left,
-          stringValue: (operatingCycle) => operatingCycle.start.toFormatted(),
-          dataComparator: (a, b, column) => a.start.compareTo(b.start),
-          cellStyleBuilder: (row) => _buildCellStyle(row),
+          cellValue: (operatingCycle) => operatingCycle.data.start,
+          cellValueStringify: (dateTime) => (dateTime as DateTime?)?.toFormatted() ?? '-',
+          // stringValue: (operatingCycle) => operatingCycle.start.toFormatted(),
+          // dataComparator: (a, b, column) => a.start.compareTo(b.start),
+          cellTextStyle: _buildTextStyle,
         ),
         DaviColumn<OperatingCycle>(
           // grow: 2,
@@ -80,48 +82,54 @@ class _OperatingCyclesTableState extends State<OperatingCyclesTable> {
           width: _timeColumnWidth,
           name: const Localized('Ending').v,
           pinStatus: PinStatus.left,
-          stringValue: (operatingCycle) => operatingCycle.stop?.toFormatted() ?? '-',
-          dataComparator: (a, b, column) {
-            final otherEnding = b.stop;
-            if (otherEnding == null) {
-              return 1;
-            }
-            return a.stop?.compareTo(otherEnding) ?? -1;
-          },
-          cellStyleBuilder: (row) => _buildCellStyle(row),
+          cellValue: (operatingCycle) => operatingCycle.data.stop,
+          cellValueStringify: (dateTime) => (dateTime as DateTime?)?.toFormatted() ?? '-',
+          // stringValue: (operatingCycle) => operatingCycle.stop?.toFormatted() ?? '-',
+          // dataComparator: (a, b, column) {
+          //   final otherEnding = b.stop;
+          //   if (otherEnding == null) {
+          //     return 1;
+          //   }
+          //   return a.stop?.compareTo(otherEnding) ?? -1;
+          // },
+          cellTextStyle: _buildTextStyle,
         ),
         DaviColumn<OperatingCycle>(
           width: 140,
           resizable: true,
           name: const Localized('Duration, s').v,
-          doubleValue: (operatingCycle) => (operatingCycle.stop?.difference(operatingCycle.start).inMilliseconds ?? 0) / 1000,
-          dataComparator: (a, b, column) {
-            final otherDifference = b.stop?.difference(b.start);
-            if (otherDifference == null) {
-              return 1;
-            }
-            return a.stop?.difference(a.start).compareTo(otherDifference) ?? -1;
-          },
-          cellStyleBuilder: (row) => _buildCellStyle(row),
+          cellValue: (operatingCycle) => (operatingCycle.data.stop?.difference(operatingCycle.data.start).inMilliseconds ?? 0) / 1000,
+          // dataComparator: (a, b, column) {
+          //   final otherDifference = b.stop?.difference(b.start);
+          //   if (otherDifference == null) {
+          //     return 1;
+          //   }
+          //   return a.stop?.difference(a.start).compareTo(otherDifference) ?? -1;
+          // },
+          cellTextStyle: _buildTextStyle,
         ),
         DaviColumn<OperatingCycle>(
           width: 120,
           name: const Localized('Alarm class').v,
-          intValue: (operatingCycle) => operatingCycle.alarmClass,
-          cellStyleBuilder: (row) => _buildCellStyle(row),
+          cellValue: (operatingCycle) => operatingCycle.data.alarmClass,
+          // intValue: (operatingCycle) => operatingCycle.alarmClass,
+          cellTextStyle: _buildTextStyle,
         ),
         ...metrics.map(
           (metric) => DaviColumn<OperatingCycle>(
             width: _metricColumnWidth,
             name: Localized(metric.name).v,
-            doubleValue: (operatingCycle) => operatingCycle.metrics[metric.name]?.value,
-            stringValue: (operatingCycle) => operatingCycle.metrics[metric.name]?.value.toString() ?? '-',
-            cellStyleBuilder: (row) => _buildCellStyle(row),
+            cellValue: (operatingCycle) => operatingCycle.data.metrics[metric.name]?.value,
+            cellValueStringify: (value) => (value as double?) == null ? '-' : value.toString(),
+            // doubleValue: (operatingCycle) => operatingCycle.metrics[metric.name]?.value,
+            // stringValue: (operatingCycle) => operatingCycle.metrics[metric.name]?.value.toString() ?? '-',
+            cellTextStyle: _buildTextStyle,
           ),
         ),
       ],
       rows: _operatingCycles,
-      alwaysSorted: true,
+      sortingMode: SortingMode.alwaysSorted,
+      // alwaysSorted: true,
     );
     super.initState();
   }
@@ -160,11 +168,9 @@ class _OperatingCyclesTableState extends State<OperatingCyclesTable> {
     );
   }
   ///
-  CellStyle _buildCellStyle(DaviRow<OperatingCycle> row) {
-    return CellStyle(
-      textStyle: _selectedTimestamps.contains(row.data.id) 
-        ? TextStyle(color: Theme.of(context).colorScheme.surface)
-        : null, 
-    );
+  TextStyle? _buildTextStyle(TextStyleBuilderParams<OperatingCycle> row) {
+    return _selectedTimestamps.contains(row.data.id) 
+      ? TextStyle(color: Theme.of(context).colorScheme.surface)
+      : null;
   }
 }

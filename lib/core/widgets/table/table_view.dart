@@ -6,8 +6,8 @@ class TableView<T> extends StatefulWidget {
   final DaviModel<T> _model;
   final void Function(T)? _onRowTap;
   final void Function(T)? _onRowDoubleTap;
-  final Color? Function(DaviRow<T>)? _rowColor;
-  final MouseCursor? Function(DaviRow<T>)? _rowCursor;
+  final Color? Function(RowColorParams<T>)? _rowColor;
+  final MouseCursor? Function(CursorBuilderParams<dynamic>)? _rowCursor;
   final Border? _outerBorder;
   final double _tableBorderThickness;
   final Color? _tableBorderColor;
@@ -21,8 +21,8 @@ class TableView<T> extends StatefulWidget {
     required DaviModel<T> model, 
     void Function(T)? onRowTap,
     void Function(T)? onRowDoubleTap, 
-    Color? Function(DaviRow<T>)? rowColor, 
-    MouseCursor? Function(DaviRow<T>)? rowCursor, 
+    Color? Function(RowColorParams<T>)? rowColor, 
+    MouseCursor? Function(CursorBuilderParams<dynamic>)? rowCursor, 
     Border? outerBorder, 
     double tableBorderThickness = 2.0, 
     Color? tableBorderColor, 
@@ -66,8 +66,8 @@ class _TableViewState<T> extends State<TableView<T>> {
   final DaviModel<T> _model;
   final void Function(T)? _onRowTap;
   final void Function(T)? _onRowDoubleTap;
-  final MouseCursor? Function(DaviRow<T>)? _rowCursor;
-  final Color? Function(DaviRow<T>)? _rowColor;
+  final MouseCursor? Function(CursorBuilderParams<dynamic>)? _rowCursor;
+  final Color? Function(RowColorParams<T>)? _rowColor;
   final Border? _outerBorder;
   final double _tableBorderThickness;
   final Color? _tableBorderColor;
@@ -80,8 +80,8 @@ class _TableViewState<T> extends State<TableView<T>> {
     required DaviModel<T> model,
     required void Function(T)? onRowTap,
     required void Function(T)? onRowDoubleTap, 
-    required Color? Function(DaviRow<T>)? rowColor,
-    required MouseCursor? Function(DaviRow<T>)? rowCursor,
+    required Color? Function(RowColorParams<T>)? rowColor,
+    required MouseCursor? Function(CursorBuilderParams<dynamic>)? rowCursor,
     required Border? outerBorder,
     required double tableBorderThickness,
     required Color? tableBorderColor,
@@ -133,7 +133,7 @@ class _TableViewState<T> extends State<TableView<T>> {
         ),
         header: HeaderThemeData(
           bottomBorderColor: tableBorderColor,
-          bottomBorderHeight: _tableBorderThickness,
+          bottomBorderThickness: _tableBorderThickness,
           columnDividerColor: tableBorderColor,
         ),
         row: RowThemeData(
@@ -157,10 +157,10 @@ class _TableViewState<T> extends State<TableView<T>> {
           columnDividerColor: tableBorderColor,
           thumbColor: thumbColor,
         ),
-        topCornerColor: Colors.transparent,
-        bottomCornerColor: scrollbarBackgroundColor,
-        topCornerBorderColor: Colors.transparent,
-        bottomCornerBorderColor: Colors.transparent,
+        // topCornerColor: Colors.transparent,
+        // bottomCornerColor: scrollbarBackgroundColor,
+        // topCornerBorderColor: Colors.transparent,
+        // bottomCornerBorderColor: Colors.transparent,
       ),
       child: Davi<T>(
         _model,

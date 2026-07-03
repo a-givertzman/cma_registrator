@@ -70,20 +70,19 @@ class _OperatingCycleDetailsBodyState extends State<OperatingCycleDetailsBody> {
       DaviColumn<OperatingCycleDetailsRecord>(
         width: _timeColumnWidth,
         name: const Localized('Time').v,
-        stringValue: (record) => record.timestamp,
+        cellValue: (params) => params.data.timestamp,
+        // stringValue: (record) => record.timestamp,
         pinStatus: PinStatus.left,
-        cellStyleBuilder: (row) => CellStyle(
-          textStyle: _selectedTimestamps.contains(row.data.timestamp) 
+        cellTextStyle: (params) => _selectedTimestamps.contains(params.data.timestamp) 
             ? TextStyle(color: Theme.of(context).colorScheme.surface)
             : null, 
-        ),
       ),
       ...signalNames.map(
         (signalName) => DaviColumn<OperatingCycleDetailsRecord>(
           width: _metricColumnWidth,
           name: signalName,
-          stringValue: (record) {
-            final recordValue = record.signals[signalName] as Object?;
+          cellValue:(params) {
+            final recordValue = params.data.signals[signalName] as Object?;
             if (recordValue == null) {
               return '-';
             }
@@ -91,13 +90,15 @@ class _OperatingCycleDetailsBodyState extends State<OperatingCycleDetailsBody> {
               ? recordValue.toStringAsFixed(3)
               : recordValue.toString();
           },
-          cellStyleBuilder: (row) => CellStyle(
-            textStyle: _defineCellTextStyle(signalName, row.data.timestamp), 
-          ),
+          cellTextStyle: (row) => _defineCellTextStyle(signalName, row.data.timestamp),
         ),
       ),
     ];
-    _model = DaviModel(rows: detailsRecords, columns: _columns, alwaysSorted: true);
+    _model = DaviModel(
+      rows: detailsRecords,
+      columns: _columns,
+      sortingMode: SortingMode.alwaysSorted,
+    );
     _columnsVisibility = Map.fromEntries(
       signalNames.map((signal) => MapEntry(signal, true)),
     );
