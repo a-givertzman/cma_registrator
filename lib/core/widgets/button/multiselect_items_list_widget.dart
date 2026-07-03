@@ -121,9 +121,16 @@ class _MultiselectItemsListWidgetState extends State<MultiselectItemsListWidget>
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            spacing: padding,
                             children: [
-                              Text(entries[i].key),
-                              const Spacer(),
+                              Expanded(
+                                child: Text(
+                                  entries[i].key,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.fade,
+                                ),
+                              ),
                               Checkbox(
                                 activeColor: theme.colorScheme.primary,
                                 value: entries[i].value, 
