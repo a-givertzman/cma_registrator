@@ -42,16 +42,16 @@ class GeneralInfoBody extends StatelessWidget {
                 color: theme.colorScheme.primary,
               ),
             ),
-            IconButton(
-              tooltip: const Localized('Tensosensor calibration').v,
-              onPressed:  () => Navigator.of(context).pushNamed(
-                TensosensorCalibrationPage.routeName,
-              ), 
-              icon: Icon(
-                Icons.settings_applications_outlined,
-                color: theme.colorScheme.primary,
-              ),
-            ),
+            // IconButton(
+            //   tooltip: const Localized('Tensosensor calibration').v,
+            //   onPressed:  () => Navigator.of(context).pushNamed(
+            //     TensosensorCalibrationPage.routeName,
+            //   ), 
+            //   icon: Icon(
+            //     Icons.settings_applications_outlined,
+            //     color: theme.colorScheme.primary,
+            //   ),
+            // ),
           ],
         ),
         const Spacer(),
