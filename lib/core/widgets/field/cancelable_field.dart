@@ -118,6 +118,17 @@ class _CancelableFieldState extends State<CancelableField> {
               initialDate: DateTime.parse(_initialValue),
               firstDate: DateTime.fromMillisecondsSinceEpoch(0),
               lastDate: DateTime.now(),
+              builder: (context, child) {
+                final theme = Theme.of(context);
+                return Theme(
+                  data: theme.copyWith(
+                    colorScheme: theme.colorScheme.copyWith(
+                      surfaceContainerHigh: theme.colorScheme.surface,
+                    ),
+                  ),
+                  child: child ?? const SizedBox(),
+                );
+              },
           );
           if(pickedDate != null ){
             final day = pickedDate.day.toString().padLeft(2, '0');
