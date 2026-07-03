@@ -3,7 +3,6 @@ import 'package:cma_registrator/core/repositories/field/field_datas.dart';
 import 'package:cma_registrator/core/widgets/future_builder_scaffold.dart';
 import 'package:cma_registrator/pages/general_info/widgets/general_info_form.dart';
 import 'package:cma_registrator/pages/operating_cycles/operating_cycles_page.dart';
-import 'package:cma_registrator/pages/tensosensor_calibration/tensosensor_calibration_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_result.dart';
 import 'package:hmi_core/hmi_core_translate.dart';
