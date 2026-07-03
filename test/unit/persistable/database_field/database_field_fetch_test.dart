@@ -15,22 +15,22 @@ void main() {
     late ServerSocket server;
     final replies = [
       {
-        "reply_str": '{"id":"1","authToken":"","data":[{"value":"b"},{"value":"d"},{"value":"f"}],"query":"{}"}',
-        "reply_data": 'b',
+        'reply_str': '{"id":"1","authToken":"","data":[{"value":"b"},{"value":"d"},{"value":"f"}],"query":"{}"}',
+        'reply_data': 'b',
       },
       {
-        "reply_str": '{"id":"1","authToken":"","data":[{"value":"321"},{"value":"123"}],"query":"{}"}',
-        "reply_data": '321',
+        'reply_str': '{"id":"1","authToken":"","data":[{"value":"321"},{"value":"123"}],"query":"{}"}',
+        'reply_data': '321',
       },
       {
-        "reply_str": '{"id":"1","authToken":"","data":[{"value":"some_Value!2#%\$()"}],"query":"{}"}',
-        "reply_data": 'some_Value!2#%\$()',
+        'reply_str': '{"id":"1","authToken":"","data":[{"value":"some_Value!2#%\$()"}],"query":"{}"}',
+        'reply_data': 'some_Value!2#%\$()',
       },
     ];
-    int i = 0;
+    var i = 0;
     setUpAll(() async {
-      server = await ServerSocket.bind(host, port);
-      server.listen(
+      server = await ServerSocket.bind(host, port)
+      ..listen(
         (socket) { 
           socket.listen((_) {
             final serializedReply = replies[i]['reply_str']!; 

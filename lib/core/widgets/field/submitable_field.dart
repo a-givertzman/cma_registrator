@@ -120,8 +120,7 @@ class _SubmitableFieldState<T> extends State<SubmitableField<T>> {
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _initialValue != _value 
-            ? InkWell(
+            if (_initialValue != _value) InkWell(
                 customBorder: const CircleBorder(),
                 onTap: () {
                   _onComplete?.call(_value);
@@ -130,10 +129,8 @@ class _SubmitableFieldState<T> extends State<SubmitableField<T>> {
                   Icons.check,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-              ) 
-              : const Icon(null),
-            _initialTextValue != _controller.text 
-            ? InkWell(
+              ) else const Icon(null),
+            if (_initialTextValue != _controller.text) InkWell(
               customBorder: const CircleBorder(),
               onTap: () {
                 _controller.text = _initialTextValue;
@@ -149,7 +146,7 @@ class _SubmitableFieldState<T> extends State<SubmitableField<T>> {
                 Icons.replay,
                 color: Theme.of(context).colorScheme.primary,
               ),
-            ) : const Icon(null),
+            ) else const Icon(null),
           ],
         ),
       ),

@@ -41,7 +41,7 @@ class FilterRule {
   ///
   String toSqlRule() => switch(type) {
     FilterRuleType.likewise => "$type '%$value%'",
-    _ => "$type $value"
+    _ => '$type $value'
   };
   //
   @override

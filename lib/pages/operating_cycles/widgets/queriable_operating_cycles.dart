@@ -48,7 +48,7 @@ class _QueriableOperatingCyclesState extends State<QueriableOperatingCycles> {
             caseData: (context, metricInfos, _) => FiltersBar(
               filtersNotifier: _filtersNotifier,
               filterNames: metricInfos.map((info) => info.id).toList(),
-              buttonWidth: 200,
+              // buttonWidth: 200,
             ),
           ),
         ),

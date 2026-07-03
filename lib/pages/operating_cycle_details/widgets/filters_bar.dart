@@ -7,14 +7,14 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 class FiltersBar extends StatelessWidget {
   final List<String> _filterNames;
   final ValueNotifier<Filters> _filtersNotifier;
-  final double _buttonWidth;
+  // final double _buttonWidth;
   const FiltersBar({
     super.key,
     required List<String> filterNames,
     required ValueNotifier<Filters> filtersNotifier,
-    required double buttonWidth,
+    // required double buttonWidth,
   }) :
-    _buttonWidth = buttonWidth,
+    // _buttonWidth = buttonWidth,
     _filtersNotifier = filtersNotifier,
     _filterNames = filterNames;
 
@@ -23,7 +23,7 @@ class FiltersBar extends StatelessWidget {
     return Row(
       children: [
         FiltersSelectionButton(
-          buttonWidth: _buttonWidth,
+          // buttonWidth: _buttonWidth,
           filterNames: _filterNames,
           filtersNotifier: _filtersNotifier,
         ),

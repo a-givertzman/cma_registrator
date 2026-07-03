@@ -30,7 +30,7 @@ class TableView<T> extends StatefulWidget {
     Color? controlElementColor, 
     Color? thumbColor, 
     ColumnWidthBehavior columnWidthBehavior = ColumnWidthBehavior.scrollable, 
-    Color? selectedRowColor, 
+    // Color? selectedRowColor, 
   }) : 
     _rowColor = rowColor, 
     _columnWidthBehavior = columnWidthBehavior, 
@@ -110,10 +110,10 @@ class _TableViewState<T> extends State<TableView<T>> {
     final controlElementColor = _controlElementColor 
       ?? theme.colorScheme.primary;
     final tableBorderColor = _tableBorderColor 
-      ?? theme.disabledColor.withOpacity(0.3);
+      ?? theme.disabledColor.withValues(alpha: 0.3);
     final scrollbarBackgroundColor = _scrollbarBackgroundColor
-      ?? theme.disabledColor.withOpacity(0.07);
-    final thumbColor = _thumbColor ?? theme.disabledColor.withOpacity(0.3);
+      ?? theme.disabledColor.withValues(alpha: 0.07);
+    final thumbColor = _thumbColor ?? theme.disabledColor.withValues(alpha: 0.3);
     final outerBorder = _outerBorder ?? Border.all(
       color:  tableBorderColor,
       width: 1,

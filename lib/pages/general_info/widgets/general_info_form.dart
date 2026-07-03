@@ -8,7 +8,7 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_result.dart';
 import 'package:hmi_core/hmi_core_translate.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
-import 'confirmation_dialog.dart';
+import 'package:cma_registrator/pages/general_info/widgets/confirmation_dialog.dart';
 
 class GeneralInfoForm extends StatefulWidget {
   final List<FieldData> _fieldsData;
@@ -63,7 +63,7 @@ class _GeneralInfoFormState extends State<GeneralInfoForm> {
                 ),
                 if (_isSaving)
                   Container(
-                    color: Theme.of(context).colorScheme.surface.withOpacity(0.75),
+                    color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.75),
                   ),
               ],
             ),
@@ -85,7 +85,7 @@ class _GeneralInfoFormState extends State<GeneralInfoForm> {
                   width: buttonWidth,
                   label: const Localized('Save').v,
                   onPressed: isAnyFieldChanged
-                    ? () async => _trySaveData(context)
+                    ? () => _trySaveData(context)
                     : null,
                 ),
               ],
@@ -296,7 +296,7 @@ class _GeneralInfoColumns extends StatelessWidget {
     },
     onSaved: (_) {
       _onSaved?.call();
-      return  Future.value(const Ok(""));
+      return  Future.value(const Ok(''));
     },
   );
 }

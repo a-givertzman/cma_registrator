@@ -5,7 +5,7 @@ import '../../../fakes/fake_database_field.dart';
 
 void main() {
   group('FieldData constructor', () { 
-    test('sets initialValue to current value', () async {
+    test('sets initialValue to current value', () {
       const initialData = [
         'abc',
         '123456',

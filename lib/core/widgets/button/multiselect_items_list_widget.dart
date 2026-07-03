@@ -82,7 +82,7 @@ class _MultiselectItemsListWidgetState extends State<MultiselectItemsListWidget>
         borderRadius: BorderRadius.circular(_listBorderRadius),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).colorScheme.shadow.withOpacity(0.4),
+            color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.4),
             offset: _shadowOffset,
             blurRadius: _shadowBlurRadius,
           ),

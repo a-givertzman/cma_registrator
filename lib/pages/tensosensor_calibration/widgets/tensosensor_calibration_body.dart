@@ -62,7 +62,7 @@ class _TensosensorCalibrationBodyState extends State<TensosensorCalibrationBody>
   }
   ///
   Widget _createStepByIndex(int index) {
-    assert(_pagesCount > 0 && index >= 0);
+    assert(_pagesCount > 0 && index >= 0, '');
     if (_pagesCount == 1) {
       return TensosensorCalibrationStep.finishing(
         onFinish: () => _trySaveData(context, () => _slideToPage(0)),

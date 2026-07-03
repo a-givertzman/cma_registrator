@@ -1,6 +1,6 @@
 import 'package:cma_registrator/core/models/operating_cycle/operating_cycle.dart';
 import 'package:ext_rw/ext_rw.dart';
-import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/hmi_core_result.dart';
 ///
 class OperatingCycleEventIds {
@@ -45,6 +45,6 @@ class OperatingCycleEventIds {
         ).toList(),
       ),
       Err(:final error) => Err(error),
-    });
+    },);
   }
 }

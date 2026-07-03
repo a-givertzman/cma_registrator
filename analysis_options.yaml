@@ -7,16 +7,76 @@
 
 # The following line activates a set of recommended lints for Flutter apps,
 # packages, and plugins designed to encourage good coding practices.
+# include: package:flutter_lints/flutter.yaml
+
+# linter:
+  # The lint rules applied to this project can be customized in the
+  # section below to disable rules from the `package:flutter_lints/flutter.yaml`
+  # included above or to enable additional rules. A list of all available lints
+  # and their documentation is published at
+  # https://dart-lang.github.io/linter/lints/index.html.
+  #
+  # Instead of disabling a lint rule for the entire project in the
+  # section below, it can also be suppressed for a single line of code
+  # or a specific dart file by using the `// ignore: name_of_lint` and
+  # `// ignore_for_file: name_of_lint` syntax on the line or in the file
+  # producing the lint.
+  # rules:
+    # avoid_print: false  # Uncomment to disable the `avoid_print` rule
+    # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
+
+# Additional information about this file can be found at
+# https://dart.dev/guides/language/analysis-options
+
+# include: package:lint/analysis_options.yaml
 include: package:flutter_lints/flutter.yaml
 
 linter:
   rules:
     no_logic_in_create_state: false
-
-# Additional information about this file can be found at
-# https://dart.dev/guides/language/analysis-options
+    prefer_const_declarations: true
+    prefer_const_constructors: true
+    avoid_void_async: true
+    unnecessary_async: true
+    unnecessary_await_in_return: true
+    cancel_subscriptions: true
+    close_sinks: true
+    prefer_single_quotes: true
+    use_named_constants: true
+    require_trailing_commas: true
+    always_use_package_imports: true
+    prefer_null_aware_method_calls: true
+    prefer_if_elements_to_conditional_expressions: true
+    prefer_final_locals: true
+    prefer_final_in_for_each: true
+    prefer_asserts_with_message: true
+    prefer_asserts_in_initializer_lists: true
+    parameter_assignments: true
+    omit_obvious_property_types: true
+    omit_obvious_local_variable_types: true
+    noop_primitive_operations: true
+    no_literal_bool_comparisons: true
+    no_adjacent_strings_in_list: true
+    missing_code_block_language_in_doc_comment: true
+    literal_only_boolean_expressions: true
+    flutter_style_todos: true
+    combinators_ordering: true
+    cast_nullable_to_non_nullable: true
+    cascade_invocations: true
+    avoid_unused_constructor_parameters: true
+    avoid_dynamic_calls: true
+    always_declare_return_types: true
+    # prefer_expression_function_bodies: true
+    # directives_ordering: true
+    # sort_pub_dependencies: true
+    # switch_on_type: true
+    # unnecessary_lambdas: true
 
 analyzer:
+  language:
+    # strict-casts: true
+    # strict-inference: true
+    # strict-raw-types: true
   # strong-mode:
     # implicit-casts: false
   errors:
@@ -24,33 +84,4 @@ analyzer:
     # missing_return: error
     # must_be_imutable: error
     # sort_unnamed_constructors_first: ignore
-  plugins:
-    - dart_code_metrics
 
-dart_code_metrics:
-  anti-patterns:
-    - long-method
-    - long-parameter-list
-  metrics:
-    cyclomatic-complexity: 20
-    maximum-nesting-level: 10
-    number-of-parameters: 4
-    source-lines-of-code: 50
-    technical-debt:
-      threshold: 1
-      todo-cost: 4
-      ignore-cost: 8
-      ignore-for-file-cost: 16
-      as-dynamic-cost: 16
-      depricated-annotations: 2
-      file-nullsafety-migration: 2
-      unit-type: "hour"
-  metrics-exclude:
-    - test/**
-  rules:
-    # - newline-before-return
-    - no-boolean-literal-compare
-    - no-empty-block
-    - prefer-trailing-comma
-    # - prefer-conditional-expressions
-    - no-equal-then-else

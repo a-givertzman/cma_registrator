@@ -44,6 +44,6 @@ class OperatingCycleMetrics {
           .toList(),
       ),
       Err(:final error) => Err(error),
-    });
+    },);
   }
 }

@@ -13,8 +13,8 @@ void main() {
     const port = 0;
     late ServerSocket server;
     setUpAll(() async {
-      server = await ServerSocket.bind(host, port);
-      server.listen(
+      server = await ServerSocket.bind(host, port)
+      ..listen(
         (socket) { 
           socket.listen((_) {
             socket.add(utf8.encode('{"id":"1","authToken":"","data":[{"a":"b"},{"c":"d"},{"e":"f"}],"query":"{}"}'));

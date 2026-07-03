@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_result.dart';
 import 'package:hmi_core/hmi_core_translate.dart';
-import 'error_message_widget.dart';
+import 'package:cma_registrator/core/widgets/error_message_widget.dart';
 /// 
 /// Default indicator builder for [FutureBuilderWidget] loading state
 Widget _defaultCaseLoading(BuildContext _) => const Center(

@@ -5,7 +5,7 @@ import '../../../fakes/fake_database_field.dart';
 
 void main() {
   group('FieldData cancel', () { 
-    test('sets value to initial without updates', () async {
+    test('sets value to initial without updates', () {
       const initialData = [
         'abc',
         '123456',
@@ -19,12 +19,12 @@ void main() {
           label: 'test', 
           initialValue: initialValue, 
           record: FakeDatabaseField(),
-        );
-        fieldData.cancel();
+        )
+        ..cancel();
         expect(fieldData.controller.text, initialValue);
       }
     });
-    test('sets value to initial after some updates', () async {
+    test('sets value to initial after some updates', () {
       const initialData = [
         'abc',
         '123456',

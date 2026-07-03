@@ -9,15 +9,15 @@ import 'package:hmi_core/hmi_core_translate.dart';
 class FiltersSelectionButton extends StatelessWidget {
   final List<String> _filterNames;
   final ValueNotifier<Filters> _filtersNotifier;
-  final double _buttonWidth;
+  // final double _buttonWidth;
   ///
   const FiltersSelectionButton({
     super.key,
     required List<String> filterNames,
     required ValueNotifier<Filters> filtersNotifier,
-    required double buttonWidth,
+    // required double buttonWidth,
   }) :
-    _buttonWidth = buttonWidth,
+    // _buttonWidth = buttonWidth,
     _filtersNotifier = filtersNotifier,
     _filterNames = filterNames;
   //

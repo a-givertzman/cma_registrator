@@ -50,7 +50,7 @@ class _QueriableOperatingCycleDetailsState extends State<QueriableOperatingCycle
             caseData: (context, signalNames, _) => FiltersBar(
               filtersNotifier: _filtersNotifier,
               filterNames: signalNames,
-              buttonWidth: 200,
+              // buttonWidth: 200,
             ),
           ),
         ),

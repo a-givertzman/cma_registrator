@@ -13,7 +13,7 @@ class OperatingCyclesBody extends StatelessWidget {
   const OperatingCyclesBody({
     super.key, 
     required OperatingCycles cycles,
-    required MetricInfos metricInfos
+    required MetricInfos metricInfos,
   }) :
     _cycles = cycles,
     _metricInfos = metricInfos;

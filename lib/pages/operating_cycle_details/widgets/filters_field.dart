@@ -30,7 +30,7 @@ class FiltersField extends StatelessWidget {
           decoration: InputDecoration(
             labelText: const Localized('Filters').v,
             hintText: const Localized('Input filtration params, e.g. Start:26.08.2024 End:27.08.2024 Signal1:>=100 Signal2:0').v,
-            hintStyle: TextStyle(color: Theme.of(context).disabledColor.withOpacity(0.5)),
+            hintStyle: TextStyle(color: Theme.of(context).disabledColor.withValues(alpha: 0.5)),
             border: const OutlineInputBorder(
               borderRadius: BorderRadius.all(
                 Radius.circular(16),

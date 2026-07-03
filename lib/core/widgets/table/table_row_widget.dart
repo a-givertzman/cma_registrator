@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'table_cell_widget.dart';
+import 'package:cma_registrator/core/widgets/table/table_cell_widget.dart';
 
 ///
 class TableRowWidget extends StatelessWidget {

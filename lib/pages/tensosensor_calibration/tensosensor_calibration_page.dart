@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_translate.dart';
-import 'widgets/tensosensor_calibration_body.dart';
+import 'package:cma_registrator/pages/tensosensor_calibration/widgets/tensosensor_calibration_body.dart';
 ///
 class TensosensorCalibrationPage extends StatelessWidget {
   static const routeName = '/tensosensorCalibration';

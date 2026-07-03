@@ -5,7 +5,7 @@ import 'package:cma_registrator/core/widgets/table/table_view.dart';
 import 'package:davi/davi.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
-import 'operating_cycle_details_app_bar.dart';
+import 'package:cma_registrator/pages/operating_cycle_details/widgets/operating_cycle_details_app_bar.dart';
 ///
 class OperatingCycleDetailsRecord {
   final String timestamp;
@@ -106,7 +106,7 @@ class _OperatingCycleDetailsBodyState extends State<OperatingCycleDetailsBody> {
   //
   List<OperatingCycleDetailsRecord> _extractDetailsRecords(List<Event> events) {
     final detailsRecords = <OperatingCycleDetailsRecord>[];
-    for (int i = 0; i < events.length; i++) {
+    for (var i = 0; i < events.length; i++) {
       final timestamp = events[i].timestamp;
       final pointName = events[i].name;
       final recordSignals = <String, dynamic>{};
@@ -172,7 +172,7 @@ class _OperatingCycleDetailsBodyState extends State<OperatingCycleDetailsBody> {
               }
             }),
             rowColor: (row) => _selectedTimestamps.contains(row.data.timestamp)
-              ? Theme.of(context).colorScheme.onSurface.withOpacity(0.7)
+              ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)
               : null,
             rowCursor: (row) => _selectedTimestamps.contains(row.data.timestamp) 
               ? SystemMouseCursors.basic 

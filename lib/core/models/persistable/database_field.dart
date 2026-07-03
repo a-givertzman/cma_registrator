@@ -34,13 +34,13 @@ class DatabaseField {
     .then<ResultF<String>>((result) => switch(result) {
       Ok(value:final reply) => Ok(reply.toString()),
       Err(:final error) => Err(error),
-    })
+    },)
     .onError((error, stackTrace) => Err(
       Failure(
         message: error.toString(),
         stackTrace: stackTrace,
       ),
-    ));
+    ),);
   }
   ///
   Future<ResultF<String>> fetch() {
@@ -56,12 +56,12 @@ class DatabaseField {
     .then<ResultF<String>>((result) => switch(result) {
       Ok(value:final reply) => Ok(reply.data.first['value'] as String),
       Err(:final error) => Err(error),
-    })
+    },)
     .onError((error, stackTrace) => Err(
       Failure(
         message: error.toString(),
         stackTrace: stackTrace,
       ),
-    ));
+    ),);
   }
 }

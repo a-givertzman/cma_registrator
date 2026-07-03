@@ -123,7 +123,7 @@ class _DropdownMultiselectButtonState extends State<DropdownMultiselectButton> {
       _removeOverlayEntry();
     } else {
       final overlayState = Overlay.of(context);
-      final RenderBox box = context.findRenderObject()! as RenderBox;
+      final box = context.findRenderObject()! as RenderBox;
       final Offset position = box.localToGlobal(
         box.size.center(Offset.zero),
         ancestor: overlayState.context.findRenderObject(),

@@ -1,7 +1,7 @@
 import 'package:cma_registrator/core/models/field/field_data.dart';
 import 'package:cma_registrator/core/models/field/field_type.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_result.dart';
 import '../../../fakes/fake_database_field.dart';
 

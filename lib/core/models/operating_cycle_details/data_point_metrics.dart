@@ -1,5 +1,5 @@
 import 'package:hmi_core/hmi_core.dart';
-import 'metric.dart';
+import 'package:cma_registrator/core/models/operating_cycle_details/metric.dart';
 /// 
 /// Metrics for data point in the corresponding work cycle.
 abstract interface class DataPointMetrics {

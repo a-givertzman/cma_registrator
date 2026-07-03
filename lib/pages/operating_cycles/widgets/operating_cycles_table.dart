@@ -155,7 +155,7 @@ class _OperatingCyclesTableState extends State<OperatingCyclesTable> {
         ),
       ),
       rowColor: (row) => _selectedTimestamps.contains(row.data.id)
-        ? Theme.of(context).colorScheme.onSurface.withOpacity(0.7)
+        ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)
         : null,
     );
   }

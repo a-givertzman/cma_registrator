@@ -1,6 +1,6 @@
 import 'package:cma_registrator/core/models/operating_cycle/metric_info.dart';
 import 'package:ext_rw/ext_rw.dart';
-import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/hmi_core_result.dart';
 ///
 class MetricInfos {
@@ -41,6 +41,6 @@ class MetricInfos {
         ).toList(),
       ),
       Err(:final error) => Err(error),
-    });
+    },);
   }
 }

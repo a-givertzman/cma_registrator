@@ -20,7 +20,7 @@ class TableCellWidget  extends StatelessWidget {
       padding: EdgeInsets.all(padding.toDouble),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.white10),
-        color: isSelected ? Theme.of(context).disabledColor.withOpacity(0.5) : null,
+        color: isSelected ? Theme.of(context).disabledColor.withValues(alpha: 0.5) : null,
       ),
       child: Text(
         content, 

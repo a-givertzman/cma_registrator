@@ -4,8 +4,8 @@ import 'package:cma_registrator/core/validation/int_validation_case.dart';
 import 'package:cma_registrator/core/validation/real_validation_case.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result.dart';
+import 'package:hmi_core/hmi_core_translate.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 
 ///
@@ -64,7 +64,7 @@ class _CancelableFieldState extends State<CancelableField> {
   final Validator? _validator;
   String _initialValue;
   String? _sendError;
-  bool _isInProcess = false;
+  var _isInProcess = false;
 
   _CancelableFieldState({
     required String initialValue, 
@@ -112,7 +112,7 @@ class _CancelableFieldState extends State<CancelableField> {
       },
       onTap: switch(_fieldType) {
         FieldType.date => () async {
-          DateTime? pickedDate = await showDatePicker(
+          final DateTime? pickedDate = await showDatePicker(
               context: context,
               locale: const Locale('ru'),
               initialDate: DateTime.parse(_initialValue),
@@ -161,7 +161,7 @@ class _CancelableFieldState extends State<CancelableField> {
               _sendError = '${error.message}';
               _isInProcess = false;
             }), 
-          });
+          },);
         }
       },
       decoration: InputDecoration(

@@ -13,7 +13,7 @@ class RealValidationCase implements ValidationCase {
     } else {
       return Err(
         Failure(
-          message: const Localized("Invalid real value").toString(), 
+          message: const Localized('Invalid real value').toString(), 
           stackTrace: StackTrace.current,
         ),
       );

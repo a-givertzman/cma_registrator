@@ -13,7 +13,7 @@ class IntValidationCase implements ValidationCase {
     } else {
       return Err(
         Failure(
-          message: const Localized("Invalid integer value").toString(), 
+          message: const Localized('Invalid integer value').toString(), 
           stackTrace: StackTrace.current,
         ),
       );

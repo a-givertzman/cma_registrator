@@ -2,7 +2,7 @@ import 'package:cma_registrator/core/repositories/field/field_datas.dart';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-import 'widgets/general_info_body.dart';
+import 'package:cma_registrator/pages/general_info/widgets/general_info_body.dart';
 ///
 class GeneralInfoPage extends StatelessWidget {
   static const routeName = '/generalInfo';

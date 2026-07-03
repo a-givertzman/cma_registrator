@@ -13,7 +13,7 @@ class DateValidationCase implements ValidationCase {
     } else {
       return Err(
         Failure(
-          message: const Localized("Invalid date").toString(), 
+          message: const Localized('Invalid date').toString(), 
           stackTrace: StackTrace.current,
         ),
       );

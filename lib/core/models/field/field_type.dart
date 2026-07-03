@@ -7,9 +7,9 @@ enum FieldType {
   const FieldType();
   factory FieldType.from(String value) {
     return switch(value) {
-      "int" => FieldType.int,
-      "real" => FieldType.real,
-      "date" => FieldType.date,
+      'int' => FieldType.int,
+      'real' => FieldType.real,
+      'date' => FieldType.date,
       _ => FieldType.string,
     };
   }

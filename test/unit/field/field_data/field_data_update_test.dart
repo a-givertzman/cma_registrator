@@ -5,7 +5,7 @@ import '../../../fakes/fake_database_field.dart';
 
 void main() {
   group('FieldData update', () { 
-    test('changes current value', () async {
+    test('changes current value', () {
       const updateData = [
         'abc',
         '123456',

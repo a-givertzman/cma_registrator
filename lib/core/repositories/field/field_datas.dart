@@ -2,8 +2,10 @@ import 'package:cma_registrator/core/models/field/field_data.dart';
 import 'package:cma_registrator/core/models/field/field_type.dart';
 import 'package:cma_registrator/core/models/persistable/database_field.dart';
 import 'package:ext_rw/ext_rw.dart' hide FieldType;
-import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_failure.dart';
+import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/hmi_core_result.dart';
+import 'package:hmi_core/hmi_core_translate.dart';
 ///
 class FieldDatas {
   static final _log = const Log('SqlRecord')..level=LogLevel.debug;
@@ -49,7 +51,7 @@ class FieldDatas {
           ).toList(),
       ),
       Err(:final error) => Err(error),
-    });
+    },);
   }
   /// 
   /// Persists changed fields and returns them updated.
