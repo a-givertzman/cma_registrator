@@ -128,6 +128,7 @@ class _MultiselectItemsListWidgetState extends State<MultiselectItemsListWidget>
                                 child: Text(
                                   entries[i].key,
                                   maxLines: 1,
+                                  softWrap: false,
                                   overflow: TextOverflow.fade,
                                 ),
                               ),
