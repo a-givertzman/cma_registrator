@@ -170,15 +170,25 @@ class _GeneralInfoFormState extends State<GeneralInfoForm> {
     if(_isFormValid()) {
       final isSaveSubmitted = await showDialog<bool>(
         context: context, 
-        builder: (_) => ConfirmationDialog(
-          title: Text(const Localized('Data saving').v),
-          content: Text(
-            const Localized(
-              'Data will be persisted on the server. Do you want to proceed?',
-            ).v,
-          ),
-          confirmationButtonLabel: const Localized('Save').v,
-        ),
+        builder: (context) {
+          final theme = Theme.of(context);
+          return Theme(
+            data: theme.copyWith(
+              colorScheme: theme.colorScheme.copyWith(
+                surfaceContainerHigh: theme.colorScheme.surface,
+              ),
+            ),
+            child: ConfirmationDialog(
+              title: Text(const Localized('Data saving').v),
+              content: Text(
+                const Localized(
+                  'Data will be persisted on the server. Do you want to proceed?',
+                ).v,
+              ),
+              confirmationButtonLabel: const Localized('Save').v,
+            ),
+          );
+        },
       );
       if (isSaveSubmitted ?? false) {
         final onSave = widget._onSave;
@@ -216,11 +226,12 @@ class _GeneralInfoFormState extends State<GeneralInfoForm> {
   bool _isFormValid() => _formKey.currentState?.validate() ?? false;
 }
 ///
-class _GeneralInfoColumns extends StatelessWidget {
+class _GeneralInfoColumns extends StatefulWidget {
   final void Function()? _onChanged;
   final void Function()? _onCancelled;
   final void Function()? _onSaved;
   final List<FieldData> _fieldsData;
+  ///
   const _GeneralInfoColumns({
     required List<FieldData> fieldsData, 
     void Function()? onChanged, 
@@ -231,56 +242,84 @@ class _GeneralInfoColumns extends StatelessWidget {
     _onChanged = onChanged,
     _onSaved = onSaved,
     _fieldsData = fieldsData;
+  //
+  @override
+  State<_GeneralInfoColumns> createState() => _GeneralInfoColumnsState();
+}
 
+class _GeneralInfoColumnsState extends State<_GeneralInfoColumns> with TickerProviderStateMixin {
+  late final TabController _tabController;
+  //
+  @override
+  void initState() {
+    _tabController = TabController(
+      length: 3,
+      vsync: this,
+    );
+    super.initState();
+  }
+  //
   @override
   Widget build(BuildContext context) {
     const columnFlex = 3;
     // const spacingFlex = 1;
-    const blockPadding = 16.0;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        spacing: blockPadding,
+    final blockPadding = const Setting('blockPadding').toDouble;
+    return Scaffold(
+      appBar: TabBar(
+        controller: _tabController,
+        tabs: [
+          Tab(
+            text: 'Crane'.loc,
+            icon: const Icon(Icons.comment_outlined),
+          ),
+          Tab(
+            text: 'Recorder'.loc,
+            icon: const Icon(Icons.note_alt_outlined),
+          ),
+          Tab(
+            text: 'Operation'.loc,
+            icon: const Icon(Icons.dynamic_feed_outlined),
+          ),
+        ],
+      ),
+      body: TabBarView(
+        controller: _tabController,
         children: [
-          // const Spacer(flex: spacingFlex),
-          Expanded(
-            flex: columnFlex,
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: blockPadding),
             child: FieldGroup(
               groupName: const Localized('Crane').v,
-              fields: _fieldsData
+              fields: widget._fieldsData
                 .where((field) => field.id.startsWith('1.'))
                 .map(_mapDataToField)
                 .toList(),
             ),
           ),
-          // const Spacer(flex: spacingFlex),
-          Expanded(
-            flex: 3,
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: blockPadding),
             child: FieldGroup(
               groupName: const Localized('Recorder').v,
-              fields: _fieldsData
+              fields: widget._fieldsData
                 .where((field) => field.id.startsWith('2.'))
                 .map(_mapDataToField)
                 .toList(),
             ),
           ),
-          // const Spacer(flex: spacingFlex),
-          Expanded(
-            flex: columnFlex,
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: blockPadding),
             child: FieldGroup(
               groupName: const Localized('Operation').v,
-              fields: _fieldsData
+              fields: widget._fieldsData
                 .where((field) => field.id.startsWith('3.'))
                 .map(_mapDataToField)
                 .toList(),
             ),
           ),
-          // const Spacer(flex: spacingFlex),
         ],
       ),
     );
   }
+
   CancelableField _mapDataToField(FieldData data) => CancelableField(
     label: data.label,
     initialValue: data.initialValue,
@@ -293,14 +332,14 @@ class _GeneralInfoColumns extends StatelessWidget {
           TextPosition(offset: data.controller.selection.base.offset),
         ),
       );
-      _onChanged?.call();
+      widget._onChanged?.call();
     },
     onCanceled: (_) {
       data.cancel();
-      _onCancelled?.call();
+      widget._onCancelled?.call();
     },
     onSaved: (_) {
-      _onSaved?.call();
+      widget._onSaved?.call();
       return  Future.value(const Ok(''));
     },
   );
